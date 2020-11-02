@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network on HCM</title>
+    <link>https://bopjiang.github.io/tags/network/</link>
+    <description>Recent content in network on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 27 Mar 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>NAT配置</title>
+      <link>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 27 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</guid>
+      <description>时隔10年，又搞了一回NAT配置，兼顾学习了下路由表知识。
+起因 分析某个移动APP的包协议
+预备知识 http://www.rfc-editor.org/rfc/rfc3022.txt
+网络拓扑图 internet | WIFI * | * | wlan0 * +-----------------+ eth0 * WAN +-----------------+ | Test PC (NAT) |------------------| TP-Link Router |--- WIFI +-----------------+ * +-----------------+ | * | * | * | +-----------------+ | Android Phone | +-----------------+ IP配置 Test PC  wlan: 172.16.13.163/16 gateway: 172.16.13.1 eth0: 192.168.2.1/24  TP-Link Router  WAN: 192.168.2.2/24  路由配置 root@hp4400:~# route -n Kernel IP routing table Destination Gateway Genmask Flags Metric Ref Use Iface 0.</description>
+    </item>
+    
+    <item>
+      <title>Python UDP客户端</title>
+      <link>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</link>
+      <pubDate>Fri, 21 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</guid>
+      <description>第一次写UDP程序，超乎寻常的简单
+&amp;gt;&amp;gt;&amp;gt; import socket &amp;gt;&amp;gt;&amp;gt; s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) &amp;gt;&amp;gt;&amp;gt; import time &amp;gt;&amp;gt;&amp;gt; s.sendto(&amp;#34;test%s&amp;#34; % time.strftime(&amp;#34;%Y-%m-%d_%H-%M-%S&amp;#34;), (&amp;#34;172.16.12.28&amp;#34;, 7301)) 23 &amp;gt;&amp;gt;&amp;gt; s.recvfrom(1024) (&amp;#39;test2014-03-21_08-35-57&amp;#39;, (&amp;#39;172.16.12.28&amp;#39;, 7301)) </description>
+    </item>
+    
+    <item>
+      <title>分配给中国的IP有多少个</title>
+      <link>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</link>
+      <pubDate>Thu, 20 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</guid>
+      <description>获取全球IP地址分配列表  curl http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest -o iplist.txt 统计  [jiangjia@houtaiceshi1 ipaddr]$ cat iplist.txt |grep ipv4 |grep \|CN\| | cut -d \| -f 5 | awk &amp;#39;// {sum += $1};END {print sum}&amp;#39; 330410496 IP v4才3.3亿，难怪深圳联通ADSL宽带分配给我是个私网IP了，合同到期坚决换掉。</description>
+    </item>
+    
+  </channel>
+</rss>

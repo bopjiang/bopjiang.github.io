@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>SQL语句解析为AST - HCM</title>
+    <meta property="og:title" content="SQL语句解析为AST - HCM">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+      
+    
+
+    
+      
+      <meta property="description" content="http go program">
+      <meta property="og:description" content="http go program">
+      
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">HCM</a></h1>
+
+<p class="tagline">Happy Coding Monkey</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>SQL语句解析为AST</h1>
+
+<h3>
+  2019-04-02</h3>
+<hr>
+
+
+      </header>
+
+
+
+<p>TiDB中的SQL Parser模块现在独立为一个库了，在其他项目也可以很方便的调用。</p>
+<p>一个例子：</p>
+<!-- raw HTML omitted -->
+<h2 id="ast">AST</h2>
+<p>解析出来是如下的样子：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">
+L-0 *ast.SelectStmt SELECT t1.a, t2.b FROM t1 JOIN t2 ON t1.id = t2.fid WHERE t1.c&gt;100
+L-1 	*ast.TableRefsClause
+L-2 		*ast.Join
+L-3 			*ast.TableSource
+L-4 				*ast.TableName
+L-3 			*ast.TableSource
+L-4 				*ast.TableName
+L-3 			*ast.OnCondition
+L-4 				*ast.BinaryOperationExpr
+L-5 					*ast.ColumnNameExpr
+L-6 						*ast.ColumnName
+L-5 					*ast.ColumnNameExpr
+L-6 						*ast.ColumnName
+L-1 	*ast.BinaryOperationExpr
+L-2 		*ast.ColumnNameExpr
+L-3 			*ast.ColumnName
+L-2 		*driver.ValueExpr
+L-1 	*ast.FieldList
+L-2 		*ast.SelectField t1.a
+L-3 			*ast.ColumnNameExpr
+L-4 				*ast.ColumnName
+L-2 		*ast.SelectField t2.b
+L-3 			*ast.ColumnNameExpr
+L-4 				*ast.ColumnName
+</code></pre></div><p>SELECT语句被解析为三部分(L-1), TableRefsClause对应FROM语句部分，BinaryOperationExpr对应WHERE语句部分，FieldList对应Select字段部分</p>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/">关于Go HTTP Timeout</a></span>
+  <span class="nav-next"><a href="/post/2019/04/21/mysql%E5%92%8Ctidb%E4%BA%8B%E5%8A%A1%E5%8C%BA%E5%88%AB/">MySQL和TiDB事务区别</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/tex.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2020 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-168084481-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+  </body>
+</html>
+

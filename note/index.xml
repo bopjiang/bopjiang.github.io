@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on HCM</title>
+    <link>https://bopjiang.github.io/note/</link>
+    <description>Recent content in Notes on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 Jun 2020 11:36:41 +0800</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/note/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Raspberry Pi Tips</title>
+      <link>https://bopjiang.github.io/note/raspberry-pi-tips/</link>
+      <pubDate>Sat, 13 Jun 2020 11:36:41 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/note/raspberry-pi-tips/</guid>
+      <description>Basic Config sudo raspi-config static IP per SSID in wireless network # in /etc/wpa_supplicant/wpa_supplicant.conf ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev update_config=1 country=CN network={ ssid=&amp;#34;WIFI-NAME&amp;#34; psk=&amp;#34;password&amp;#34; } # in /etc/dhcpcd.conf # set wifi static ip per ssid ssid WIFI-Name static ip_address=10.2.32.50/24 static routers=10.2.32.1 static domain_name_servers=8.8.8.8 https://www.raspberrypi.org/forums/viewtopic.php?f=29&amp;amp;t=199081
+Monitor Measure CPU temperature $ sudo vcgencmd measure_temp temp=44.4&amp;#39;C monitor others $ sudo vcgencmd commands commands=&amp;#34;vcos, ap_output_control, ap_output_post_processing, vchi_test_init, vchi_test_exit, vctest_memmap, vctest_start, vctest_stop, vctest_set, vctest_get, pm_set_policy, pm_get_status, pm_show_stats, pm_start_logging, pm_stop_logging, version, commands, set_vll_dir, set_backlight, set_logging, get_lcd_info, arbiter, cache_flush, otp_dump, test_result, codec_enabled, get_camera, get_mem, measure_clock, measure_volts, enable_clock, scaling_kernel, scaling_sharpness, get_hvs_asserts, get_throttled, measure_temp, get_config, hdmi_ntsc_freqs, hdmi_adjust_clock, hdmi_status_show, hvs_update_fields, pwm_speedup, force_audio, hdmi_stream_channels, hdmi_channel_map, display_power, read_ring_osc, memtest, dispmanx_list, get_rsts, schmoo, render_bar, disk_notify, inuse_notify, sus_suspend, sus_status, sus_is_enabled, sus_stop_test_thread, egl_platform_switch, mem_validate, mem_oom, mem_reloc_stats, hdmi_cvt, hdmi_timings, readmr, pmicrd, pmicwr, bootloader_version, bootloader_config, file&amp;#34; contrl LED config in /boot/config.</description>
+    </item>
+    
+    <item>
+      <title>Tools Collection</title>
+      <link>https://bopjiang.github.io/note/tools-collection/</link>
+      <pubDate>Tue, 09 Jun 2020 07:34:16 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/note/tools-collection/</guid>
+      <description>dev-ops  crontab checker online regex tester  music  AudioMass, a free, open source, web-based Audio and Waveform Editor.  VPS  linode, 比AWS EC2计费模式简单, 而且2T的传输完全够了. AWS数据传输每GB$0.01~0.02, 对个人用户是个大坑.  storage  mega 50G free space. [cryptomator] encryption  </description>
+    </item>
+    
+    <item>
+      <title>AWS知识汇总</title>
+      <link>https://bopjiang.github.io/note/aws%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 02 Jun 2020 07:00:46 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/note/aws%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</guid>
+      <description>AWS IN ONE WORD Amazon Web Services in a single one-liner, 一句话介绍AWS各项服务.
+EBS 常用的卷类型有GP2和ST1.
+ST1卷, 1TB磁盘, 基线(baseline)吞吐率为40MiB/s, 瞬时(burst)吞吐率为250MiB/s. 但是有个前提, 必须是顺序IO, 并且每个IO需要达到1MB大小, 不然吞吐率上不去. (实测, 125KB IO大小, 吞吐率只有7MiB/s, 也就是IOPS 只能60左右).
+IO大小可以通过VolumnReadBytes / VolumeReadOps得到, 但是Cloudwatch是不支持两个指标做数学运算的.
+有随机I/O的负载, 还是建议使用GP2类型.
+EFS 就是NFS. 除了要在多个机器挂载, 一般用EBS就够了, EFS成本比EBS贵3倍以上. 不过多个机器共享数据, 用S3会更便宜, 方案也更通用.
+EFS是异步写入, 存在一致性问题, A机器上写入后, B机器不是一定能马上读到.
+有个内核Bug, 会导致文件系统hang住. 需要升级内核才能解决.
+Cloudfront (CND) SSL configuration in cloudfront:
+ Instruction in Sendgrid Instruction in Iterable  Cloudfront可以配置简单的分发规则, 根据请求域名、Path分发到Upstream(可以是S3)
+ELB ELB分为四层(NLB)和七层(ALB)两种.
+面对大量突发请求时(如秒杀活动), ELB可能需要提前预热.
+ALB上的配置规则不能过多, 最多只能有100条.</description>
+    </item>
+    
+    <item>
+      <title>G-Suite知识汇总</title>
+      <link>https://bopjiang.github.io/note/g-suite%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 02 Jun 2020 07:00:30 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/note/g-suite%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/</guid>
+      <description>Gmail open draft in new window press Shift when click.
+Google Drive Create a Symbolic Link  Click to highlight the file(s) and folder(s) you want to copy Press Shift-Z to open a dialog with the “Add here” button Navigate to the destination folder Press “Add here”  Chrome disable auto update $ cat /etc/hosts # disable chrome update 127.0.0.1 tools.google.com </description>
+    </item>
+    
+    <item>
+      <title>MacOS Tips</title>
+      <link>https://bopjiang.github.io/note/macos-tips/</link>
+      <pubDate>Sun, 31 May 2020 09:59:35 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/note/macos-tips/</guid>
+      <description>Basic Keyboard Shortcuts    command Usages Comments     ⌘ + ↑ Go To the Parent Directory     Tools color picker use Digital Color Meter in MacOS
+Intel Power Gadget measure Power Watts, CPU temperature, CPU frequency.
+GNU tools brew install coreutils Networking brew install with proxy ALL_PROXY=socks5://localhost:1080 brew install minetest # or with password ALL_PROXY=socks5://a:a@localhost:8765 brew install minetest open multiple Wireshark instances $ open -n /Applications/Wireshark.</description>
+    </item>
+    
+  </channel>
+</rss>

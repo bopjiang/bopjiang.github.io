@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>emacs on HCM</title>
+    <link>https://bopjiang.github.io/tags/emacs/</link>
+    <description>Recent content in emacs on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 20 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ubuntu 14.04 Emacs24问题汇总</title>
+      <link>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 20 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</guid>
+      <description>工作环境升级到Ubuntu14.04下，Emacs也升级到了24.3.1, 一些问题汇总如下：
+中文无法输入 我用的fcitx，只要做一件事情，确保启动Emacs的时候locale为中文,就可以在Emacs下输入中文
+Emacs图形界面启动使用的是emacs24-x, 先改名
+$ sudo mv /usr/bin/emacs24-x /usr/bin/emacs24-x_behind 然后添加同名脚本文件:
+$ echo /usr/bin/emacs24-x LC_CTYPE=&amp;#39;zh_CN.UTF-8&amp;#39; emacs24-x_behind 常用插件   插件管理
+默认用使ELPA，可以自己增加MELPA， 参考 1
+添加下述至~/.emacs开始，并重启emacs
+  (when (&amp;gt;= emacs-major-version 24) (require &amp;#39;package) (package-initialize) (add-to-list &amp;#39;package-archives &amp;#39;(&amp;#34;melpa&amp;#34; . &amp;#34;http://melpa.milkbox.net/packages/&amp;#34;) t) ) 运行list-package就能看到了
+下面插件，MELPA中都有
+  markdown-mode
+  yaml-mode
+  </description>
+    </item>
+    
+    <item>
+      <title>使用emacs进行golang编程</title>
+      <link>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 21 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</guid>
+      <description>环境 Ubuntu 12.04， Emacs 23, 中文输入法fcitx
+Emacs配置 使用el-get管理Emacs插件甚是方便，具体见[1]
+Emacs需要安装的插件
+ el-get （下面的emacs插件都使用el-get-install安装） cscope (安装前要在系统安装cscope) go-mode ibus  中文输入法问题 除了安装ibus，下面两个要注意：
+ apt-get安装python-xlib插件 快捷键冲突：  建立代码索引 用下面的脚本：
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+  </channel>
+</rss>
