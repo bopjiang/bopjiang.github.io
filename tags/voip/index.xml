@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VOIP on HCM</title>
+    <link>https://bopjiang.github.io/tags/voip/</link>
+    <description>Recent content in VOIP on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 25 Aug 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/voip/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>网络电话几种模式</title>
+      <link>https://bopjiang.github.io/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/</guid>
+      <description>移动互联网时代，通过在手机上安装个APP打网络电话是再自然不过的事情了。
+市面上靠谱一点的有Skype，有信，微会，来电，易信，触宝，而且大部分都打着免费的旗号(真的是免费),谋求占领电话拨号盘的入口。（基本上我手机上都安装了:-)）
+几种常见的通话模式如下：
+OTT 主叫客户端安装了APP，通过APP发起呼叫，被叫也安装了APP且在线，这时候，主、被叫不需要通过运营商的PSTN网络，直接可以OTT通话（视频、IM也属于此类）
+大部分电话APP都支持这种通话方式。
++---------------------+ +----------------------+ | Caller App(Phone) | | Callee App(Phone) | +---------------------+ +----------------------+ | | 3G/4G/WIFI 3G/4G/WIFI | | | Operator Network | +-----------------------+ +-----------------+ | BTS/NodeB/eNodeB/AP...|------------------| OTT Service | +-----------------------+ +-----------------+ 直拨 主叫客户端安装了APP，通过APP发起呼叫，被叫没有安装APP或者不在线，这时候，被叫需要通过运营商的PSTN网络，将被叫唤起。
+目前只有有信支持这种通话方式。
++---------------------+ +--------------------------+ | Caller App(Phone) | | Callee (Phone, No App) | +---------------------+ +--------------------------+ | # 3G/4G/WIFI # | # | Operator Network # Operator Network +-----------------------+ +-----------------+ SIP +-----------------+ | BTS/NodeB/eNodeB/AP.</description>
+    </item>
+    
+  </channel>
+</rss>

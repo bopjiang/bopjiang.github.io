@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>metrics on HCM</title>
+    <link>https://bopjiang.github.io/tags/metrics/</link>
+    <description>Recent content in metrics on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Measure, Statsd and Graphite</title>
+      <link>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</link>
+      <pubDate>Wed, 03 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</guid>
+      <description>今天给UXIN内部做了graphite的分享，PPT也是网上资料拼凑的，分享下: Measure, Statsd and Graphite</description>
+    </item>
+    
+    <item>
+      <title>使用graphite做指标统计和绘图</title>
+      <link>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</link>
+      <pubDate>Mon, 01 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</guid>
+      <description>基础知识  https://graphite.readthedocs.org/en/latest/ graphite doc http://graphite.wikidot.com/ outdated http://graphite.wikidot.com/high-level-diagram high-level-diagram(outdated) http://www.aosabook.org/en/graphite.html The Architecture of Open Source Applications  代码库  https://github.com/graphite-project https://github.com/bitly/statsdaemon statsd implemented in Go  使用graphite的项目  League Of Legends http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html hipchat http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html  其他资料  Measure it, Don&amp;rsquo;t Just Monitor It http://bryanwb.github.io/monitoring-measurement-preso A quick look at Graphite and StatsDhttp://www.slideshare.net/adrianmoisey1/graphite-14761751  </description>
+    </item>
+    
+  </channel>
+</rss>

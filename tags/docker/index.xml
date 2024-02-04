@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on HCM</title>
+    <link>https://bopjiang.github.io/tags/docker/</link>
+    <description>Recent content in docker on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用docker安装storm集群</title>
+      <link>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</guid>
+      <description>基础  storm storm-docker docker fig pip, python  步骤   升级内核
+由于是CentOS 6.3环境，内核不满足版本要求。升级内核版本至3.10.63
+ In general, a 3.8 Linux kernel is the minimum requirement for Docker, as some of the prior versions have known issues that are triggered by Docker. Linux kernel versions older than 3.8 are known to cause kernel panics and to break Docker.
+  The latest minor version (3.x.y) of the 3.10 (or a newer maintained version) Linux kernel is recommended.</description>
+    </item>
+    
+  </channel>
+</rss>
