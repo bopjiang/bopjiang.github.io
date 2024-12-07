@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wiki on HCM</title>
+    <link>https://bopjiang.github.io/tags/wiki/</link>
+    <description>Recent content in wiki on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 12 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/wiki/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>停止使用MS Word撰写技术文档</title>
+      <link>https://bopjiang.github.io/post/2015/01/12/%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8ms-word%E6%92%B0%E5%86%99%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</link>
+      <pubDate>Mon, 12 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/12/%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8ms-word%E6%92%B0%E5%86%99%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</guid>
+      <description>技术文档特点  多人参与撰写、维护 保留时间长 经常更改 很多人长期需要阅读 需要做检索 历史修订记录  综合下来，对我们采用的技术提出以下要求
+基本要求  轻量 易更改 易获取; 易传播,变更能及时的通知到其他所有人 易检索  我们的文档管理软件栈  Web服务器：Apache或Nginx WikiMedia：写文档 Graphviz：写基本流程图 PlantUML：写UML图  写文档，其他可能选择有Markdown, reStructuredText
+对比    技术项 MS Word Wiki（WikiMedia）     撰写难度 容易 有门槛   撰写 WYSIWYG(所见即所得) WYTIWYG(所想即所得)   修改难度 好 好   归档保存 SVN, 邮件附件 WIKI网站，网址   修订历史 有 有   修改差异比较 SVN版本差异对比困难 方便，WIKI系统自带   检索查找 单文档查找（借助三方索引) 全文检索   权限控制 MS加密 账号/密码   格式 私有二进制,必须装有OFFICE 开放、文本、HTML,任何平台下浏览器都能打开    使用MediaWiki语法撰写文档 常用的语法</description>
+    </item>
+    
+  </channel>
+</rss>
