@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on HCM</title>
+    <link>https://bopjiang.github.io/post/</link>
+    <description>Recent content in Posts on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Aug 2022 06:50:37 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MySQL Client Install</title>
+      <link>https://bopjiang.github.io/post/2022/08/05/mysql-client-install/</link>
+      <pubDate>Fri, 05 Aug 2022 06:50:37 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2022/08/05/mysql-client-install/</guid>
+      <description>CentOS check CentOS version
+$ sudo yum install redhat-lsb-core $ lsb_release -d Description: CentOS Linux release 7.9.2009 (Core) $ hostnamectl Static hostname: tidb-dm-1 Icon name: computer-vm Chassis: vm Machine ID: xxxx Boot ID: xxxx Virtualization: kvm Operating System: CentOS Linux 7 (Core) CPE OS Name: cpe:/o:centos:centos:7 Kernel: Linux 3.10.0-1160.71.1.el7.x86_64 Architecture: x86-64 purge existing installation
+$ rpm -qa|grep -E &amp;#34;(mariadb|mysql)&amp;#34; mysql57-community-release-el7-11.noarch mariadb-libs-5.5.68-1.el7.x86_64 $ yum remove mysql57-community-release-el7-11.noarch mariadb-libs-5.5.68-1.el7.x86_64 install MySQL 5.7.38 client</description>
+    </item>
+    
+    <item>
+      <title>GDB made easy</title>
+      <link>https://bopjiang.github.io/post/2022/06/14/gdb-made-easy/</link>
+      <pubDate>Tue, 14 Jun 2022 07:14:54 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2022/06/14/gdb-made-easy/</guid>
+      <description>gdbgui Pros:
+ can debug from remote Web UI  Cons
+ can not copy/paste in the terminal of Web UI  install
+pip install gdbgui pip install werkzeug==2.0.0 run
+gdbgui -r --host 0.0.0.0 -g &amp;#34;sudo gdb -p $(pgrep mysqld-debug)-x ./gdb.init&amp;#34; open
+http://host_ip:5000/
+GDB dashboard Pros:
+ clean terminal GUI  Just a gdb init file with Python script. Remember append config file in /root/.gdbinit if we use gdb to attach a process.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu 20.04 Desktop安装后瘦身</title>
+      <link>https://bopjiang.github.io/post/2021/06/26/ubuntu-20.04-desktop%E5%AE%89%E8%A3%85%E5%90%8E%E7%98%A6%E8%BA%AB/</link>
+      <pubDate>Sat, 26 Jun 2021 11:58:03 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2021/06/26/ubuntu-20.04-desktop%E5%AE%89%E8%A3%85%E5%90%8E%E7%98%A6%E8%BA%AB/</guid>
+      <description>clean up ## remove snap ## stop snapd services $ sudo systemctl stop snapd &amp;amp;&amp;amp; sudo systemctl disable snapd # purge snapd $ sudo apt purge snapd ## remove no longer needed folders $ rm -rf ~/snap $ sudo rm -rf /snap /var/snap /var/lib/snapd /var/cache/snapd /usr/lib/snapd ## remove goa-daemon $ cd /usr/share/dbus-1/services $ sudo ln -snf /dev/null org.gnome.OnlineAccounts.service # tracker-miner-fs # Tracker is an indexing system $ sudo apt remove tracker tracker-extract tracker-miner-fs # stop X-server $ sudo systemctl disable gdm $ sudo apt autoremove # reboot How to turn off display remotely $ mount -o remount,exec /dev $ vbetool dpms off ## if not mount, error happens: mmap /dev/zero: Operation not permitted Ubuntu Server pi preinstall</description>
+    </item>
+    
+    <item>
+      <title>手动安装Linux网卡驱动</title>
+      <link>https://bopjiang.github.io/post/2021/06/10/%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85linux%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Thu, 10 Jun 2021 12:16:07 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2021/06/10/%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85linux%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</guid>
+      <description>今天偶然间发现一台Linux机器的网卡峰值速度只有100Mbps了, 奇怪.
+虽说是台旧电脑(Thinkpad X61s), 但明明规格是1000Mbps啊.
+查询了下interface信息, 网卡类型Intel(R) PRO/1000,eth0: NIC Link is Up 100 Mbps Full Duplex, 果然是100Mbps.
+sudo dmesg | grep -i duplex [ 15.928542] e1000e 0000:00:19.0 eth0: NIC Link is Up 100 Mbps Full Duplex, Flow Control: Rx/Tx (dev2)➜ ~ sudo dmesg | grep -i eth [ 3.568102] e1000e 0000:00:19.0 eth0: (PCI Express:2.5GT/s:Width x1) 00:16:d3:3e:0d:74 [ 3.568105] e1000e 0000:00:19.0 eth0: Intel(R) PRO/1000 Network Connection [ 3.568144] e1000e 0000:00:19.0 eth0: MAC: 6, PHY: 6, PBA No: FFFFFF-0FF [ 7.</description>
+    </item>
+    
+    <item>
+      <title>TiDB Local Development Envrionment</title>
+      <link>https://bopjiang.github.io/post/2020/08/16/tidb-local-development-envrionment/</link>
+      <pubDate>Sun, 16 Aug 2020 12:16:07 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2020/08/16/tidb-local-development-envrionment/</guid>
+      <description>Run TiDB in Docker 使用的tidb-docker-compose, fork自pingcap/tidb-docker-compose仓库.
+去掉了TiSpark功能, 暂时用不上, 节省点内存.
+TiDB集群(有Prometheus + Grafana)跑起来, 2G内存不够, 至少要分配4G内存.
+Development locally. 在tidb代码目录的同级目录, 增加一个shell脚本, 用于替换容器中的二进制文件.
+# cat ../script/replace_tidb.sh #!/bin/bash set -e make docker cp bin/tidb-server tidb-docker-compose_tidb_1:/tidb-server docker restart tidb-docker-compose_tidb_1 echo &amp;#34;replace tidb success&amp;#34; docker exec -it tidb-docker-compose_tidb_1 /tidb-server -V 在tidb代码目录执行../script/replace_tidb.sh就能替换版本, 也不用污染tidb的代码目录.
+关键不用重新build docker镜像和重新创建container, 速度很快.
+增加日志 增加一个事务启动时的日志打印, 需修改TiDB Server代码, repo在bopjiang/tidb
+发现一个问题, tidb-docker-compose仓库中的tidb server配置文件config/tidb.toml貌似有问题, 集群启动后有报出如下错误:
+tidb_1 | config file /tidb.toml contained unknown configuration options: log.file.log-rotate, performance.retry-limit, plan-cache, plan-cache.enabled, plan-cache.</description>
+    </item>
+    
+    <item>
+      <title>AES使用的正确姿势</title>
+      <link>https://bopjiang.github.io/post/2020/06/13/aes%E4%BD%BF%E7%94%A8%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF/</link>
+      <pubDate>Sat, 13 Jun 2020 06:08:06 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2020/06/13/aes%E4%BD%BF%E7%94%A8%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF/</guid>
+      <description>昨天碰到一个敏感信息需要存入数据库的问题, 其实关键三个问题:
+ 怎么选择加密方式 怎么保存IV(初始化向量) 怎么保存秘钥  加密方式 加密我们选用是AES, 但加密模式(encryption mode)很多, 用的比较普遍的有:
+ ECB (Electronic codebook, 电子密码本): 简单, 加密只有密钥一个参数. 但是秘钥, 明文不变时, 产生的密文是一样的, 不能防止重放攻击 CBC (密码分组链接，Cipher-block chaining): 配合随机的IV使用, 无重放问题. 加密复杂.  一般存放敏感信息的场景, 是不适合使用ECB模式的.
+IV 但是使用CBC模式, 如果IV不随机, 甚至使用不变的IV, 也会有重放问题.
+那么IV信息需要保护吗? 可以明文存储吗?
+答案是IV并非敏感信息, 但IV的生成要完全随机, 每次加密都使用不同的IV.
+最后, 我们的设计是: 在数据库中存储加密的敏感信息时, 自己做编码, 将IV+加密后的秘文base64后存在一个varchar中. 解密时, 需要先解出IV和密文, 配合秘钥才能解出原始信息.
+秘钥 秘钥肯定是要安全保存的, 有几个方案:
+ 如果有配置中心, 秘钥是作为敏感配置存储的, 只有程序启动时才能读取. 此类配置由专人管理, 开发人员无修改和查看权限. 借助云厂商的机制, 譬如AWS的Secrets Manager配合IAM使用.  后记 看到很多网上文章中的AES加解密示例, 将IV设置为固定值, 或者将IV设置为秘钥的前N位, 应该是个错误.
+参考  Wikipedia: Block cipher mode of operation  When using AES and CBC, is it necessary to keep the IV secret?</description>
+    </item>
+    
+    <item>
+      <title>博客迁移至Hugo</title>
+      <link>https://bopjiang.github.io/post/2020/05/30/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E8%87%B3hugo/</link>
+      <pubDate>Sat, 30 May 2020 07:25:48 +0800</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2020/05/30/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E8%87%B3hugo/</guid>
+      <description>作为一个Gopher, 今天终于将博客从Jeklly迁移到了Hugo. 并不是一帆风顺, 折腾了大半天.
+首先, Hugo同Jeklly Markdown文件的元数据有区别. 为了转为Hugo格式, 使用了一个工具ConvertToHugo, 是Python 2写的. 转换后的文件, date字段缺失. 因为之前时间是从文件名截取的(如: 2019-03-02-go-http-timeout.md), 所以自己写了个脚本解决.
+其次, git submodule用得少, 碰到一些问题, 特别是删除submodule, 最后在stackoverflow找到的答案.
+git submodule deinit &amp;lt;asubmodule&amp;gt; git rm &amp;lt;asubmodule&amp;gt; # Note: asubmodule (no trailing slash) # or, if you want to leave it in your working tree git rm --cached &amp;lt;asubmodule&amp;gt; rm -rf .git/modules/&amp;lt;asubmodule&amp;gt; 还有, 为了提交.md文件后, 博客能自动渲染, 使用Github Action建立了个CD流程.
+name: Push to GitHub Pages on push to master on: push: branches: - master jobs: build: name: Deploy runs-on: ubuntu-latest steps: - name: Checkout master uses: actions/checkout@v1 with: submodules: &amp;#39;true&amp;#39; ## 使用了submodule - name: Deploy the site uses: benmatselby/hugo-deploy-gh-pages@v1.</description>
+    </item>
+    
+    <item>
+      <title>关于API、协议设计的一点思考</title>
+      <link>https://bopjiang.github.io/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/</guid>
+      <description>最近几年有幸在两家公司从零开始主导了两个系统对外API、协议的的设计, 最近也在反思在协议设计中的问题(自己埋下的坑).
+自定义二进制协议 先讲第一家ToC的互联网公司, 客户端是手机APP. 因为涉及到VOIP相关业务, 客户端-服务端必须具备双工通信能力, 同时为了节省流量, 选择了基于TCP的二进制协议.(当然也跟我当时从传统通信行业出来有关)
+一个系统当然不是凭空设计出来的, 从中一定能看出组织架构的影子.当时我这边主要负责接入层这块, VoIP SIP信令是另一个团队在负责, 本着两个团队间代码最小耦合的原则, 于是乎, 协议就分为了两层, 一层负责消息路由(报文头), 一层负责业务数据(报文体). 具体到字段设计
+   字段名称 宽度(Byte)     报文头长度 2   报文体长度 2   报文头 变长   报文体 变长    为了保证版本向后扩展, 在TCP三次握手完成后, 客户端必须主动发送一个版本号消息.
+因为是TCP长连接,所以必须要有应用层心跳消息进行连接保活, 4个Bytes的全0就行了(报文头长度和报文体长度都设置为0)
+这里的版本号在后来还真起到了很大的用处, 报文头最开始用的是JSON编码, 后面改为Protocol Buffers, 版本号在这块帮助了协议的平滑升级.
+遇到的坑 由于我们的二进制协议没有特殊的边界字符(magic number), 导致客户端处理异常时, 没有很快的检测到报文错误(Fail Fast), 会导致服务端一致读阻塞(读到错误的报文头或报文体长度字段).
+报文体长度的宽度, 2个字节一般是够用了, 设计4字节大小的报文体, 也不太合适,万一谁不小心发个几百M的巨包, 岂不是把整条TCP连接都阻塞住了? 但是大报文的场景总是存在的, 预先设计好分帧协议是很有必要的.
+二进制协议调试定位上会有一定难度, 特别是协议开发初期, 数据结构不稳定时.</description>
+    </item>
+    
+    <item>
+      <title>MySQL和TiDB事务区别</title>
+      <link>https://bopjiang.github.io/post/2019/04/21/mysql%E5%92%8Ctidb%E4%BA%8B%E5%8A%A1%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/04/21/mysql%E5%92%8Ctidb%E4%BA%8B%E5%8A%A1%E5%8C%BA%E5%88%AB/</guid>
+      <description>我们知道, MySQL的默认隔离级别是可重复读(RR, Repeatable Read). TiDB是快照隔离 (SI, Snapshot Isolation), 虽然对外显示为Repeatable Read).
+TiDB 使用 Percolator 事务模型, 冲突检测只在事务提交时才触发, 而MySQL则是通过锁等待机制(如SELECT &amp;hellip; FOR UPDATE)解决冲突问题.TiDB这样设计有好有坏, 在冲突小的情况下,由于没有锁等待,系统的并发性能更好. 但在冲突严重的情况下, 会造成事务失败增多,影响并发性能.
+反映到应用开发中, 我们会发现, 在很多场景, MySQL事务提交成功, 但是TiDB事务提交却可能会失败. 如果应用代码有在事务执行过程中穿插业务判断逻辑, 是不能依赖TiDB自带的事务重试机制的. 这时,要显式的关闭事务重试, 重试逻辑必须放到业务层来做.
+例子 下面三个例子, 从TiDB和MySQL执行结果和逻辑的区别, 我们可以看到两个数据库系统在事务处理上的差别.
+本文中MySQL的版本是8.0.15, TiDB的版本是v2.1.7, 事务隔离级别都为默认值Repeatable Read.
+例1: Update在事务中处理逻辑不同 创建表t1, 语句如下:
+CREATE TABLE `t1` ( `a` int(11) NOT NULL, `b` int(11) DEFAULT NULL, PRIMARY KEY (`a`) ) 在MySQL和TiDB中分别执行下面的两个事务, 执行时序如下:
+   Time Tx1 Tx2     t0 begin;    t1 select * from t1;    t2  begin;   t3  insert into t1 values(1,10);   t4  commit;   t5 update t1 set b=b+10 where a = 1;    t6 commit;    t7 select * from t1;     MySQL, t7时刻,select语句的执行结果是</description>
+    </item>
+    
+    <item>
+      <title>SQL语句解析为AST</title>
+      <link>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</guid>
+      <description>TiDB中的SQL Parser模块现在独立为一个库了，在其他项目也可以很方便的调用。
+一个例子：
+AST 解析出来是如下的样子：
+L-0 *ast.SelectStmt SELECT t1.a, t2.b FROM t1 JOIN t2 ON t1.id = t2.fid WHERE t1.c&amp;gt;100 L-1 *ast.TableRefsClause L-2 *ast.Join L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.OnCondition L-4 *ast.BinaryOperationExpr L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-1 *ast.BinaryOperationExpr L-2 *ast.ColumnNameExpr L-3 *ast.ColumnName L-2 *driver.ValueExpr L-1 *ast.FieldList L-2 *ast.SelectField t1.a L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName L-2 *ast.SelectField t2.b L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName SELECT语句被解析为三部分(L-1), TableRefsClause对应FROM语句部分，BinaryOperationExpr对应WHERE语句部分，FieldList对应Select字段部分</description>
+    </item>
+    
+    <item>
+      <title>关于Go HTTP Timeout</title>
+      <link>https://bopjiang.github.io/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/</guid>
+      <description>上周碰到一个使用Traefik反向代理的问题, 正好跟HTTP Timeout相关，现将分析过程总结如下。
+问题现象 客户端的一个文件请求，先经过反向代理， 再经过Server，最后数据从Storage中获取（类似S3）。 基本架构如下：
++----------------------+ | Client | +----------------------+ | GET /FileA HTTP/1.1 | | +-----------------------+ +-----------------+ +-----------------+ | Nginx/Traefik |--------| Server |-------| Storage | +-----------------------+ +-----------------+ +-----------------+ 反向代理最开始是使用的Nginx， 后来因为服务都在Docker部署，切换到Traefik。
+开始还没有问题, 直到有一天, 测试同学反馈客户端偶尔GET /AFile请求老是被异常关闭， 请求响应越大概率失败概率越大， 网速不好的时候更容易出现。最开始还以为是客户端的锅。
+问题定位 后面试了好几个客户端版本， 问题依然存在， 看来跟客户端最近的更新无关。
+排除了客户端后，开始怀疑Traefik这块配置有问题。查看服务端日志， 果然失败时Taefik有日志打印：
+2018/12/19 09:16:54 reverseproxy.go:395: httputil: ReverseProxy read error during body copy: unexpected EOF  traefik 上有个issue #2903 Truncated body when unexpected EOF，跟我们看到的现象是一样的。切换到Nginx后，问题不出现了, 更加证实了我们的判断。
+运气这么好， 一下就踩到了traefik的BUG？直觉告诉我， 问题可能不是这样。 又试了用curl命令行模拟Client请求， 没有出错。其间抓包发现EOF(FIN)确实是服务端发起，主动关闭的。</description>
+    </item>
+    
+    <item>
+      <title>Golang程序问题定位方法</title>
+      <link>https://bopjiang.github.io/post/2017/10/31/golang%E7%A8%8B%E5%BA%8F%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 31 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2017/10/31/golang%E7%A8%8B%E5%BA%8F%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/</guid>
+      <description>本文总结的方法对Go1.6及以后版本有效。
+运行时问题 通过暴露http接口把运行栈打出来：
+import _ &amp;#34;net/http/pprof&amp;#34; 命令如下:
+curl http://server:port/debug/pprof/goroutine?debug=1 参数debug=1时输出按照goroutine的当前栈位置汇总过的栈信息。 譬如可以看到某类goroutine运行了多少个，在遇到goroutine泄露的问题时比较有用。
+goroutine profile: total 104 100 @ 0x102ebdc 0x102ecce 0x10065a4 0x100624b 0x12e3683 0x105cbd1 #	0x12e3682	main.foo+0x42	/Users/bopjiang/code/test/go/stackdump.go:18 1 @ 0x102ebdc 0x1029b8a 0x1029187 0x108f55e 0x108f5dd 0x109037a 0x10f1242 0x110264d 0x1258052 0x105cbd1 #	0x1029186	internal/poll.runtime_pollWait+0x56	/usr/local/go/src/runtime/netpoll.go:173 #	0x108f55d	internal/poll.(*pollDesc).wait+0xad	/usr/local/go/src/internal/poll/fd_poll_runtime.go:85 #	0x108f5dc	internal/poll.(*pollDesc).waitRead+0x3c	/usr/local/go/src/internal/poll/fd_poll_runtime.go:90 #	0x1090379	internal/poll.(*FD).Read+0x189	/usr/local/go/src/internal/poll/fd_unix.go:125 #	0x10f1241	net.(*netFD).Read+0x51	/usr/local/go/src/net/fd_unix.go:202 #	0x110264c	net.(*conn).Read+0x6c	/usr/local/go/src/net/net.go:176 #	0x1258051	net/http.(*connReader).backgroundRead+0x61	/usr/local/go/src/net/http/server.go:660 curl http://server:port/debug/pprof/goroutine?debug=2 参数debug=2时输出的是详细每个goroutine的运行状态：调用栈信息，传入参数值，阻塞事件等待时间 最后的等待时间对定位程序挂起的问题很有用。譬如某个goroutine的channel写入阻塞了1个小时，那很有可能此channel的消费端出了问题。</description>
+    </item>
+    
+    <item>
+      <title>开源常用术语</title>
+      <link>https://bopjiang.github.io/post/2017/08/15/%E5%BC%80%E6%BA%90%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/</link>
+      <pubDate>Tue, 15 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2017/08/15/%E5%BC%80%E6%BA%90%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/</guid>
+      <description>术语   CL: change lists
+Code is written and packaged as a unit that called a change list, or CL for short. &amp;ldquo;How Google Tests Software&amp;rdquo;, James A. Whittaker, Jason Arbon, Jeff Carollo
+  </description>
+    </item>
+    
+    <item>
+      <title>《Raspberry Pi入门指南》读书笔记</title>
+      <link>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 01 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+      <description>Raspberry Pi 入手两年了，除了装过XMBC看电视外，基本没怎么用了。偶然在图书馆发现这本&amp;laquo;Raspberry Pi入门指南&amp;raquo;，作为入门读物还是不错的。
+简单摘要下：
+模块  CSI接口(Camera Serial Interface), 摄像头 淘宝上有大把 DSI接口(Display Serial Interface) GPIO 作为单片机驱动外围设备  使用场景   BT下载器 使用aria2(http://aria2.sourceforge.net/) 在chrome中使用Yaaw插件（Yet Another Aria2 Web）, 使用aria2提供的JSON RPC接口远程控制
+  XBMC 介绍的XBian
+  文件服务器samba
+  GPIO编程  控制LED灯闪烁 面包板，杜邦线(跳线), LED灯  SHELL/BASH控制， 操作文件 Python,使用RPi.GPIO包   温度传感器  图像处理  CSI USB口WebCam 罗技C270WebCam，720P  luvcview实时看视频流 uvccapeture截图   其他软件  motion python:SimpleCV Haar Cascade哈尔分类，面部识别 2013-08: SimpleCV暂时还不能从CSI取视频    Arduino开源电子原型平台 使用USB与Pi相连， 串口通信</description>
+    </item>
+    
+    <item>
+      <title>网络电话几种模式</title>
+      <link>https://bopjiang.github.io/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Tue, 25 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/</guid>
+      <description>移动互联网时代，通过在手机上安装个APP打网络电话是再自然不过的事情了。
+市面上靠谱一点的有Skype，有信，微会，来电，易信，触宝，而且大部分都打着免费的旗号(真的是免费),谋求占领电话拨号盘的入口。（基本上我手机上都安装了:-)）
+几种常见的通话模式如下：
+OTT 主叫客户端安装了APP，通过APP发起呼叫，被叫也安装了APP且在线，这时候，主、被叫不需要通过运营商的PSTN网络，直接可以OTT通话（视频、IM也属于此类）
+大部分电话APP都支持这种通话方式。
++---------------------+ +----------------------+ | Caller App(Phone) | | Callee App(Phone) | +---------------------+ +----------------------+ | | 3G/4G/WIFI 3G/4G/WIFI | | | Operator Network | +-----------------------+ +-----------------+ | BTS/NodeB/eNodeB/AP...|------------------| OTT Service | +-----------------------+ +-----------------+ 直拨 主叫客户端安装了APP，通过APP发起呼叫，被叫没有安装APP或者不在线，这时候，被叫需要通过运营商的PSTN网络，将被叫唤起。
+目前只有有信支持这种通话方式。
++---------------------+ +--------------------------+ | Caller App(Phone) | | Callee (Phone, No App) | +---------------------+ +--------------------------+ | # 3G/4G/WIFI # | # | Operator Network # Operator Network +-----------------------+ +-----------------+ SIP +-----------------+ | BTS/NodeB/eNodeB/AP.</description>
+    </item>
+    
+    <item>
+      <title>Ansible, 批量脚本执行神器</title>
+      <link>https://bopjiang.github.io/post/2015/08/20/ansible-%E6%89%B9%E9%87%8F%E8%84%9A%E6%9C%AC%E6%89%A7%E8%A1%8C%E7%A5%9E%E5%99%A8/</link>
+      <pubDate>Thu, 20 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/08/20/ansible-%E6%89%B9%E9%87%8F%E8%84%9A%E6%9C%AC%E6%89%A7%E8%A1%8C%E7%A5%9E%E5%99%A8/</guid>
+      <description>就像产品和运营一样，开发和运维的界限现在也越来越模糊。运维工具还是有很多好东西的, Ansible就是个这样一个。
+选择Ansbile理由:
+ python 无须在远程机器上安装agent，直接ssh权限就够了 宿主机上没有什么依赖，pip安装Ansible就够了  效果如下：
+[bopjiang@localhost adhoc]$ ansible kafka-broker -i ./ansible_host -a &amp;#34;df -h&amp;#34; --sudo --sudo-user bopjiang 10.10.82.180 | success | rc=0 &amp;gt;&amp;gt; Filesystem Size Used Avail Use% Mounted on /dev/sda2 49G 18G 29G 38% / tmpfs 16G 0 16G 0% /dev/shm /dev/sda1 194M 31M 153M 17% /boot /dev/sda5 1.1T 729G 255G 75% /data 10.10.30.207 | success | rc=0 &amp;gt;&amp;gt; Filesystem Size Used Avail Use% Mounted on /dev/sda2 97G 46G 46G 51% / tmpfs 32G 0 32G 0% /dev/shm /dev/sda1 194M 54M 131M 30% /boot /dev/sda5 1.</description>
+    </item>
+    
+    <item>
+      <title>fonts.googleapi导致网页打不开问题</title>
+      <link>https://bopjiang.github.io/post/2015/01/30/fonts.googleapi%E5%AF%BC%E8%87%B4%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 30 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/30/fonts.googleapi%E5%AF%BC%E8%87%B4%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98/</guid>
+      <description>经常打开readthedocs.org网站时，页面崩溃或很长时间才打开，看了下基本都用到fonts.googleapis提供的字体的服务。
+解决办法：
+安装Adblock Plus插件（chrome和firefox都有）， 增加自定义过滤规则：
+fonts.googleapis.com$stylesheet,match-case use.typekit.net$script,match-case </description>
+    </item>
+    
+    <item>
+      <title>使用Pyleus开发Storm应用</title>
+      <link>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Fri, 23 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</guid>
+      <description>Storm  什么是Storm(https://storm.apache.org/) 解决的问题：实时数据分析  Pyleus   用Python写Storm topolopgy Storm是在JVM平台上开发的，要使用非JVM平台语言（如Python，Go),需要使用ShellBolt，但是top仍然要使用Java定义 Pyleus是全部使用Python开发spout,bolt,top的一整套框架，可以完全不使用Java。
+Pyleus由Yelp开发
+  遇到的坑 定义muti-stream时的语法 注意，当只有一个stream时，文档中定义muti-stream的语法有有问题，运行提交topoplogy时会报错
+Topology submission exception. (topology name=&#39;top_name&#39;) #&amp;lt;InvalidTopologyException InvalidTopologyException(msg:Component: [my_bolt] subscribes from non-existent stream:  class MultipleBolt(Bolt): OUTPUT_FIELDS = { &amp;#34;stream-id&amp;#34;: [&amp;#34;id&amp;#34;, &amp;#34;value&amp;#34;], &amp;#34;stream-fake&amp;#34;: [&amp;#34;fake&amp;#34;], ##只有一个stream时，记得加个假的，不然会出错 } </description>
+    </item>
+    
+    <item>
+      <title>Ubuntu 14.04 Emacs24问题汇总</title>
+      <link>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 20 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</guid>
+      <description>工作环境升级到Ubuntu14.04下，Emacs也升级到了24.3.1, 一些问题汇总如下：
+中文无法输入 我用的fcitx，只要做一件事情，确保启动Emacs的时候locale为中文,就可以在Emacs下输入中文
+Emacs图形界面启动使用的是emacs24-x, 先改名
+$ sudo mv /usr/bin/emacs24-x /usr/bin/emacs24-x_behind 然后添加同名脚本文件:
+$ echo /usr/bin/emacs24-x LC_CTYPE=&amp;#39;zh_CN.UTF-8&amp;#39; emacs24-x_behind 常用插件   插件管理
+默认用使ELPA，可以自己增加MELPA， 参考 1
+添加下述至~/.emacs开始，并重启emacs
+  (when (&amp;gt;= emacs-major-version 24) (require &amp;#39;package) (package-initialize) (add-to-list &amp;#39;package-archives &amp;#39;(&amp;#34;melpa&amp;#34; . &amp;#34;http://melpa.milkbox.net/packages/&amp;#34;) t) ) 运行list-package就能看到了
+下面插件，MELPA中都有
+  markdown-mode
+  yaml-mode
+  </description>
+    </item>
+    
+    <item>
+      <title>停止使用MS Word撰写技术文档</title>
+      <link>https://bopjiang.github.io/post/2015/01/12/%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8ms-word%E6%92%B0%E5%86%99%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</link>
+      <pubDate>Mon, 12 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/12/%E5%81%9C%E6%AD%A2%E4%BD%BF%E7%94%A8ms-word%E6%92%B0%E5%86%99%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</guid>
+      <description>技术文档特点  多人参与撰写、维护 保留时间长 经常更改 很多人长期需要阅读 需要做检索 历史修订记录  综合下来，对我们采用的技术提出以下要求
+基本要求  轻量 易更改 易获取; 易传播,变更能及时的通知到其他所有人 易检索  我们的文档管理软件栈  Web服务器：Apache或Nginx WikiMedia：写文档 Graphviz：写基本流程图 PlantUML：写UML图  写文档，其他可能选择有Markdown, reStructuredText
+对比    技术项 MS Word Wiki（WikiMedia）     撰写难度 容易 有门槛   撰写 WYSIWYG(所见即所得) WYTIWYG(所想即所得)   修改难度 好 好   归档保存 SVN, 邮件附件 WIKI网站，网址   修订历史 有 有   修改差异比较 SVN版本差异对比困难 方便，WIKI系统自带   检索查找 单文档查找（借助三方索引) 全文检索   权限控制 MS加密 账号/密码   格式 私有二进制,必须装有OFFICE 开放、文本、HTML,任何平台下浏览器都能打开    使用MediaWiki语法撰写文档 常用的语法</description>
+    </item>
+    
+    <item>
+      <title>Unix哲学</title>
+      <link>https://bopjiang.github.io/post/2015/01/02/unix%E5%93%B2%E5%AD%A6/</link>
+      <pubDate>Fri, 02 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/02/unix%E5%93%B2%E5%AD%A6/</guid>
+      <description>所谓道的东西，大概只能参悟，不是言语能表达的。
+下面几篇文章,值得细细品味。
+  Unix编程艺术，最后一章《无根的根：无名师的 Unix 心传》
+似乎用隐喻，很多道理能讲的更透彻。
+这本书的英文版本是公开的，值得一看。
+  UNIX痛恨者手册
+英文原版：The UNIX-HATERS Handbook
+  Linux/Unix设计思想
+  </description>
+    </item>
+    
+    <item>
+      <title>ssh一系列问题汇总</title>
+      <link>https://bopjiang.github.io/post/2014/12/23/ssh%E4%B8%80%E7%B3%BB%E5%88%97%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 23 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/23/ssh%E4%B8%80%E7%B3%BB%E5%88%97%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</guid>
+      <description>ssh登录慢 解决方案：关闭GSS认证
+[jj@sysadmin ~]$ cat ~/.ssh/config ServerAliveInterval 20 GSSAPIAuthentication no 配置密钥登录  生成密钥  $ ssh-keygen -t rsa -C &amp;#34;your_email@youremail.com&amp;#34;   复制本地的公钥， 追加到远端的$HOME/.ssh/authorized_keys文件
+  必须保证要远端$HOME目录下:
+ .ssh目录的权限必须是700 .ssh/authorized_keys文件权限必须是600    </description>
+    </item>
+    
+    <item>
+      <title>使用docker安装storm集群</title>
+      <link>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</guid>
+      <description>基础  storm storm-docker docker fig pip, python  步骤   升级内核
+由于是CentOS 6.3环境，内核不满足版本要求。升级内核版本至3.10.63
+ In general, a 3.8 Linux kernel is the minimum requirement for Docker, as some of the prior versions have known issues that are triggered by Docker. Linux kernel versions older than 3.8 are known to cause kernel panics and to break Docker.
+  The latest minor version (3.x.y) of the 3.10 (or a newer maintained version) Linux kernel is recommended.</description>
+    </item>
+    
+    <item>
+      <title>为什么要写blog</title>
+      <link>https://bopjiang.github.io/post/2014/12/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%86%99blog/</link>
+      <pubDate>Sun, 21 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%86%99blog/</guid>
+      <description>为什么要写博客,我认为有以下几个理由：
+  培养坚持做一件事情的毅力。
+自从上半年开始写blog以来，发现坚持实在太难了，中间有半年的时间都没有写任何东西。
+  习惯性的整理自己的思考的东西，让它更有系统性
+很多想法唯有从大脑写出来，才能更加准确。很多逻辑漏洞，转换为书面的过程中会更容易被发现。
+  提高写作表述能力
+除了PPT，EXCEL表格，邮件，技术方案、规格等八股文外，基本上很少有机会写文章了。
+  增加自己的影响力和朋友圈。
+这个暂时还没有。
+  网上其他人的见解:
+  You should blog even if you have no readers， by Nathan Marz, Storm系统的作者。
+  上文中译: 即便没有读者，你也要写博客
+  为什么要写Blog？, by 阮一峰
+  国内一直关注的几个博客：
+  云风的BLOG
+  阮一峰
+  </description>
+    </item>
+    
+    <item>
+      <title>自己动手做个机顶盒</title>
+      <link>https://bopjiang.github.io/post/2014/12/07/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%81%9A%E4%B8%AA%E6%9C%BA%E9%A1%B6%E7%9B%92/</link>
+      <pubDate>Sun, 07 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/07/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%81%9A%E4%B8%AA%E6%9C%BA%E9%A1%B6%E7%9B%92/</guid>
+      <description>不知N年后，还有人知道机顶盒是啥东西不。
+基础知识  Respberry Pi XBMC，现在改名叫Kodi了 xbmc-addons-chinese XBMC Remote for Android  硬件准备  Respberry Pi一个， 淘宝200-300元间 SD卡（2G或4G），装系统和软件用 网线一根（我的Pi只有LAN口， 没有装WIFI模块） 5V micro USB电源一个(Android手机的充电器就可以用) Android手机一个（旧的也行，反正HTC G1能用） HDMI线一根(老电视没有HDMI接口，需要三色AV线1根，3.5mm一分二音频线公头转双母头1根，AV解析度只能到720×480i）  软件准备  RASPBMC：raspberrypi网站上已经做好预装XBMC的镜像，直接用就可以 ssh客户端（最好Linux系统）  过程  在SD卡上做好系统 修改配置文件，设置http控制端口(有raspi-config的脚本可以用) 手机端安装遥控程序(XBMC Remote), 使用配置的HTTP端口 安装中文插件xbmc-addons-chinese  遇到问题  安装插件后下载不到节目列表  设置HTTP代理 重启Pi 打开debug，查看错误日志，一般都是网络访问不了   网络代理配置改后未生效，GUI上也看不到  暂未解决    </description>
+    </item>
+    
+    <item>
+      <title>Measure, Statsd and Graphite</title>
+      <link>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</link>
+      <pubDate>Wed, 03 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</guid>
+      <description>今天给UXIN内部做了graphite的分享，PPT也是网上资料拼凑的，分享下: Measure, Statsd and Graphite</description>
+    </item>
+    
+    <item>
+      <title>使用graphite做指标统计和绘图</title>
+      <link>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</link>
+      <pubDate>Mon, 01 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</guid>
+      <description>基础知识  https://graphite.readthedocs.org/en/latest/ graphite doc http://graphite.wikidot.com/ outdated http://graphite.wikidot.com/high-level-diagram high-level-diagram(outdated) http://www.aosabook.org/en/graphite.html The Architecture of Open Source Applications  代码库  https://github.com/graphite-project https://github.com/bitly/statsdaemon statsd implemented in Go  使用graphite的项目  League Of Legends http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html hipchat http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html  其他资料  Measure it, Don&amp;rsquo;t Just Monitor It http://bryanwb.github.io/monitoring-measurement-preso A quick look at Graphite and StatsDhttp://www.slideshare.net/adrianmoisey1/graphite-14761751  </description>
+    </item>
+    
+    <item>
+      <title>使用jekyll-bootstrap和github建立个人博客</title>
+      <link>https://bopjiang.github.io/post/2014/11/30/%E4%BD%BF%E7%94%A8jekyll-bootstrap%E5%92%8Cgithub%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/11/30/%E4%BD%BF%E7%94%A8jekyll-bootstrap%E5%92%8Cgithub%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</guid>
+      <description>注意：仅在Ubuntu 14.04环境下测试过。
+安装jekyll-bootstrap http://www.ithans.com/blog/2013/02/18/jekyll-bootstrap-install/
+本地测试环境 jekyll b ## 编译 jekyll s --watch ## 运行服务（有变动时实时编译） 出错处理  jekyll serve启动服务的时候报错：  /var/lib/gems/1.9.1/gems/execjs-1.4.0/lib/execjs/runtimes.rb:51:in `autodetect&amp;#39;: Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs for a list of available runtimes. (ExecJS::RuntimeUnavailable)  原因: 没有js运行时环境 解决办法: 安装js运行时环境  sudo apt-get install nodejs 错误  ERROR: Could not find a valid gem &amp;#39;jekyll&amp;#39; (&amp;gt;= 0) in any repository ERROR: Possible alternatives: jekyll`  原因: 国内网络的原因。 解决办法: 只用taobao源  gem sources --remove http://rubygems.</description>
+    </item>
+    
+    <item>
+      <title>使用emacs进行golang编程</title>
+      <link>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 21 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</guid>
+      <description>环境 Ubuntu 12.04， Emacs 23, 中文输入法fcitx
+Emacs配置 使用el-get管理Emacs插件甚是方便，具体见[1]
+Emacs需要安装的插件
+ el-get （下面的emacs插件都使用el-get-install安装） cscope (安装前要在系统安装cscope) go-mode ibus  中文输入法问题 除了安装ibus，下面两个要注意：
+ apt-get安装python-xlib插件 快捷键冲突：  建立代码索引 用下面的脚本：
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+    <item>
+      <title>go常用工具</title>
+      <link>https://bopjiang.github.io/post/2014/04/18/go%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Fri, 18 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/18/go%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</guid>
+      <description>项目正式使用go语言，到现在已经有半年多了。有几个工具共享下：
+godep 依赖管理 godep get install
+godef 日志模块seelog 日志量大的时候，日志产生的几个参数需要调整，不然日志时间偏差较大
+使用Go的开源项目  nsq, 一个分布式的消息队列 docker etcd, 配置服务，类似Zookeeper和doozer。是CoreOS的核心组件。 influxdb, 一个时间序列（TSDB, time series database）数据库, 类似graphite项目  </description>
+    </item>
+    
+    <item>
+      <title>sudo 环境变量继承</title>
+      <link>https://bopjiang.github.io/post/2014/04/01/sudo-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Tue, 01 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/01/sudo-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%BB%A7%E6%89%BF/</guid>
+      <description>修改sudo的配置文件：
+sudo visudo 将Defaults env_reset改成Defaults !env_reset,取消掉对PATH变量的重置。然后在.bashrc中最后添加
+alias sudo=&amp;#39;sudo env PATH=$PATH&amp;#39; 这样sudo执行命令时所搜寻的路径就是系统的PATH变量中的路径，如想添加其他变量也是类似。
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+    <item>
+      <title>NAT配置</title>
+      <link>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 27 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</guid>
+      <description>时隔10年，又搞了一回NAT配置，兼顾学习了下路由表知识。
+起因 分析某个移动APP的包协议
+预备知识 http://www.rfc-editor.org/rfc/rfc3022.txt
+网络拓扑图 internet | WIFI * | * | wlan0 * +-----------------+ eth0 * WAN +-----------------+ | Test PC (NAT) |------------------| TP-Link Router |--- WIFI +-----------------+ * +-----------------+ | * | * | * | +-----------------+ | Android Phone | +-----------------+ IP配置 Test PC  wlan: 172.16.13.163/16 gateway: 172.16.13.1 eth0: 192.168.2.1/24  TP-Link Router  WAN: 192.168.2.2/24  路由配置 root@hp4400:~# route -n Kernel IP routing table Destination Gateway Genmask Flags Metric Ref Use Iface 0.</description>
+    </item>
+    
+    <item>
+      <title>Linux与Windows间相互远程访问</title>
+      <link>https://bopjiang.github.io/post/2014/03/26/linux%E4%B8%8Ewindows%E9%97%B4%E7%9B%B8%E4%BA%92%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/</link>
+      <pubDate>Wed, 26 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/26/linux%E4%B8%8Ewindows%E9%97%B4%E7%9B%B8%E4%BA%92%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/</guid>
+      <description>windows访问linux ssh访问  putty xshell SecureCRT  图形界面  TightVNC （linux上面要装vncserver）  linux访问windows桌面  remmina, The GTK+ Remote Desktop Client rdesktop  rdesktop -a 16 172.16.13.88:3389 -u jiangjia -g 1024*768 windows远程后，图形界面的关机按钮消失了，要关机必须命令行：
+关机(等待一分钟): shutdown -s
+重启: shutdown -r
+30s后关机: shutdown -s -t 30
+中止关机操作: shutdown – a
+遗留问题  remmina 远程没有声音问题  </description>
+    </item>
+    
+    <item>
+      <title>深圳百公里徒步活动</title>
+      <link>https://bopjiang.github.io/post/2014/03/22/%E6%B7%B1%E5%9C%B3%E7%99%BE%E5%85%AC%E9%87%8C%E5%BE%92%E6%AD%A5%E6%B4%BB%E5%8A%A8/</link>
+      <pubDate>Sat, 22 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/22/%E6%B7%B1%E5%9C%B3%E7%99%BE%E5%85%AC%E9%87%8C%E5%BE%92%E6%AD%A5%E6%B4%BB%E5%8A%A8/</guid>
+      <description>第二次了。去年一起走的人多一些，今年好几位同学（jimmy，小周，阿卓）都没参加，只有四个人组队了，不过还是蛮开心的。
+参加人员   jj 龚博 jiangmin jiangmin同学小青  路线  科技园-深圳湾红树林-滨海大道-中心公园Ａ区南门 （没开手机的GPS, 本来想手绘个路线图的，openstreetmap还不熟）
+https://www.openstreetmap.org/
+路上人实在太多了，都走不开。出红树林后脱离了大部队，跟几个驴友沿着滨海大道行进，钻过桥洞无数，最终还是在中心公园同大部队汇合了。
+时间  19:00 - 23:00 约20KM</description>
+    </item>
+    
+    <item>
+      <title>Python UDP客户端</title>
+      <link>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</link>
+      <pubDate>Fri, 21 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</guid>
+      <description>第一次写UDP程序，超乎寻常的简单
+&amp;gt;&amp;gt;&amp;gt; import socket &amp;gt;&amp;gt;&amp;gt; s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) &amp;gt;&amp;gt;&amp;gt; import time &amp;gt;&amp;gt;&amp;gt; s.sendto(&amp;#34;test%s&amp;#34; % time.strftime(&amp;#34;%Y-%m-%d_%H-%M-%S&amp;#34;), (&amp;#34;172.16.12.28&amp;#34;, 7301)) 23 &amp;gt;&amp;gt;&amp;gt; s.recvfrom(1024) (&amp;#39;test2014-03-21_08-35-57&amp;#39;, (&amp;#39;172.16.12.28&amp;#39;, 7301)) </description>
+    </item>
+    
+    <item>
+      <title>分配给中国的IP有多少个</title>
+      <link>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</link>
+      <pubDate>Thu, 20 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</guid>
+      <description>获取全球IP地址分配列表  curl http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest -o iplist.txt 统计  [jiangjia@houtaiceshi1 ipaddr]$ cat iplist.txt |grep ipv4 |grep \|CN\| | cut -d \| -f 5 | awk &amp;#39;// {sum += $1};END {print sum}&amp;#39; 330410496 IP v4才3.3亿，难怪深圳联通ADSL宽带分配给我是个私网IP了，合同到期坚决换掉。</description>
+    </item>
+    
+    <item>
+      <title>Hello world</title>
+      <link>https://bopjiang.github.io/post/2014/03/19/hello-world/</link>
+      <pubDate>Wed, 19 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/19/hello-world/</guid>
+      <description>开始 以后可以把wiz上收集的东西整理下放在这里</description>
+    </item>
+    
+  </channel>
+</rss>
