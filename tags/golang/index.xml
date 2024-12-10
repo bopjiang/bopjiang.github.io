@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on HCM</title>
+    <link>https://bopjiang.github.io/tags/golang/</link>
+    <description>Recent content in Golang on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SQL语句解析为AST</title>
+      <link>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</guid>
+      <description>TiDB中的SQL Parser模块现在独立为一个库了，在其他项目也可以很方便的调用。
+一个例子：
+AST 解析出来是如下的样子：
+L-0 *ast.SelectStmt SELECT t1.a, t2.b FROM t1 JOIN t2 ON t1.id = t2.fid WHERE t1.c&amp;gt;100 L-1 *ast.TableRefsClause L-2 *ast.Join L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.OnCondition L-4 *ast.BinaryOperationExpr L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-1 *ast.BinaryOperationExpr L-2 *ast.ColumnNameExpr L-3 *ast.ColumnName L-2 *driver.ValueExpr L-1 *ast.FieldList L-2 *ast.SelectField t1.a L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName L-2 *ast.SelectField t2.b L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName SELECT语句被解析为三部分(L-1), TableRefsClause对应FROM语句部分，BinaryOperationExpr对应WHERE语句部分，FieldList对应Select字段部分</description>
+    </item>
+    
+    <item>
+      <title>关于Go HTTP Timeout</title>
+      <link>https://bopjiang.github.io/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/</guid>
+      <description>上周碰到一个使用Traefik反向代理的问题, 正好跟HTTP Timeout相关，现将分析过程总结如下。
+问题现象 客户端的一个文件请求，先经过反向代理， 再经过Server，最后数据从Storage中获取（类似S3）。 基本架构如下：
++----------------------+ | Client | +----------------------+ | GET /FileA HTTP/1.1 | | +-----------------------+ +-----------------+ +-----------------+ | Nginx/Traefik |--------| Server |-------| Storage | +-----------------------+ +-----------------+ +-----------------+ 反向代理最开始是使用的Nginx， 后来因为服务都在Docker部署，切换到Traefik。
+开始还没有问题, 直到有一天, 测试同学反馈客户端偶尔GET /AFile请求老是被异常关闭， 请求响应越大概率失败概率越大， 网速不好的时候更容易出现。最开始还以为是客户端的锅。
+问题定位 后面试了好几个客户端版本， 问题依然存在， 看来跟客户端最近的更新无关。
+排除了客户端后，开始怀疑Traefik这块配置有问题。查看服务端日志， 果然失败时Taefik有日志打印：
+2018/12/19 09:16:54 reverseproxy.go:395: httputil: ReverseProxy read error during body copy: unexpected EOF  traefik 上有个issue #2903 Truncated body when unexpected EOF，跟我们看到的现象是一样的。切换到Nginx后，问题不出现了, 更加证实了我们的判断。
+运气这么好， 一下就踩到了traefik的BUG？直觉告诉我， 问题可能不是这样。 又试了用curl命令行模拟Client请求， 没有出错。其间抓包发现EOF(FIN)确实是服务端发起，主动关闭的。</description>
+    </item>
+    
+    <item>
+      <title>Golang程序问题定位方法</title>
+      <link>https://bopjiang.github.io/post/2017/10/31/golang%E7%A8%8B%E5%BA%8F%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 31 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2017/10/31/golang%E7%A8%8B%E5%BA%8F%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%B3%95/</guid>
+      <description>本文总结的方法对Go1.6及以后版本有效。
+运行时问题 通过暴露http接口把运行栈打出来：
+import _ &amp;#34;net/http/pprof&amp;#34; 命令如下:
+curl http://server:port/debug/pprof/goroutine?debug=1 参数debug=1时输出按照goroutine的当前栈位置汇总过的栈信息。 譬如可以看到某类goroutine运行了多少个，在遇到goroutine泄露的问题时比较有用。
+goroutine profile: total 104 100 @ 0x102ebdc 0x102ecce 0x10065a4 0x100624b 0x12e3683 0x105cbd1 #	0x12e3682	main.foo+0x42	/Users/bopjiang/code/test/go/stackdump.go:18 1 @ 0x102ebdc 0x1029b8a 0x1029187 0x108f55e 0x108f5dd 0x109037a 0x10f1242 0x110264d 0x1258052 0x105cbd1 #	0x1029186	internal/poll.runtime_pollWait+0x56	/usr/local/go/src/runtime/netpoll.go:173 #	0x108f55d	internal/poll.(*pollDesc).wait+0xad	/usr/local/go/src/internal/poll/fd_poll_runtime.go:85 #	0x108f5dc	internal/poll.(*pollDesc).waitRead+0x3c	/usr/local/go/src/internal/poll/fd_poll_runtime.go:90 #	0x1090379	internal/poll.(*FD).Read+0x189	/usr/local/go/src/internal/poll/fd_unix.go:125 #	0x10f1241	net.(*netFD).Read+0x51	/usr/local/go/src/net/fd_unix.go:202 #	0x110264c	net.(*conn).Read+0x6c	/usr/local/go/src/net/net.go:176 #	0x1258051	net/http.(*connReader).backgroundRead+0x61	/usr/local/go/src/net/http/server.go:660 curl http://server:port/debug/pprof/goroutine?debug=2 参数debug=2时输出的是详细每个goroutine的运行状态：调用栈信息，传入参数值，阻塞事件等待时间 最后的等待时间对定位程序挂起的问题很有用。譬如某个goroutine的channel写入阻塞了1个小时，那很有可能此channel的消费端出了问题。</description>
+    </item>
+    
+    <item>
+      <title>使用emacs进行golang编程</title>
+      <link>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 21 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</guid>
+      <description>环境 Ubuntu 12.04， Emacs 23, 中文输入法fcitx
+Emacs配置 使用el-get管理Emacs插件甚是方便，具体见[1]
+Emacs需要安装的插件
+ el-get （下面的emacs插件都使用el-get-install安装） cscope (安装前要在系统安装cscope) go-mode ibus  中文输入法问题 除了安装ibus，下面两个要注意：
+ apt-get安装python-xlib插件 快捷键冲突：  建立代码索引 用下面的脚本：
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+    <item>
+      <title>go常用工具</title>
+      <link>https://bopjiang.github.io/post/2014/04/18/go%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Fri, 18 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/18/go%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/</guid>
+      <description>项目正式使用go语言，到现在已经有半年多了。有几个工具共享下：
+godep 依赖管理 godep get install
+godef 日志模块seelog 日志量大的时候，日志产生的几个参数需要调整，不然日志时间偏差较大
+使用Go的开源项目  nsq, 一个分布式的消息队列 docker etcd, 配置服务，类似Zookeeper和doozer。是CoreOS的核心组件。 influxdb, 一个时间序列（TSDB, time series database）数据库, 类似graphite项目  </description>
+    </item>
+    
+  </channel>
+</rss>
