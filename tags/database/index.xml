@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Database on HCM</title>
+    <link>https://bopjiang.github.io/tags/database/</link>
+    <description>Recent content in Database on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>MySQL和TiDB事务区别</title>
+      <link>https://bopjiang.github.io/post/2019/04/21/mysql%E5%92%8Ctidb%E4%BA%8B%E5%8A%A1%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/04/21/mysql%E5%92%8Ctidb%E4%BA%8B%E5%8A%A1%E5%8C%BA%E5%88%AB/</guid>
+      <description>我们知道, MySQL的默认隔离级别是可重复读(RR, Repeatable Read). TiDB是快照隔离 (SI, Snapshot Isolation), 虽然对外显示为Repeatable Read).
+TiDB 使用 Percolator 事务模型, 冲突检测只在事务提交时才触发, 而MySQL则是通过锁等待机制(如SELECT &amp;hellip; FOR UPDATE)解决冲突问题.TiDB这样设计有好有坏, 在冲突小的情况下,由于没有锁等待,系统的并发性能更好. 但在冲突严重的情况下, 会造成事务失败增多,影响并发性能.
+反映到应用开发中, 我们会发现, 在很多场景, MySQL事务提交成功, 但是TiDB事务提交却可能会失败. 如果应用代码有在事务执行过程中穿插业务判断逻辑, 是不能依赖TiDB自带的事务重试机制的. 这时,要显式的关闭事务重试, 重试逻辑必须放到业务层来做.
+例子 下面三个例子, 从TiDB和MySQL执行结果和逻辑的区别, 我们可以看到两个数据库系统在事务处理上的差别.
+本文中MySQL的版本是8.0.15, TiDB的版本是v2.1.7, 事务隔离级别都为默认值Repeatable Read.
+例1: Update在事务中处理逻辑不同 创建表t1, 语句如下:
+CREATE TABLE `t1` ( `a` int(11) NOT NULL, `b` int(11) DEFAULT NULL, PRIMARY KEY (`a`) ) 在MySQL和TiDB中分别执行下面的两个事务, 执行时序如下:
+   Time Tx1 Tx2     t0 begin;    t1 select * from t1;    t2  begin;   t3  insert into t1 values(1,10);   t4  commit;   t5 update t1 set b=b+10 where a = 1;    t6 commit;    t7 select * from t1;     MySQL, t7时刻,select语句的执行结果是</description>
+    </item>
+    
+    <item>
+      <title>SQL语句解析为AST</title>
+      <link>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/</guid>
+      <description>TiDB中的SQL Parser模块现在独立为一个库了，在其他项目也可以很方便的调用。
+一个例子：
+AST 解析出来是如下的样子：
+L-0 *ast.SelectStmt SELECT t1.a, t2.b FROM t1 JOIN t2 ON t1.id = t2.fid WHERE t1.c&amp;gt;100 L-1 *ast.TableRefsClause L-2 *ast.Join L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.TableSource L-4 *ast.TableName L-3 *ast.OnCondition L-4 *ast.BinaryOperationExpr L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-5 *ast.ColumnNameExpr L-6 *ast.ColumnName L-1 *ast.BinaryOperationExpr L-2 *ast.ColumnNameExpr L-3 *ast.ColumnName L-2 *driver.ValueExpr L-1 *ast.FieldList L-2 *ast.SelectField t1.a L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName L-2 *ast.SelectField t2.b L-3 *ast.ColumnNameExpr L-4 *ast.ColumnName SELECT语句被解析为三部分(L-1), TableRefsClause对应FROM语句部分，BinaryOperationExpr对应WHERE语句部分，FieldList对应Select字段部分</description>
+    </item>
+    
+    <item>
+      <title>使用Pyleus开发Storm应用</title>
+      <link>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Fri, 23 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</guid>
+      <description>Storm  什么是Storm(https://storm.apache.org/) 解决的问题：实时数据分析  Pyleus   用Python写Storm topolopgy Storm是在JVM平台上开发的，要使用非JVM平台语言（如Python，Go),需要使用ShellBolt，但是top仍然要使用Java定义 Pyleus是全部使用Python开发spout,bolt,top的一整套框架，可以完全不使用Java。
+Pyleus由Yelp开发
+  遇到的坑 定义muti-stream时的语法 注意，当只有一个stream时，文档中定义muti-stream的语法有有问题，运行提交topoplogy时会报错
+Topology submission exception. (topology name=&#39;top_name&#39;) #&amp;lt;InvalidTopologyException InvalidTopologyException(msg:Component: [my_bolt] subscribes from non-existent stream:  class MultipleBolt(Bolt): OUTPUT_FIELDS = { &amp;#34;stream-id&amp;#34;: [&amp;#34;id&amp;#34;, &amp;#34;value&amp;#34;], &amp;#34;stream-fake&amp;#34;: [&amp;#34;fake&amp;#34;], ##只有一个stream时，记得加个假的，不然会出错 } </description>
+    </item>
+    
+    <item>
+      <title>使用docker安装storm集群</title>
+      <link>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</guid>
+      <description>基础  storm storm-docker docker fig pip, python  步骤   升级内核
+由于是CentOS 6.3环境，内核不满足版本要求。升级内核版本至3.10.63
+ In general, a 3.8 Linux kernel is the minimum requirement for Docker, as some of the prior versions have known issues that are triggered by Docker. Linux kernel versions older than 3.8 are known to cause kernel panics and to break Docker.
+  The latest minor version (3.x.y) of the 3.10 (or a newer maintained version) Linux kernel is recommended.</description>
+    </item>
+    
+  </channel>
+</rss>
