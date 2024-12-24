@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on HCM</title>
+    <link>https://bopjiang.github.io/tags/linux/</link>
+    <description>Recent content in linux on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Oct 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《Raspberry Pi入门指南》读书笔记</title>
+      <link>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 01 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+      <description>Raspberry Pi 入手两年了，除了装过XMBC看电视外，基本没怎么用了。偶然在图书馆发现这本&amp;laquo;Raspberry Pi入门指南&amp;raquo;，作为入门读物还是不错的。
+简单摘要下：
+模块  CSI接口(Camera Serial Interface), 摄像头 淘宝上有大把 DSI接口(Display Serial Interface) GPIO 作为单片机驱动外围设备  使用场景   BT下载器 使用aria2(http://aria2.sourceforge.net/) 在chrome中使用Yaaw插件（Yet Another Aria2 Web）, 使用aria2提供的JSON RPC接口远程控制
+  XBMC 介绍的XBian
+  文件服务器samba
+  GPIO编程  控制LED灯闪烁 面包板，杜邦线(跳线), LED灯  SHELL/BASH控制， 操作文件 Python,使用RPi.GPIO包   温度传感器  图像处理  CSI USB口WebCam 罗技C270WebCam，720P  luvcview实时看视频流 uvccapeture截图   其他软件  motion python:SimpleCV Haar Cascade哈尔分类，面部识别 2013-08: SimpleCV暂时还不能从CSI取视频    Arduino开源电子原型平台 使用USB与Pi相连， 串口通信</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu 14.04 Emacs24问题汇总</title>
+      <link>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 20 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</guid>
+      <description>工作环境升级到Ubuntu14.04下，Emacs也升级到了24.3.1, 一些问题汇总如下：
+中文无法输入 我用的fcitx，只要做一件事情，确保启动Emacs的时候locale为中文,就可以在Emacs下输入中文
+Emacs图形界面启动使用的是emacs24-x, 先改名
+$ sudo mv /usr/bin/emacs24-x /usr/bin/emacs24-x_behind 然后添加同名脚本文件:
+$ echo /usr/bin/emacs24-x LC_CTYPE=&amp;#39;zh_CN.UTF-8&amp;#39; emacs24-x_behind 常用插件   插件管理
+默认用使ELPA，可以自己增加MELPA， 参考 1
+添加下述至~/.emacs开始，并重启emacs
+  (when (&amp;gt;= emacs-major-version 24) (require &amp;#39;package) (package-initialize) (add-to-list &amp;#39;package-archives &amp;#39;(&amp;#34;melpa&amp;#34; . &amp;#34;http://melpa.milkbox.net/packages/&amp;#34;) t) ) 运行list-package就能看到了
+下面插件，MELPA中都有
+  markdown-mode
+  yaml-mode
+  </description>
+    </item>
+    
+    <item>
+      <title>Unix哲学</title>
+      <link>https://bopjiang.github.io/post/2015/01/02/unix%E5%93%B2%E5%AD%A6/</link>
+      <pubDate>Fri, 02 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/02/unix%E5%93%B2%E5%AD%A6/</guid>
+      <description>所谓道的东西，大概只能参悟，不是言语能表达的。
+下面几篇文章,值得细细品味。
+  Unix编程艺术，最后一章《无根的根：无名师的 Unix 心传》
+似乎用隐喻，很多道理能讲的更透彻。
+这本书的英文版本是公开的，值得一看。
+  UNIX痛恨者手册
+英文原版：The UNIX-HATERS Handbook
+  Linux/Unix设计思想
+  </description>
+    </item>
+    
+    <item>
+      <title>ssh一系列问题汇总</title>
+      <link>https://bopjiang.github.io/post/2014/12/23/ssh%E4%B8%80%E7%B3%BB%E5%88%97%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</link>
+      <pubDate>Tue, 23 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/23/ssh%E4%B8%80%E7%B3%BB%E5%88%97%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</guid>
+      <description>ssh登录慢 解决方案：关闭GSS认证
+[jj@sysadmin ~]$ cat ~/.ssh/config ServerAliveInterval 20 GSSAPIAuthentication no 配置密钥登录  生成密钥  $ ssh-keygen -t rsa -C &amp;#34;your_email@youremail.com&amp;#34;   复制本地的公钥， 追加到远端的$HOME/.ssh/authorized_keys文件
+  必须保证要远端$HOME目录下:
+ .ssh目录的权限必须是700 .ssh/authorized_keys文件权限必须是600    </description>
+    </item>
+    
+    <item>
+      <title>使用emacs进行golang编程</title>
+      <link>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 21 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/21/%E4%BD%BF%E7%94%A8emacs%E8%BF%9B%E8%A1%8Cgolang%E7%BC%96%E7%A8%8B/</guid>
+      <description>环境 Ubuntu 12.04， Emacs 23, 中文输入法fcitx
+Emacs配置 使用el-get管理Emacs插件甚是方便，具体见[1]
+Emacs需要安装的插件
+ el-get （下面的emacs插件都使用el-get-install安装） cscope (安装前要在系统安装cscope) go-mode ibus  中文输入法问题 除了安装ibus，下面两个要注意：
+ apt-get安装python-xlib插件 快捷键冲突：  建立代码索引 用下面的脚本：
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+    <item>
+      <title>sudo 环境变量继承</title>
+      <link>https://bopjiang.github.io/post/2014/04/01/sudo-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Tue, 01 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/04/01/sudo-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%BB%A7%E6%89%BF/</guid>
+      <description>修改sudo的配置文件：
+sudo visudo 将Defaults env_reset改成Defaults !env_reset,取消掉对PATH变量的重置。然后在.bashrc中最后添加
+alias sudo=&amp;#39;sudo env PATH=$PATH&amp;#39; 这样sudo执行命令时所搜寻的路径就是系统的PATH变量中的路径，如想添加其他变量也是类似。
+参考  http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html  </description>
+    </item>
+    
+    <item>
+      <title>NAT配置</title>
+      <link>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 27 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/</guid>
+      <description>时隔10年，又搞了一回NAT配置，兼顾学习了下路由表知识。
+起因 分析某个移动APP的包协议
+预备知识 http://www.rfc-editor.org/rfc/rfc3022.txt
+网络拓扑图 internet | WIFI * | * | wlan0 * +-----------------+ eth0 * WAN +-----------------+ | Test PC (NAT) |------------------| TP-Link Router |--- WIFI +-----------------+ * +-----------------+ | * | * | * | +-----------------+ | Android Phone | +-----------------+ IP配置 Test PC  wlan: 172.16.13.163/16 gateway: 172.16.13.1 eth0: 192.168.2.1/24  TP-Link Router  WAN: 192.168.2.2/24  路由配置 root@hp4400:~# route -n Kernel IP routing table Destination Gateway Genmask Flags Metric Ref Use Iface 0.</description>
+    </item>
+    
+    <item>
+      <title>Linux与Windows间相互远程访问</title>
+      <link>https://bopjiang.github.io/post/2014/03/26/linux%E4%B8%8Ewindows%E9%97%B4%E7%9B%B8%E4%BA%92%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/</link>
+      <pubDate>Wed, 26 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/26/linux%E4%B8%8Ewindows%E9%97%B4%E7%9B%B8%E4%BA%92%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/</guid>
+      <description>windows访问linux ssh访问  putty xshell SecureCRT  图形界面  TightVNC （linux上面要装vncserver）  linux访问windows桌面  remmina, The GTK+ Remote Desktop Client rdesktop  rdesktop -a 16 172.16.13.88:3389 -u jiangjia -g 1024*768 windows远程后，图形界面的关机按钮消失了，要关机必须命令行：
+关机(等待一分钟): shutdown -s
+重启: shutdown -r
+30s后关机: shutdown -s -t 30
+中止关机操作: shutdown – a
+遗留问题  remmina 远程没有声音问题  </description>
+    </item>
+    
+    <item>
+      <title>分配给中国的IP有多少个</title>
+      <link>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</link>
+      <pubDate>Thu, 20 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/20/%E5%88%86%E9%85%8D%E7%BB%99%E4%B8%AD%E5%9B%BD%E7%9A%84ip%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA/</guid>
+      <description>获取全球IP地址分配列表  curl http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest -o iplist.txt 统计  [jiangjia@houtaiceshi1 ipaddr]$ cat iplist.txt |grep ipv4 |grep \|CN\| | cut -d \| -f 5 | awk &amp;#39;// {sum += $1};END {print sum}&amp;#39; 330410496 IP v4才3.3亿，难怪深圳联通ADSL宽带分配给我是个私网IP了，合同到期坚决换掉。</description>
+    </item>
+    
+  </channel>
+</rss>
