@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Raspberry Pi on HCM</title>
+    <link>https://bopjiang.github.io/tags/raspberry-pi/</link>
+    <description>Recent content in Raspberry Pi on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Oct 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《Raspberry Pi入门指南》读书笔记</title>
+      <link>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 01 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+      <description>Raspberry Pi 入手两年了，除了装过XMBC看电视外，基本没怎么用了。偶然在图书馆发现这本&amp;laquo;Raspberry Pi入门指南&amp;raquo;，作为入门读物还是不错的。
+简单摘要下：
+模块  CSI接口(Camera Serial Interface), 摄像头 淘宝上有大把 DSI接口(Display Serial Interface) GPIO 作为单片机驱动外围设备  使用场景   BT下载器 使用aria2(http://aria2.sourceforge.net/) 在chrome中使用Yaaw插件（Yet Another Aria2 Web）, 使用aria2提供的JSON RPC接口远程控制
+  XBMC 介绍的XBian
+  文件服务器samba
+  GPIO编程  控制LED灯闪烁 面包板，杜邦线(跳线), LED灯  SHELL/BASH控制， 操作文件 Python,使用RPi.GPIO包   温度传感器  图像处理  CSI USB口WebCam 罗技C270WebCam，720P  luvcview实时看视频流 uvccapeture截图   其他软件  motion python:SimpleCV Haar Cascade哈尔分类，面部识别 2013-08: SimpleCV暂时还不能从CSI取视频    Arduino开源电子原型平台 使用USB与Pi相连， 串口通信</description>
+    </item>
+    
+    <item>
+      <title>自己动手做个机顶盒</title>
+      <link>https://bopjiang.github.io/post/2014/12/07/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%81%9A%E4%B8%AA%E6%9C%BA%E9%A1%B6%E7%9B%92/</link>
+      <pubDate>Sun, 07 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/12/07/%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%81%9A%E4%B8%AA%E6%9C%BA%E9%A1%B6%E7%9B%92/</guid>
+      <description>不知N年后，还有人知道机顶盒是啥东西不。
+基础知识  Respberry Pi XBMC，现在改名叫Kodi了 xbmc-addons-chinese XBMC Remote for Android  硬件准备  Respberry Pi一个， 淘宝200-300元间 SD卡（2G或4G），装系统和软件用 网线一根（我的Pi只有LAN口， 没有装WIFI模块） 5V micro USB电源一个(Android手机的充电器就可以用) Android手机一个（旧的也行，反正HTC G1能用） HDMI线一根(老电视没有HDMI接口，需要三色AV线1根，3.5mm一分二音频线公头转双母头1根，AV解析度只能到720×480i）  软件准备  RASPBMC：raspberrypi网站上已经做好预装XBMC的镜像，直接用就可以 ssh客户端（最好Linux系统）  过程  在SD卡上做好系统 修改配置文件，设置http控制端口(有raspi-config的脚本可以用) 手机端安装遥控程序(XBMC Remote), 使用配置的HTTP端口 安装中文插件xbmc-addons-chinese  遇到问题  安装插件后下载不到节目列表  设置HTTP代理 重启Pi 打开debug，查看错误日志，一般都是网络访问不了   网络代理配置改后未生效，GUI上也看不到  暂未解决    </description>
+    </item>
+    
+  </channel>
+</rss>

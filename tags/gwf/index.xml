@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gwf on HCM</title>
+    <link>https://bopjiang.github.io/tags/gwf/</link>
+    <description>Recent content in gwf on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 30 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/gwf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>fonts.googleapi导致网页打不开问题</title>
+      <link>https://bopjiang.github.io/post/2015/01/30/fonts.googleapi%E5%AF%BC%E8%87%B4%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 30 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/30/fonts.googleapi%E5%AF%BC%E8%87%B4%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98/</guid>
+      <description>经常打开readthedocs.org网站时，页面崩溃或很长时间才打开，看了下基本都用到fonts.googleapis提供的字体的服务。
+解决办法：
+安装Adblock Plus插件（chrome和firefox都有）， 增加自定义过滤规则：
+fonts.googleapis.com$stylesheet,match-case use.typekit.net$script,match-case </description>
+    </item>
+    
+  </channel>
+</rss>

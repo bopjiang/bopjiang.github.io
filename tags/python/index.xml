@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on HCM</title>
+    <link>https://bopjiang.github.io/tags/python/</link>
+    <description>Recent content in python on HCM</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 23 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://bopjiang.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用Pyleus开发Storm应用</title>
+      <link>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Fri, 23 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2015/01/23/%E4%BD%BF%E7%94%A8pyleus%E5%BC%80%E5%8F%91storm%E5%BA%94%E7%94%A8/</guid>
+      <description>Storm  什么是Storm(https://storm.apache.org/) 解决的问题：实时数据分析  Pyleus   用Python写Storm topolopgy Storm是在JVM平台上开发的，要使用非JVM平台语言（如Python，Go),需要使用ShellBolt，但是top仍然要使用Java定义 Pyleus是全部使用Python开发spout,bolt,top的一整套框架，可以完全不使用Java。
+Pyleus由Yelp开发
+  遇到的坑 定义muti-stream时的语法 注意，当只有一个stream时，文档中定义muti-stream的语法有有问题，运行提交topoplogy时会报错
+Topology submission exception. (topology name=&#39;top_name&#39;) #&amp;lt;InvalidTopologyException InvalidTopologyException(msg:Component: [my_bolt] subscribes from non-existent stream:  class MultipleBolt(Bolt): OUTPUT_FIELDS = { &amp;#34;stream-id&amp;#34;: [&amp;#34;id&amp;#34;, &amp;#34;value&amp;#34;], &amp;#34;stream-fake&amp;#34;: [&amp;#34;fake&amp;#34;], ##只有一个stream时，记得加个假的，不然会出错 } </description>
+    </item>
+    
+    <item>
+      <title>Python UDP客户端</title>
+      <link>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</link>
+      <pubDate>Fri, 21 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://bopjiang.github.io/post/2014/03/21/python-udp%E5%AE%A2%E6%88%B7%E7%AB%AF/</guid>
+      <description>第一次写UDP程序，超乎寻常的简单
+&amp;gt;&amp;gt;&amp;gt; import socket &amp;gt;&amp;gt;&amp;gt; s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) &amp;gt;&amp;gt;&amp;gt; import time &amp;gt;&amp;gt;&amp;gt; s.sendto(&amp;#34;test%s&amp;#34; % time.strftime(&amp;#34;%Y-%m-%d_%H-%M-%S&amp;#34;), (&amp;#34;172.16.12.28&amp;#34;, 7301)) 23 &amp;gt;&amp;gt;&amp;gt; s.recvfrom(1024) (&amp;#39;test2014-03-21_08-35-57&amp;#39;, (&amp;#39;172.16.12.28&amp;#39;, 7301)) </description>
+    </item>
+    
+  </channel>
+</rss>
