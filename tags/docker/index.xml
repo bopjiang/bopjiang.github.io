@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on 江 Blog</title>
+    <link>https://bopjiang.github.io/tags/docker/</link>
+    <description>Recent content in Docker on 江 Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Dec 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://bopjiang.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用docker安装storm集群</title>
+      <link>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Mon, 22 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://bopjiang.github.io/post/2014/12/22/%E4%BD%BF%E7%94%A8docker%E5%AE%89%E8%A3%85storm%E9%9B%86%E7%BE%A4/</guid>
+      <description>&lt;h4 id=&#34;基础&#34;&gt;基础&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://storm.apache.org/&#34;&gt;storm&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/wurstmeister/storm-docker&#34;&gt;storm-docker&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.docker.com/&#34;&gt;docker&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://www.fig.sh/&#34;&gt;fig&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;pip, python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;步骤&#34;&gt;步骤&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;升级内核&lt;/p&gt;&#xA;&lt;p&gt;由于是CentOS 6.3环境，内核不满足版本要求。升级内核版本至3.10.63&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;In general, a 3.8 Linux kernel is the minimum requirement for Docker, as some of the prior versions have known issues that are triggered by Docker. Linux kernel versions older than 3.8 are known to cause kernel panics and to break Docker.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;The latest minor version (3.x.y) of the 3.10 (or a newer maintained version) Linux kernel is recommended. Keeping the kernel up to date with the latest minor version will ensure critical kernel bugs get fixed.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
