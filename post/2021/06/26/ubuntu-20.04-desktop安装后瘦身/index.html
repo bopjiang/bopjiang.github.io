@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Ubuntu 20.04 Desktop安装后瘦身 - 江 Blog</title>
+    <meta property="og:title" content="Ubuntu 20.04 Desktop安装后瘦身 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="## remove snap ## stop snapd services $ sudo systemctl stop snapd &amp;&amp; sudo systemctl disable snapd # purge snapd $ sudo apt purge snapd ## remove no longer needed folders $ rm -rf ~/snap $ sudo &amp;hellip;">
+      <meta property="og:description" content="## remove snap ## stop snapd services $ sudo systemctl stop snapd &amp;&amp; sudo systemctl disable snapd # purge snapd $ sudo apt purge snapd ## remove no longer needed folders $ rm -rf ~/snap $ sudo &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Ubuntu 20.04 Desktop安装后瘦身</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2021-06-26
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h3 id="clean-up">clean up</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## remove snap</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## stop snapd services</span>
+</span></span><span style="display:flex;"><span>$ sudo systemctl stop snapd <span style="color:#f92672">&amp;&amp;</span> sudo systemctl disable snapd
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  purge snapd</span>
+</span></span><span style="display:flex;"><span>$ sudo apt purge snapd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## remove no longer needed folders</span>
+</span></span><span style="display:flex;"><span>$ rm -rf ~/snap
+</span></span><span style="display:flex;"><span>$ sudo rm -rf /snap /var/snap /var/lib/snapd /var/cache/snapd /usr/lib/snapd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## remove goa-daemon</span>
+</span></span><span style="display:flex;"><span>$ cd /usr/share/dbus-1/services
+</span></span><span style="display:flex;"><span>$ sudo ln -snf /dev/null org.gnome.OnlineAccounts.service
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># tracker-miner-fs</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Tracker is an indexing system</span>
+</span></span><span style="display:flex;"><span>$ sudo apt remove tracker tracker-extract tracker-miner-fs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># why libreoffice is installed by default??</span>
+</span></span><span style="display:flex;"><span>$ sudo apt-get remove --purge <span style="color:#e6db74">&#34;libreoffice*&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># stop X-server</span>
+</span></span><span style="display:flex;"><span>$ sudo systemctl disable gdm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># clean log</span>
+</span></span><span style="display:flex;"><span>$ sudo journalctl --disk-usage
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Archived and active journals take up 2.0G in the file system.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ sudo journalctl --vacuum-size<span style="color:#f92672">=</span>100M
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Vacuuming done, freed 1.9G of archived journals from /var/log/journal/xxxx</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ sudo apt autoremove
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># reboot</span>
+</span></span></code></pre></div><h3 id="how-to-turn-off-display-remotely">How to turn off display remotely</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mount -o remount,exec /dev
+</span></span><span style="display:flex;"><span>$ vbetool dpms off
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## if not mount, error happens: mmap /dev/zero: Operation not permitted</span>
+</span></span></code></pre></div><h2 id="ubuntu-server">Ubuntu Server</h2>
+<p>pi preinstall</p>
+<p>unattended-upgrade auto update job: <a href="https://www.cnblogs.com/sparkdev/p/11376560.html">https://www.cnblogs.com/sparkdev/p/11376560.html</a></p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2021/06/10/%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85linux%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/">手动安装Linux网卡驱动</a></span>
+  <span class="nav-next"><a href="/post/2022/06/14/gdb-made-easy/">GDB made easy</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

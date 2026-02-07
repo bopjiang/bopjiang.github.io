@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>自己动手做个机顶盒 - 江 Blog</title>
+    <meta property="og:title" content="自己动手做个机顶盒 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="XBMC on Respberry Pi">
+      <meta property="og:description" content="XBMC on Respberry Pi">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>自己动手做个机顶盒</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2014-12-07
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>不知N年后，还有人知道<a href="http://en.wikipedia.org/wiki/Set-top_box">机顶盒</a>是啥东西不。</p>
+<h3 id="基础知识">基础知识</h3>
+<ul>
+<li><a href="http://www.raspberrypi.org/">Respberry Pi</a></li>
+<li><a href="www.xbmc.org/">XBMC</a>，现在改名叫<a href="http://kodi.tv/">Kodi</a>了</li>
+<li><a href="https://github.com/taxigps/xbmc-addons-chinese">xbmc-addons-chinese</a></li>
+<li><a href="https://code.google.com/p/android-xbmcremote/">XBMC Remote for Android</a></li>
+</ul>
+<h3 id="硬件准备">硬件准备</h3>
+<ul>
+<li>Respberry Pi一个， 淘宝200-300元间</li>
+<li>SD卡（2G或4G），装系统和软件用</li>
+<li>网线一根（我的Pi只有LAN口， 没有装WIFI模块）</li>
+<li>5V micro USB电源一个(Android手机的充电器就可以用)</li>
+<li>Android手机一个（旧的也行，反正HTC G1能用）</li>
+<li>HDMI线一根(老电视没有HDMI接口，需要三色AV线1根，3.5mm一分二音频线公头转双母头1根，AV解析度只能到720×480i）</li>
+</ul>
+<h3 id="软件准备">软件准备</h3>
+<ul>
+<li>RASPBMC：raspberrypi网站上已经做好预装XBMC的镜像，直接用就可以</li>
+<li>ssh客户端（最好Linux系统）</li>
+</ul>
+<h3 id="过程">过程</h3>
+<ul>
+<li>在SD卡上做好系统</li>
+<li>修改配置文件，设置http控制端口(有raspi-config的脚本可以用)</li>
+<li>手机端安装遥控程序(XBMC Remote), 使用配置的HTTP端口</li>
+<li>安装中文插件xbmc-addons-chinese</li>
+</ul>
+<h3 id="遇到问题">遇到问题</h3>
+<ul>
+<li>安装插件后下载不到节目列表
+<ul>
+<li>设置HTTP代理</li>
+<li>重启Pi</li>
+<li>打开debug，查看错误日志，一般都是网络访问不了</li>
+</ul>
+</li>
+<li>网络代理配置改后未生效，GUI上也看不到
+<ul>
+<li>暂未解决</li>
+</ul>
+</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2014/12/03/measure-statsd-and-graphite/">Measure, Statsd and Graphite</a></span>
+  <span class="nav-next"><a href="/post/2014/12/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%86%99blog/">为什么要写blog</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

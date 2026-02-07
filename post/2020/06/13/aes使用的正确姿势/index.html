@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>AES使用的正确姿势 - 江 Blog</title>
+    <meta property="og:title" content="AES使用的正确姿势 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="昨天碰到一个敏感信息需要存入数据库的问题, 其实关键三个问题:
+[&hellip;] 加密我们选用是AES, 但加密模式(encryption mode)很多, 用的比较普遍的有:
+[&hellip;] 一般存放敏感信息的场景, 是不适合使用ECB模式的.
+[&hellip;] 但是使用CBC模式, 如果IV不随机, 甚至使用不变的IV, 也会有重放问题.
+那么IV信息需要保护吗? 可以明文存储吗 &amp;hellip;">
+      <meta property="og:description" content="昨天碰到一个敏感信息需要存入数据库的问题, 其实关键三个问题:
+[&hellip;] 加密我们选用是AES, 但加密模式(encryption mode)很多, 用的比较普遍的有:
+[&hellip;] 一般存放敏感信息的场景, 是不适合使用ECB模式的.
+[&hellip;] 但是使用CBC模式, 如果IV不随机, 甚至使用不变的IV, 也会有重放问题.
+那么IV信息需要保护吗? 可以明文存储吗 &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>AES使用的正确姿势</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2020-06-13
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>昨天碰到一个敏感信息需要存入数据库的问题, 其实关键三个问题:</p>
+<ol>
+<li>怎么选择加密方式</li>
+<li>怎么保存<a href="https://en.wikipedia.org/wiki/Initialization_vector">IV</a>(初始化向量)</li>
+<li>怎么保存秘钥</li>
+</ol>
+<h2 id="加密方式">加密方式</h2>
+<p>加密我们选用是<a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a>, 但加密模式(encryption mode)很多, 用的比较普遍的有:</p>
+<ul>
+<li><strong>ECB</strong> (Electronic codebook, 电子密码本): 简单, 加密只有密钥一个参数. 但是秘钥, 明文不变时, 产生的密文是一样的, 不能防止重放攻击</li>
+<li><strong>CBC</strong> (密码分组链接，Cipher-block chaining): 配合随机的IV使用, 无重放问题. 加密复杂.</li>
+</ul>
+<p>一般存放敏感信息的场景, 是不适合使用ECB模式的.</p>
+<h2 id="iv">IV</h2>
+<p>但是使用CBC模式, 如果IV不随机, 甚至使用不变的IV, 也会有重放问题.</p>
+<p>那么IV信息需要保护吗? 可以明文存储吗?</p>
+<p>答案是<strong>IV并非敏感信息</strong>, 但IV的生成要<strong>完全随机</strong>, 每次加密都使用不同的IV.</p>
+<p>最后, 我们的设计是: 在数据库中存储加密的敏感信息时, 自己做编码, 将IV+加密后的秘文base64后存在一个varchar中. 解密时, 需要先解出IV和密文, 配合秘钥才能解出原始信息.</p>
+<h2 id="秘钥">秘钥</h2>
+<p>秘钥肯定是要安全保存的, 有几个方案:</p>
+<ul>
+<li>如果有配置中心, 秘钥是作为敏感配置存储的, 只有程序启动时才能读取. 此类配置由专人管理, 开发人员无修改和查看权限.</li>
+<li>借助云厂商的机制, 譬如AWS的Secrets Manager配合IAM使用.</li>
+</ul>
+<h2 id="后记">后记</h2>
+<p>看到很多网上文章中的AES加解密示例, 将IV设置为固定值, 或者将IV设置为秘钥的前N位, 应该是个错误.</p>
+<h2 id="参考">参考</h2>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">Wikipedia: Block cipher mode of operation
+</a></li>
+<li><a href="https://security.stackexchange.com/questions/17044/when-using-aes-and-cbc-is-it-necessary-to-keep-the-iv-secret">When using AES and CBC, is it necessary to keep the IV secret?</a></li>
+</ol>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2020/05/30/%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E8%87%B3hugo/">博客迁移至Hugo</a></span>
+  <span class="nav-next"><a href="/post/2020/08/16/tidb-local-development-envrionment/">TiDB Local Development Envrionment</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
