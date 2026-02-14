@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>《Raspberry Pi入门指南》读书笔记 - 江 Blog</title>
+    <meta property="og:title" content="《Raspberry Pi入门指南》读书笔记 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="Raspberry Pi for beginners">
+      <meta property="og:description" content="Raspberry Pi for beginners">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>《Raspberry Pi入门指南》读书笔记</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2015-10-01
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>Raspberry Pi 入手两年了，除了装过XMBC看电视外，基本没怎么用了。偶然在图书馆发现这本<a href="http://book.douban.com/subject/26336217/">&laquo;Raspberry Pi入门指南&raquo;</a>，作为入门读物还是不错的。</p>
+<p>简单摘要下：</p>
+<h3 id="模块">模块</h3>
+<ul>
+<li>CSI接口(Camera Serial Interface), 摄像头
+淘宝上有大把</li>
+<li>DSI接口(Display Serial Interface)</li>
+<li>GPIO 作为单片机驱动外围设备</li>
+</ul>
+<h3 id="使用场景">使用场景</h3>
+<ul>
+<li>
+<p>BT下载器
+使用aria2(<a href="http://aria2.sourceforge.net/">http://aria2.sourceforge.net/</a>)
+在chrome中使用Yaaw插件（Yet Another Aria2 Web）, 使用aria2提供的JSON RPC接口远程控制</p>
+</li>
+<li>
+<p>XBMC
+介绍的XBian</p>
+</li>
+<li>
+<p>文件服务器samba</p>
+</li>
+</ul>
+<h3 id="gpio编程">GPIO编程</h3>
+<ul>
+<li>控制LED灯闪烁
+面包板，杜邦线(跳线), LED灯
+<ul>
+<li>SHELL/BASH控制， 操作文件</li>
+<li>Python,使用RPi.GPIO包</li>
+</ul>
+</li>
+<li>温度传感器</li>
+</ul>
+<h3 id="图像处理">图像处理</h3>
+<ul>
+<li>CSI</li>
+<li>USB口WebCam
+罗技C270WebCam，720P
+<ul>
+<li>luvcview实时看视频流</li>
+<li>uvccapeture截图</li>
+</ul>
+</li>
+<li>其他软件
+<ul>
+<li>motion</li>
+<li>python:SimpleCV
+Haar Cascade哈尔分类，面部识别
+2013-08: SimpleCV暂时还不能从CSI取视频</li>
+</ul>
+</li>
+</ul>
+<h3 id="arduino开源电子原型平台">Arduino开源电子原型平台</h3>
+<p>使用USB与Pi相连， 串口通信</p>
+<p>python中import serial</p>
+<h3 id="raspberry-pi-2">Raspberry Pi 2</h3>
+<ul>
+<li>新出的Raspberry Pi升级版本Raspberry Pi 2 ，可跑“官方精简版” Ubuntu Core</li>
+<li>建议使用lxde图形界面（和debian类似）， 安装xrdp支持windows上使用远程桌面连接</li>
+<li>听说可可运行win10</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/">网络电话几种模式</a></span>
+  <span class="nav-next"><a href="/post/2017/08/15/%E5%BC%80%E6%BA%90%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/">开源常用术语</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

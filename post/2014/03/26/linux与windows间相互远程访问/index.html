@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Linux与Windows间相互远程访问 - 江 Blog</title>
+    <meta property="og:title" content="Linux与Windows间相互远程访问 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="远程访问remote">
+      <meta property="og:description" content="远程访问remote">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Linux与Windows间相互远程访问</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2014-03-26
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="windows访问linux">windows访问linux</h2>
+<h4 id="ssh访问">ssh访问</h4>
+<ul>
+<li>putty</li>
+<li>xshell</li>
+<li>SecureCRT</li>
+</ul>
+<h4 id="图形界面">图形界面</h4>
+<ul>
+<li>TightVNC
+（linux上面要装vncserver）</li>
+</ul>
+<h2 id="linux访问windows桌面">linux访问windows桌面</h2>
+<ul>
+<li>remmina, The GTK+ Remote Desktop Client</li>
+<li>rdesktop</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>rdesktop -a <span style="color:#ae81ff">16</span> 172.16.13.88:3389 -u jiangjia -g 1024*768 
+</span></span></code></pre></div><p>windows远程后，图形界面的关机按钮消失了，要关机必须命令行：</p>
+<p>关机(等待一分钟): shutdown -s</p>
+<p>重启: shutdown -r</p>
+<p>30s后关机: shutdown -s -t 30</p>
+<p>中止关机操作: shutdown – a</p>
+<h2 id="遗留问题">遗留问题</h2>
+<ul>
+<li>remmina 远程没有声音问题</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2014/03/22/%E6%B7%B1%E5%9C%B3%E7%99%BE%E5%85%AC%E9%87%8C%E5%BE%92%E6%AD%A5%E6%B4%BB%E5%8A%A8/">深圳百公里徒步活动</a></span>
+  <span class="nav-next"><a href="/post/2014/03/27/nat%E9%85%8D%E7%BD%AE/">NAT配置</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

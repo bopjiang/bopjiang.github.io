@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>使用docker安装storm集群 - 江 Blog</title>
+    <meta property="og:title" content="使用docker安装storm集群 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="install storm cluster using docker">
+      <meta property="og:description" content="install storm cluster using docker">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>使用docker安装storm集群</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2014-12-22
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h4 id="基础">基础</h4>
+<ul>
+<li><a href="https://storm.apache.org/">storm</a></li>
+<li><a href="https://github.com/wurstmeister/storm-docker">storm-docker</a></li>
+<li><a href="https://www.docker.com/">docker</a></li>
+<li><a href="http://www.fig.sh/">fig</a></li>
+<li>pip, python</li>
+</ul>
+<h4 id="步骤">步骤</h4>
+<ul>
+<li>
+<p>升级内核</p>
+<p>由于是CentOS 6.3环境，内核不满足版本要求。升级内核版本至3.10.63</p>
+<blockquote>
+<p>In general, a 3.8 Linux kernel is the minimum requirement for Docker, as some of the prior versions have known issues that are triggered by Docker. Linux kernel versions older than 3.8 are known to cause kernel panics and to break Docker.</p>
+</blockquote>
+<blockquote>
+<p>The latest minor version (3.x.y) of the 3.10 (or a newer maintained version) Linux kernel is recommended. Keeping the kernel up to date with the latest minor version will ensure critical kernel bugs get fixed.</p>
+</blockquote>
+</li>
+<li>
+<p>安装fig</p>
+<p>首先安装pip</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo apt-get install python-pip 
+</span></span><span style="display:flex;"><span>$ sudo pip install fig
+</span></span></code></pre></div><ul>
+<li>安装storm-docker</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mkdir storm <span style="color:#f92672">&amp;&amp;</span> cd storm
+</span></span><span style="display:flex;"><span>$ git clone https://github.com/wurstmeister/storm-docker.git
+</span></span><span style="display:flex;"><span>$ cd storm-docker
+</span></span><span style="display:flex;"><span>$ 
+</span></span><span style="display:flex;"><span>$ sudo fig up -d
+</span></span><span style="display:flex;"><span>$ <span style="color:#75715e">## 第一次会拉取镜像, 时间较长, 随后集群将启动</span>
+</span></span></code></pre></div><ul>
+<li>
+<p>storm集群UI:</p>
+<p>可以看到cluster, topology一系列信息</p>
+<p><a href="http://172.16.12.31:49080/index.html">http://172.16.12.31:49080/index.html</a></p>
+</li>
+</ul>
+<h4 id="加入topology">加入topology</h4>
+<ul>
+<li>新增一个topopogy到cluster: call-perf-topology</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$storm jar target/call-perf-0.1.0-jar-with-dependencies.jar com.uxin.storm.RollingTopWords call-perf-topology  remote -c nimbus.host<span style="color:#f92672">=</span>172.16.12.31 -c nimbus.thrift.port<span style="color:#f92672">=</span><span style="color:#ae81ff">49627</span>
+</span></span></code></pre></div>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2014/12/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%86%99blog/">为什么要写blog</a></span>
+  <span class="nav-next"><a href="/post/2014/12/23/ssh%E4%B8%80%E7%B3%BB%E5%88%97%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/">ssh一系列问题汇总</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
