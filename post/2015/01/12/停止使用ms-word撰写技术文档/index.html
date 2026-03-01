@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>停止使用MS Word撰写技术文档 - 江 Blog</title>
+    <meta property="og:title" content="停止使用MS Word撰写技术文档 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="stop writing technical documentation using MS Word">
+      <meta property="og:description" content="stop writing technical documentation using MS Word">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>停止使用MS Word撰写技术文档</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2015-01-12
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h4 id="技术文档特点">技术文档特点</h4>
+<ul>
+<li>多人参与撰写、维护</li>
+<li>保留时间长</li>
+<li>经常更改</li>
+<li>很多人长期需要阅读</li>
+<li>需要做检索</li>
+<li>历史修订记录</li>
+</ul>
+<p>综合下来，对我们采用的技术提出以下要求</p>
+<h4 id="基本要求">基本要求</h4>
+<ul>
+<li>轻量</li>
+<li>易更改</li>
+<li>易获取; 易传播,变更能及时的通知到其他所有人</li>
+<li>易检索</li>
+</ul>
+<h4 id="我们的文档管理软件栈">我们的文档管理软件栈</h4>
+<ul>
+<li>Web服务器：Apache或Nginx</li>
+<li>WikiMedia：写文档</li>
+<li>Graphviz：写基本流程图</li>
+<li>PlantUML：写UML图</li>
+</ul>
+<p>写文档，其他可能选择有Markdown, reStructuredText</p>
+<h4 id="对比">对比</h4>
+<table>
+  <thead>
+      <tr>
+          <th>技术项</th>
+          <th>MS Word</th>
+          <th>Wiki（WikiMedia）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>撰写难度</td>
+          <td>容易</td>
+          <td>有门槛</td>
+      </tr>
+      <tr>
+          <td>撰写</td>
+          <td>WYSIWYG(所见即所得)</td>
+          <td>WYTIWYG(所想即所得)</td>
+      </tr>
+      <tr>
+          <td>修改难度</td>
+          <td>好</td>
+          <td>好</td>
+      </tr>
+      <tr>
+          <td>归档保存</td>
+          <td>SVN, 邮件附件</td>
+          <td>WIKI网站，网址</td>
+      </tr>
+      <tr>
+          <td>修订历史</td>
+          <td>有</td>
+          <td>有</td>
+      </tr>
+      <tr>
+          <td>修改差异比较</td>
+          <td>SVN版本差异对比困难</td>
+          <td>方便，WIKI系统自带</td>
+      </tr>
+      <tr>
+          <td>检索查找</td>
+          <td>单文档查找（借助三方索引)</td>
+          <td>全文检索</td>
+      </tr>
+      <tr>
+          <td>权限控制</td>
+          <td>MS加密</td>
+          <td>账号/密码</td>
+      </tr>
+      <tr>
+          <td>格式</td>
+          <td>私有二进制,必须装有OFFICE</td>
+          <td>开放、文本、HTML,任何平台下浏览器都能打开</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="使用mediawiki语法撰写文档">使用MediaWiki语法撰写文档</h4>
+<p>常用的语法</p>
+<ul>
+<li>标题、段落</li>
+<li>列表</li>
+<li>链接</li>
+<li>表格</li>
+<li>图
+<ul>
+<li>
+<p>方法一：直接使用二进制的图</p>
+<p>画图：PowerPoint、Visio、白板+水笔+相机</p>
+<p>上传图片到WIKI-&gt; 生成链接 -&gt; 文档中嵌入链接</p>
+</li>
+<li>
+<p>方法二（推荐）：把图写出来</p>
+<ul>
+<li>流程图：graphviz
+使用graphviz 的dot语法</li>
+<li>UML图： PlantUML
+使用PlantUML语法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="参考">参考</h4>
+<ul>
+<li><a href="http://www.wikimedia.org/">WikiMedia</a></li>
+<li><a href="http://www.graphviz.org/">Graphviz</a></li>
+<li><a href="http://www.plantuml.com/">PlantUML</a></li>
+<li>很多同学问为什么要学习这么多语言，参看<a href="http://book.douban.com/subject/21964984/">Domain-Specific Languages 领域特定语言</a>,by Martin Fowler</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2015/01/02/unix%E5%93%B2%E5%AD%A6/">Unix哲学</a></span>
+  <span class="nav-next"><a href="/post/2015/01/20/ubuntu-14.04-emacs24%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/">Ubuntu 14.04 Emacs24问题汇总</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

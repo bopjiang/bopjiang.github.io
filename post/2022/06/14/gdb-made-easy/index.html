@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>GDB made easy - 江 Blog</title>
+    <meta property="og:title" content="GDB made easy - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="Pros:
+[&hellip;] Cons
+[&hellip;] install
+pip install gdbgui pip install werkzeug==2.0.0 run
+[&hellip;] gdbgui -r --host 0.0.0.0 -g &#34;sudo gdb -p $(pgrep mysqld-debug) -x ./gdb.init&#34; open &amp;hellip;">
+      <meta property="og:description" content="Pros:
+[&hellip;] Cons
+[&hellip;] install
+pip install gdbgui pip install werkzeug==2.0.0 run
+[&hellip;] gdbgui -r --host 0.0.0.0 -g &#34;sudo gdb -p $(pgrep mysqld-debug) -x ./gdb.init&#34; open &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>GDB made easy</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2022-06-14
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="gdbgui"><a href="https://www.gdbgui.com/">gdbgui</a></h2>
+<p>Pros:</p>
+<ul>
+<li>can debug from remote Web UI</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li>can not copy/paste in the terminal of Web UI</li>
+</ul>
+<p>install</p>
+<pre tabindex="0"><code>pip install gdbgui
+pip install werkzeug==2.0.0
+</code></pre><p>run</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gdbgui -r --host 0.0.0.0 -g <span style="color:#e6db74">&#34;sudo gdb -p </span><span style="color:#66d9ef">$(</span>pgrep mysqld-debug<span style="color:#66d9ef">)</span><span style="color:#e6db74"> -x ./gdb.init&#34;</span>
+</span></span></code></pre></div><p>open</p>
+<p><a href="http://127.0.0.1:5000">http://host_ip:5000/</a></p>
+<h2 id="gdb-dashboard"><a href="https://github.com/cyrus-and/gdb-dashboard">GDB dashboard</a></h2>
+<p>Pros:</p>
+<ul>
+<li>clean terminal GUI</li>
+</ul>
+<p>Just a gdb init file with Python script.
+Remember append config file in <code>/root/.gdbinit</code> if we use gdb to attach a process.</p>
+<h2 id="vscode--gdb">VSCode + GDB</h2>
+<p>Pros:</p>
+<ul>
+<li>integation with IDE, nice experiment when debugging step by step(Just like VisualStudio).</li>
+<li>still can use gdb command directly.</li>
+<li>remote debug (TBC).</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li><input disabled="" type="checkbox"> must append <code>-exec</code> perfix for each command in <code>debug console</code></li>
+<li><input disabled="" type="checkbox"> must input password even with sudo when attaching</li>
+<li><input disabled="" type="checkbox"> breakpoints in UI not synced with the ones created in debug console</li>
+</ul>
+<p>Install</p>
+<p>need install an extension first <a href="https://marketplace.visualstudio.com/items?itemName=rioj7.command-variable">https://marketplace.visualstudio.com/items?itemName=rioj7.command-variable</a></p>
+<p>Attach script(launch.json):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&#34;version&#34;</span>: <span style="color:#e6db74">&#34;0.2.0&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&#34;configurations&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;gdb - Attach to process&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;cppdbg&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;request&#34;</span>: <span style="color:#e6db74">&#34;attach&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;MIMode&#34;</span>: <span style="color:#e6db74">&#34;gdb&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;program&#34;</span>: <span style="color:#e6db74">&#34;/home/poweruser/code/mysql-57-bld/sql/mysqld&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;processId&#34;</span>: <span style="color:#e6db74">&#34;${input:readPID}&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;setupCommands&#34;</span>: [
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Enable pretty-printing for gdb&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;text&#34;</span>: <span style="color:#e6db74">&#34;-enable-pretty-printing&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;ignoreFailures&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;set follow-fork-mode&#34;</span>: <span style="color:#e6db74">&#34;child&#34;</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>],
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&#34;inputs&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;readPID&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;command&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;command&#34;</span>: <span style="color:#e6db74">&#34;extension.commandvariable.file.content&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;args&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;fileName&#34;</span>: <span style="color:#e6db74">&#34;/home/poweruser/sandboxes/dev_5_7_37/data/mysql_sandbox5737.pid&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>other options:</p>
+<pre tabindex="0"><code>1. &#34;procreessId&#34;: &#34;${command:pickProcess}&#34;,
+2. &#34;preLaunchTask&#34;: &#34;writePID&#34;, # need to define pre-launch task in task.json
+</code></pre><h3 id="references">References</h3>
+<ul>
+<li>
+<p><a href="https://stackoverflow.com/questions/52981423/can-visual-studio-code-use-gdb-to-attach-to-process-without-the-program-proper">https://stackoverflow.com/questions/52981423/can-visual-studio-code-use-gdb-to-attach-to-process-without-the-program-proper</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/66164972/vs-code-how-to-get-process-id-via-shell-command-in-launch-json">https://stackoverflow.com/questions/66164972/vs-code-how-to-get-process-id-via-shell-command-in-launch-json</a></p>
+</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2021/06/26/ubuntu-20.04-desktop%E5%AE%89%E8%A3%85%E5%90%8E%E7%98%A6%E8%BA%AB/">Ubuntu 20.04 Desktop安装后瘦身</a></span>
+  <span class="nav-next"><a href="/post/2022/08/05/mysql-client-install/">MySQL Client Install</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

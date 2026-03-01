@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Metrics on 江 Blog</title>
+    <link>https://bopjiang.github.io/tags/metrics/</link>
+    <description>Recent content in Metrics on 江 Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Dec 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://bopjiang.github.io/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Measure, Statsd and Graphite</title>
+      <link>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</link>
+      <pubDate>Wed, 03 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://bopjiang.github.io/post/2014/12/03/measure-statsd-and-graphite/</guid>
+      <description>&lt;p&gt;今天给UXIN内部做了graphite的分享，PPT也是网上资料拼凑的，分享下: &lt;a href=&#34;http://pan.baidu.com/s/1dDfBYaH&#34;&gt;Measure, Statsd and Graphite&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>使用graphite做指标统计和绘图</title>
+      <link>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</link>
+      <pubDate>Mon, 01 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://bopjiang.github.io/post/2014/12/01/%E4%BD%BF%E7%94%A8graphite%E5%81%9A%E6%8C%87%E6%A0%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E7%BB%98%E5%9B%BE/</guid>
+      <description>&lt;h3 id=&#34;基础知识&#34;&gt;基础知识&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://graphite.readthedocs.org/en/latest/&#34;&gt;https://graphite.readthedocs.org/en/latest/&lt;/a&gt;  graphite doc&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://graphite.wikidot.com/&#34;&gt;http://graphite.wikidot.com/&lt;/a&gt;  outdated&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://graphite.wikidot.com/high-level-diagram&#34;&gt;http://graphite.wikidot.com/high-level-diagram&lt;/a&gt;  high-level-diagram(outdated)&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://www.aosabook.org/en/graphite.html&#34;&gt;http://www.aosabook.org/en/graphite.html&lt;/a&gt; The Architecture of Open Source Applications&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;代码库&#34;&gt;代码库&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/graphite-project&#34;&gt;https://github.com/graphite-project&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/bitly/statsdaemon&#34;&gt;https://github.com/bitly/statsdaemon&lt;/a&gt; statsd implemented in Go&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;使用graphite的项目&#34;&gt;使用graphite的项目&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;League Of Legends  &lt;a href=&#34;http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html&#34;&gt;http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;hipchat &lt;a href=&#34;http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html&#34;&gt;http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;其他资料&#34;&gt;其他资料&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Measure it, Don&amp;rsquo;t Just Monitor It &lt;a href=&#34;http://bryanwb.github.io/monitoring-measurement-preso&#34;&gt;http://bryanwb.github.io/monitoring-measurement-preso&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;A quick look at Graphite and StatsD&lt;a href=&#34;http://www.slideshare.net/adrianmoisey1/graphite-14761751&#34;&gt;http://www.slideshare.net/adrianmoisey1/graphite-14761751&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>AWS知识汇总 - 江 Blog</title>
+    <meta property="og:title" content="AWS知识汇总 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="Amazon Web Services in a single one-liner, 一句话介绍AWS各项服务.
+[&hellip;] 常用的卷类型有GP2和ST1.
+ST1卷, 1TB磁盘, 基线(baseline)吞吐率为40MiB/s, 瞬时(burst)吞吐率为250MiB/s. 但是有个前提, 必须是顺序IO, 并且每个IO需要达到1MB大小, 不然吞吐率上不去. (实测, 125KB &amp;hellip;">
+      <meta property="og:description" content="Amazon Web Services in a single one-liner, 一句话介绍AWS各项服务.
+[&hellip;] 常用的卷类型有GP2和ST1.
+ST1卷, 1TB磁盘, 基线(baseline)吞吐率为40MiB/s, 瞬时(burst)吞吐率为250MiB/s. 但是有个前提, 必须是顺序IO, 并且每个IO需要达到1MB大小, 不然吞吐率上不去. (实测, 125KB &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="note">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>AWS知识汇总</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2020-06-02
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="aws-in-one-word">AWS IN ONE WORD</h2>
+<p><a href="https://adayinthelifeof.nl/2020/05/20/aws.html">Amazon Web Services in a single one-liner</a>, 一句话介绍AWS各项服务.</p>
+<h2 id="ebs">EBS</h2>
+<p>常用的卷类型有GP2和ST1.</p>
+<p>ST1卷,  1TB磁盘, 基线(baseline)吞吐率为<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volume-types.html#EBSVolumeTypes_st1">40MiB/s</a>, 瞬时(burst)吞吐率为250MiB/s. 但是有个前提, 必须是顺序IO, 并且<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-io-characteristics.html#ebs-io-size-throughput-limits">每个IO需要达到1MB大小</a>, 不然吞吐率上不去. (实测, 125KB IO大小, 吞吐率只有7MiB/s, 也就是IOPS 只能60左右).</p>
+<p>IO大小可以通过<code>VolumnReadBytes</code> / <code>VolumeReadOps</code>得到, 但是Cloudwatch是不支持两个指标做数学运算的.</p>
+<p>有随机I/O的负载, 还是建议使用GP2类型.</p>
+<h2 id="efs">EFS</h2>
+<p>就是NFS. 除了要在多个机器挂载, 一般用EBS就够了, EFS成本比EBS贵3倍以上. 不过多个机器共享数据, 用S3会更便宜, 方案也更通用.</p>
+<p>EFS是异步写入, <a href="https://docs.aws.amazon.com/efs/latest/ug/performance-tips.html">存在一致性问题</a>, A机器上写入后, B机器不是一定能马上读到.</p>
+<p>有个<a href="https://forums.aws.amazon.com/ann.jspa?annID=6444">内核Bug</a>, 会导致文件系统hang住. 需要升级内核才能解决.</p>
+<h2 id="cloudfront-cnd">Cloudfront (CND)</h2>
+<p>SSL configuration in cloudfront:</p>
+<ul>
+<li><a href="https://sendgrid.com/docs/ui/account-and-settings/custom-ssl-configurations/">Instruction in Sendgrid</a></li>
+<li><a href="https://support.iterable.com/hc/en-us/articles/115000427446-How-to-Set-up-HTTPS-for-Links-for-Click-Tracking">Instruction in Iterable</a></li>
+</ul>
+<p>Cloudfront可以配置简单的分发规则, 根据请求域名、Path分发到Upstream(可以是S3)</p>
+<h2 id="elb">ELB</h2>
+<p>ELB分为四层(NLB)和七层(ALB)两种.</p>
+<p>面对大量突发请求时(如秒杀活动), ELB可能需要提前预热.</p>
+<p>ALB上的配置规则不能过多, 最多只能有100条.
+要关注ALB的stickness设置, slow start设置(<code>TODO</code>).</p>
+<p>NLB上把机器从target group摘除后,已有的到被摘除机器的TCP连接不会自动断开.</p>
+<h2 id="lambda">Lambda</h2>
+<p>Lambda不适合场景: 调用非常频繁的业务请求.</p>
+<p>AWS给出的数据, 使用Lambda, 每月3000万次调用, 费用比EC2节省60%, 每月8000万次调用时, 费用与EC2基本持平, 已经不适合使用Lambda.</p>
+<h2 id="personal-health-dashboard">Personal Health Dashboard</h2>
+<p>需要关注AWS的schedule change, 维护事件(如EC2机器重启,数据库Instance停机维护)会提前通知.</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://www.bioaws.com/blogs/2020-01-26-s3-ebs-efs-compare/">https://www.bioaws.com/blogs/2020-01-26-s3-ebs-efs-compare/</a></li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/note/g-suite%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/">G-Suite知识汇总</a></span>
+  <span class="nav-next"><a href="/note/tools-collection-%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">Tools Collection 常用工具</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Golang程序问题定位方法 - 江 Blog</title>
+    <meta property="og:title" content="Golang程序问题定位方法 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="debug go program">
+      <meta property="og:description" content="debug go program">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Golang程序问题定位方法</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2017-10-31
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>本文总结的方法对Go1.6及以后版本有效。</p>
+<h2 id="运行时问题">运行时问题</h2>
+<p>通过暴露http接口把运行栈打出来：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span><span style="color:#f92672">import</span> <span style="color:#a6e22e">_</span> <span style="color:#e6db74">&#34;net/http/pprof&#34;</span>
+</span></span></code></pre></div><p>命令如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://server:port/debug/pprof/goroutine?debug<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>参数debug=1时输出按照goroutine的当前栈位置汇总过的栈信息。 譬如可以看到某类goroutine运行了多少个，在遇到goroutine泄露的问题时比较有用。</p>
+<pre tabindex="0"><code>goroutine profile: total 104
+100 @ 0x102ebdc 0x102ecce 0x10065a4 0x100624b 0x12e3683 0x105cbd1
+#	0x12e3682	main.foo+0x42	/Users/bopjiang/code/test/go/stackdump.go:18
+
+1 @ 0x102ebdc 0x1029b8a 0x1029187 0x108f55e 0x108f5dd 0x109037a 0x10f1242 0x110264d 0x1258052 0x105cbd1
+#	0x1029186	internal/poll.runtime_pollWait+0x56		/usr/local/go/src/runtime/netpoll.go:173
+#	0x108f55d	internal/poll.(*pollDesc).wait+0xad		/usr/local/go/src/internal/poll/fd_poll_runtime.go:85
+#	0x108f5dc	internal/poll.(*pollDesc).waitRead+0x3c		/usr/local/go/src/internal/poll/fd_poll_runtime.go:90
+#	0x1090379	internal/poll.(*FD).Read+0x189			/usr/local/go/src/internal/poll/fd_unix.go:125
+#	0x10f1241	net.(*netFD).Read+0x51				/usr/local/go/src/net/fd_unix.go:202
+#	0x110264c	net.(*conn).Read+0x6c				/usr/local/go/src/net/net.go:176
+#	0x1258051	net/http.(*connReader).backgroundRead+0x61	/usr/local/go/src/net/http/server.go:660
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl http://server:port/debug/pprof/goroutine?debug<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p>参数debug=2时输出的是详细每个goroutine的运行状态：调用栈信息，传入参数值，阻塞事件等待时间
+最后的等待时间对定位程序挂起的问题很有用。譬如某个goroutine的channel写入阻塞了1个小时，那很有可能此channel的消费端出了问题。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>goroutine <span style="color:#ae81ff">47</span> <span style="color:#f92672">[</span>chan receive, <span style="color:#ae81ff">3</span> minutes<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>main.foo<span style="color:#f92672">(</span>0x1d<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:23 +0x7c
+</span></span><span style="display:flex;"><span>created by main.main
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:33 +0xae
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>goroutine <span style="color:#ae81ff">48</span> <span style="color:#f92672">[</span>chan receive, <span style="color:#ae81ff">3</span> minutes<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>main.foo<span style="color:#f92672">(</span>0x0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:18 +0x43
+</span></span><span style="display:flex;"><span>created by main.main
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:28 +0xae
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>goroutine <span style="color:#ae81ff">118</span> <span style="color:#f92672">[</span>running<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>runtime/pprof.writeGoroutineStacks<span style="color:#f92672">(</span>0x154b720, 0xc4201901c0, 0x0, 0xc42004fad0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/pprof/pprof.go:608 +0xa7
+</span></span><span style="display:flex;"><span>runtime/pprof.writeGoroutine<span style="color:#f92672">(</span>0x154b720, 0xc4201901c0, 0x2, 0x30, 0x135ff20<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/pprof/pprof.go:597 +0x44
+</span></span><span style="display:flex;"><span>runtime/pprof.<span style="color:#f92672">(</span>*Profile<span style="color:#f92672">)</span>.WriteTo<span style="color:#f92672">(</span>0x157d720, 0x154b720, 0xc4201901c0, 0x2, 0xc4201901c0, 0x15893e0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/pprof/pprof.go:310 +0x3ab
+</span></span><span style="display:flex;"><span>net/http/pprof.handler.ServeHTTP<span style="color:#f92672">(</span>0xc42001ea31, 0x9, 0x154fb20, 0xc4201901c0, 0xc420112400<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/pprof/pprof.go:237 +0x1b8
+</span></span><span style="display:flex;"><span>net/http/pprof.Index<span style="color:#f92672">(</span>0x154fb20, 0xc4201901c0, 0xc420112400<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/pprof/pprof.go:248 +0x1db
+</span></span><span style="display:flex;"><span>net/http.HandlerFunc.ServeHTTP<span style="color:#f92672">(</span>0x13b54d0, 0x154fb20, 0xc4201901c0, 0xc420112400<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/server.go:1918 +0x44
+</span></span><span style="display:flex;"><span>net/http.<span style="color:#f92672">(</span>*ServeMux<span style="color:#f92672">)</span>.ServeHTTP<span style="color:#f92672">(</span>0x15893e0, 0x154fb20, 0xc4201901c0, 0xc420112400<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/server.go:2254 +0x130
+</span></span><span style="display:flex;"><span>net/http.serverHandler.ServeHTTP<span style="color:#f92672">(</span>0xc4201281a0, 0x154fb20, 0xc4201901c0, 0xc420112400<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/server.go:2619 +0xb4
+</span></span><span style="display:flex;"><span>net/http.<span style="color:#f92672">(</span>*conn<span style="color:#f92672">)</span>.serve<span style="color:#f92672">(</span>0xc420184000, 0x15501e0, 0xc420126100<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/server.go:1801 +0x71d
+</span></span><span style="display:flex;"><span>created by net/http.<span style="color:#f92672">(</span>*Server<span style="color:#f92672">)</span>.Serve
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/net/http/server.go:2720 +0x288
+</span></span></code></pre></div><h2 id="崩溃问题">崩溃问题</h2>
+<p>找崩溃原因，遇到大部分都是nil reference。
+输出跟debug=2一样格式的栈信息（只不过只有崩溃goroutine一个栈的）。</p>
+<h3 id="race-detector">race detector</h3>
+<p>在程序出现race condition的情况下（通常都是并发对map进行读写），崩溃的地点可能在runtime里面， 这时候就不太好定位了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>fatal error: concurrent map writes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>goroutine <span style="color:#ae81ff">19</span> <span style="color:#f92672">[</span>running<span style="color:#f92672">]</span>:
+</span></span><span style="display:flex;"><span>runtime.throw<span style="color:#f92672">(</span>0x13a3caf, 0x15<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/panic.go:605 +0x95 fp<span style="color:#f92672">=</span>0xc420028f08 sp<span style="color:#f92672">=</span>0xc420028ee8 pc<span style="color:#f92672">=</span>0x102d065
+</span></span><span style="display:flex;"><span>runtime.mapassign_faststr<span style="color:#f92672">(</span>0x1339020, 0xc420130060, 0x139dd66, 0x8, 0x0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/hashmap_fast.go:607 +0x4f5 fp<span style="color:#f92672">=</span>0xc420028f88 sp<span style="color:#f92672">=</span>0xc420028f08 pc<span style="color:#f92672">=</span>0x100ea85
+</span></span><span style="display:flex;"><span>main.foo<span style="color:#f92672">(</span>0x1<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:20 +0x52 fp<span style="color:#f92672">=</span>0xc420028fd8 sp<span style="color:#f92672">=</span>0xc420028f88 pc<span style="color:#f92672">=</span>0x12e3692
+</span></span><span style="display:flex;"><span>runtime.goexit<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>	/usr/local/go/src/runtime/asm_amd64.s:2337 +0x1 fp<span style="color:#f92672">=</span>0xc420028fe0 sp<span style="color:#f92672">=</span>0xc420028fd8 pc<span style="color:#f92672">=</span>0x105cbd1
+</span></span><span style="display:flex;"><span>created by main.main
+</span></span><span style="display:flex;"><span>	/Users/bopjiang/code/test/go/stackdump.go:33 +0xae
+</span></span></code></pre></div><p>此时可以依靠<a href="https://blog.golang.org/race-detector">Race Detector</a>。写测试用例做race检查是一个办法。还可以将线上的某台机器运行race版本，等待问题，或者复制客户端请求重现。race detector对性能影响非常大，这点上线时要注意。</p>
+<h2 id="core-dump">core dump</h2>
+<p>最后还有一个办法就是看core dump，可以看到程序的完整状态。这篇文章<a href="https://rakyll.org/coredumps/">Debugging Go core dumps</a>总结得很好。</p>
+<h2 id="性能分析">性能分析</h2>
+<p>除了崩溃，挂死问题，很多性能方面问题必须依赖profile和指标监控：</p>
+<ul>
+<li><a href="https://blog.golang.org/profiling-go-programs">Profiling Go Programs</a></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># CPU Profile</span>
+</span></span><span style="display:flex;"><span>$ curl -s -o cpu.pprof http://server:port/debug/pprof/profile <span style="color:#75715e"># 30-second CPU profile</span>
+</span></span><span style="display:flex;"><span>$ go tool pprof cpu.pprof
+</span></span><span style="display:flex;"><span>Type: cpu
+</span></span><span style="display:flex;"><span>Time: Nov 14, <span style="color:#ae81ff">2017</span> at 7:43pm <span style="color:#f92672">(</span>CST<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Duration: 30s, Total samples <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Entering interactive mode <span style="color:#f92672">(</span>type <span style="color:#e6db74">&#34;help&#34;</span> <span style="color:#66d9ef">for</span> commands, <span style="color:#e6db74">&#34;o&#34;</span> <span style="color:#66d9ef">for</span> options<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>pprof<span style="color:#f92672">)</span> web
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 会生成SVG图(需要安装graphviz)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Heap Profile</span>
+</span></span><span style="display:flex;"><span>go tool pprof http://server:port/debug/pprof/heap
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># goroutine blocking profile</span>
+</span></span><span style="display:flex;"><span>go tool pprof http://server:port/debug/pprof/block
+</span></span></code></pre></div><ul>
+<li>通过程序自己上报指标，在TSDB中做回溯分析。程序中buffered channel的长度最好都做下监控。 这块一般都是<a href="https://prometheus.io/">Promethues</a> 搭配<a href="https://grafana.com/">Grafana</a>使用。</li>
+</ul>
+<h2 id="update-2018-09-21">UPDATE 2018-09-21</h2>
+<h3 id="flame-graphs-火焰图">flame graphs 火焰图</h3>
+<p>Go 1.11在tool中集成了火焰图, 而且已经不再需要二进制文件.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go tool pprof -http<span style="color:#f92672">=</span>:8080 /path/to/profile
+</span></span></code></pre></div>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2017/08/15/%E5%BC%80%E6%BA%90%E5%B8%B8%E7%94%A8%E6%9C%AF%E8%AF%AD/">开源常用术语</a></span>
+  <span class="nav-next"><a href="/post/2019/03/02/%E5%85%B3%E4%BA%8Ego-http-timeout/">关于Go HTTP Timeout</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

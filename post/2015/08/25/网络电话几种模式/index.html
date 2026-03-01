@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>网络电话几种模式 - 江 Blog</title>
+    <meta property="og:title" content="网络电话几种模式 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="ansible, remote ssh">
+      <meta property="og:description" content="ansible, remote ssh">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>网络电话几种模式</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2015-08-25
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>移动互联网时代，通过在手机上安装个APP打网络电话是再自然不过的事情了。</p>
+<p>市面上靠谱一点的有Skype，有信，微会，来电，易信，触宝，而且大部分都打着免费的旗号(真的是免费),谋求占领电话拨号盘的入口。（基本上我手机上都安装了:-)）</p>
+<p>几种常见的通话模式如下：</p>
+<h3 id="ott">OTT</h3>
+<p>主叫客户端安装了APP，通过APP发起呼叫，被叫也安装了APP且在线，这时候，主、被叫不需要通过运营商的PSTN网络，直接可以OTT通话（视频、IM也属于此类）</p>
+<p>大部分电话APP都支持这种通话方式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  +---------------------+                +----------------------+
+</span></span><span style="display:flex;"><span>  | Caller App(Phone)   |                |  Callee App(Phone)   |
+</span></span><span style="display:flex;"><span>  +---------------------+                +----------------------+
+</span></span><span style="display:flex;"><span>          |                                        |
+</span></span><span style="display:flex;"><span>     3G/4G/WIFI                                3G/4G/WIFI
+</span></span><span style="display:flex;"><span>          |                                        |
+</span></span><span style="display:flex;"><span>          | Operator Network                       |
+</span></span><span style="display:flex;"><span> +-----------------------+                  +-----------------+
+</span></span><span style="display:flex;"><span> | BTS/NodeB/eNodeB/AP...|------------------|  OTT Service    |
+</span></span><span style="display:flex;"><span> +-----------------------+                  +-----------------+
+</span></span></code></pre></div><h3 id="直拨">直拨</h3>
+<p>主叫客户端安装了APP，通过APP发起呼叫，被叫没有安装APP或者不在线，这时候，被叫需要通过运营商的PSTN网络，将被叫唤起。</p>
+<p>目前只有有信支持这种通话方式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  +---------------------+                                  +--------------------------+
+</span></span><span style="display:flex;"><span>  | Caller App(Phone)   |                                  |  Callee (Phone, No App)  |
+</span></span><span style="display:flex;"><span>  +---------------------+                                  +--------------------------+
+</span></span><span style="display:flex;"><span>          |                                                           #
+</span></span><span style="display:flex;"><span>     3G/4G/WIFI                                                       #
+</span></span><span style="display:flex;"><span>          |                                                           #
+</span></span><span style="display:flex;"><span>          | Operator Network                                          #  Operator Network
+</span></span><span style="display:flex;"><span> +-----------------------+        +-----------------+    SIP   +-----------------+
+</span></span><span style="display:flex;"><span> | BTS/NodeB/eNodeB/AP...|--------|  OTT Service    | ---------|  PSTN GateWay   |
+</span></span><span style="display:flex;"><span> +-----------------------+        +-----------------+          +-----------------+
+</span></span></code></pre></div><h3 id="回拨">回拨</h3>
+<p>主叫客户端安装了APP，但是因主叫网络质量较差，无法在数据链路传输语音数据。APP发起呼叫请求到服务器，服务器先呼起主叫，再呼起被叫，将二者的媒体流连接在一起,就像主被叫在一个会议室里面。</p>
+<p>大部分电话APP都支持这种通话方式。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  +---------------------+                                 +--------------------------+
+</span></span><span style="display:flex;"><span>  | Caller App(Phone)   | #################               |  Callee (Phone, No App)  |
+</span></span><span style="display:flex;"><span>  +---------------------+                 #               +--------------------------+
+</span></span><span style="display:flex;"><span>          |                               #                            #
+</span></span><span style="display:flex;"><span>          2G                              #########################    #
+</span></span><span style="display:flex;"><span>          |                                                       #    #
+</span></span><span style="display:flex;"><span>          | Operator Network                                      #    #  Operator Network
+</span></span><span style="display:flex;"><span> +-----------------------+        +-----------------+    SIP   +-----------------+
+</span></span><span style="display:flex;"><span> | BTS/NodeB/eNodeB/AP...|--------|  OTT   Service  | ---------|  PSTN GateWay   |
+</span></span><span style="display:flex;"><span> +-----------------------+        +-----------------+          +-----------------+
+</span></span></code></pre></div><h3 id="呼叫转移至ott呼转">呼叫转移至OTT（呼转）</h3>
+<p>主叫通过运营商发起PSTN呼叫，运营商查询被叫APP在线时，直接通过OTT将被叫唤起。</p>
+<p>国内目前暂时没有运营商支持。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>  +------------------------+                                        +---------------------+
+</span></span><span style="display:flex;"><span>  | Caller(Phone, No App)  |                                        |  Callee APP(Phone)  |
+</span></span><span style="display:flex;"><span>  +------------------------+                                        +---------------------+
+</span></span><span style="display:flex;"><span>          #                                                                  |
+</span></span><span style="display:flex;"><span>          #                                                             3G/4G/WIFI
+</span></span><span style="display:flex;"><span>          #                                                                  |
+</span></span><span style="display:flex;"><span>          # Operator Network                                                 |
+</span></span><span style="display:flex;"><span> +-----------------------+  +-------------+  SIP +------------+    +-----------------------+
+</span></span><span style="display:flex;"><span> | BTS/NodeB/eNodeB/AP...|--| PSTN GateWay|------| OTT Service| -- | BTS/NodeB/eNodeB/AP...|
+</span></span><span style="display:flex;"><span> +-----------------------+  +-------------+      +------------+    +-----------------------+
+</span></span></code></pre></div>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2015/08/20/ansible-%E6%89%B9%E9%87%8F%E8%84%9A%E6%9C%AC%E6%89%A7%E8%A1%8C%E7%A5%9E%E5%99%A8/">Ansible, 批量脚本执行神器</a></span>
+  <span class="nav-next"><a href="/post/2015/10/01/raspberry-pi%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《Raspberry Pi入门指南》读书笔记</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

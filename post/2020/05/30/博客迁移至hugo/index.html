@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>博客迁移至Hugo - 江 Blog</title>
+    <meta property="og:title" content="博客迁移至Hugo - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="作为一个Gopher, 今天终于将博客从Jeklly迁移到了Hugo. 并不是一帆风顺, 折腾了大半天.
+首先, Hugo同Jeklly Markdown文件的元数据有区别. 为了转为Hugo格式, 使用了一个工具ConvertToHugo, 是Python 2写的. 转换后的文件, date字段缺失. 因为之前时间是从文件名截取的(如: &amp;hellip;">
+      <meta property="og:description" content="作为一个Gopher, 今天终于将博客从Jeklly迁移到了Hugo. 并不是一帆风顺, 折腾了大半天.
+首先, Hugo同Jeklly Markdown文件的元数据有区别. 为了转为Hugo格式, 使用了一个工具ConvertToHugo, 是Python 2写的. 转换后的文件, date字段缺失. 因为之前时间是从文件名截取的(如: &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>博客迁移至Hugo</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2020-05-30
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>作为一个Gopher, 今天终于将博客从Jeklly迁移到了Hugo. 并不是一帆风顺, 折腾了大半天.</p>
+<p>首先, Hugo同Jeklly Markdown文件的元数据有区别. 为了转为Hugo格式, 使用了一个工具<a href="https://github.com/coderzh/ConvertToHugo">ConvertToHugo</a>, 是Python 2写的. 转换后的文件, date字段缺失. 因为之前时间是从文件名截取的(如: <code>2019-03-02</code>-go-http-timeout.md),  所以自己写了个<a href="https://gist.github.com/bopjiang/b47132a97fd32ff99f73174de5bace89">脚本</a>解决.</p>
+<p>其次, git submodule用得少, 碰到一些问题, 特别是删除submodule, 最后在stackoverflow找到的<a href="https://stackoverflow.com/questions/29850029/what-is-the-current-way-to-remove-a-git-submodule">答案</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git submodule deinit &lt;asubmodule&gt;    
+</span></span><span style="display:flex;"><span>git rm &lt;asubmodule&gt;
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Note: asubmodule (no trailing slash)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or, if you want to leave it in your working tree</span>
+</span></span><span style="display:flex;"><span>git rm --cached &lt;asubmodule&gt;
+</span></span><span style="display:flex;"><span>rm -rf .git/modules/&lt;asubmodule&gt;
+</span></span></code></pre></div><p>还有, 为了提交.md文件后, 博客能自动渲染, 使用Github Action建立了个CD流程.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Push to GitHub Pages on push to master</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">master</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">build</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout master</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#e6db74">&#39;true&#39;</span> <span style="color:#75715e">## 使用了submodule</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Deploy the site</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">benmatselby/hugo-deploy-gh-pages@v1.4.0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">HUGO_VERSION</span>: <span style="color:#ae81ff">0.71.1</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">TARGET_REPO</span>: <span style="color:#ae81ff">bopjiang/bopjiang.github.io</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">TOKEN</span>: <span style="color:#ae81ff">${{ secrets.TOKEN }}</span> <span style="color:#75715e">## access token, 可惜不能给单个库做授权.</span>
+</span></span></code></pre></div><p>最后, 建立两个代码仓库:</p>
+<ul>
+<li><a href="https://github.com/bopjiang/blog">blog</a>, 存放原始的.md文件</li>
+<li><a href="https://github.com/bopjiang/bopjiang.github.io">bopjiang.github.io</a>, 存放生成的静态HTML文件.</li>
+</ul>
+<p>做完的效果就是, Markdown格式的博客文件提交后, 1分钟内网站<a href="https://bopjiang.github.io">bopjiang.github.io</a>上就能看到效果. 整个流程在github上搞定, 没有其他依赖.</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://github.com/yihui/hugo-ivy">hugo-ivy</a>, 博客使用的模版</li>
+<li><a href="https://yihui.org/cn/">谢益辉Yihui&rsquo;s Blog</a></li>
+<li><a href="https://www.jameswright.xyz/post/deploy-hugo-academic-using-githubio/">https://www.jameswright.xyz/post/deploy-hugo-academic-using-githubio/</a></li>
+<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">https://gohugo.io/hosting-and-deployment/hosting-on-github/</a>, 这篇文章中的脚本deploy.sh和将public目录设置为submodule在CD流程中没采用.</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">关于API、协议设计的一点思考</a></span>
+  <span class="nav-next"><a href="/post/2020/06/13/aes%E4%BD%BF%E7%94%A8%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF/">AES使用的正确姿势</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

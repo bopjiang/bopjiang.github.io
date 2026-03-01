@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>使用emacs进行golang编程 - 江 Blog</title>
+    <meta property="og:title" content="使用emacs进行golang编程 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="golang programming in emacs">
+      <meta property="og:description" content="golang programming in emacs">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>使用emacs进行golang编程</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2014-04-21
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h3 id="环境">环境</h3>
+<p>Ubuntu 12.04， Emacs 23, 中文输入法fcitx</p>
+<h3 id="emacs配置">Emacs配置</h3>
+<p>使用el-get管理Emacs插件甚是方便，具体见[1]</p>
+<p>Emacs需要安装的插件</p>
+<ul>
+<li>el-get （下面的emacs插件都使用el-get-install安装）</li>
+<li>cscope (安装前要在系统安装cscope)</li>
+<li>go-mode</li>
+<li>ibus</li>
+</ul>
+<h3 id="中文输入法问题">中文输入法问题</h3>
+<p>除了安装ibus，下面两个要注意：</p>
+<ul>
+<li>apt-get安装python-xlib插件</li>
+<li>快捷键冲突：</li>
+</ul>
+<h3 id="建立代码索引">建立代码索引</h3>
+<p>用下面的脚本：</p>
+<script src="https://gist.github.com/bopjiang/11146574.js"></script>
+<h3 id="参考">参考</h3>
+<ol>
+<li><a href="http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html">http://www.cnblogs.com/A-Song/archive/2013/03/09/2951951.html</a></li>
+<li><a href="http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html">http://www.ibm.com/developerworks/cn/aix/library/au-sudo/index.html</a></li>
+</ol>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2014/04/18/go%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">go常用工具</a></span>
+  <span class="nav-next"><a href="/post/2014/11/30/%E4%BD%BF%E7%94%A8jekyll-bootstrap%E5%92%8Cgithub%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">使用jekyll-bootstrap和github建立个人博客</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

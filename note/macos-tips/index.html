@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>MacOS Tips - 江 Blog</title>
+    <meta property="og:title" content="MacOS Tips - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="## use gnu readlink instead of readlink greadlink -f ./1.txt gfind . -name &#34;XXX&#34; Tools color picker use Digital Color Meter in MacOS
+[&hellip;] sudo powermetrics --samplers smc |grep -i &amp;hellip;">
+      <meta property="og:description" content="## use gnu readlink instead of readlink greadlink -f ./1.txt gfind . -name &#34;XXX&#34; Tools color picker use Digital Color Meter in MacOS
+[&hellip;] sudo powermetrics --samplers smc |grep -i &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="note">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>MacOS Tips</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2020-05-31
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="basic">Basic</h2>
+<h3 id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<table>
+  <thead>
+      <tr>
+          <th>command</th>
+          <th style="text-align: center">Usages</th>
+          <th style="text-align: right">Comments</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>⌘ + ↑</td>
+          <td style="text-align: center">Go To the Parent Directory</td>
+          <td style="text-align: right"></td>
+      </tr>
+      <tr>
+          <td>alt + ←</td>
+          <td style="text-align: center">move left a space</td>
+          <td style="text-align: right"></td>
+      </tr>
+      <tr>
+          <td>alt + →</td>
+          <td style="text-align: center">move right a space</td>
+          <td style="text-align: right"></td>
+      </tr>
+      <tr>
+          <td>⌘   + `</td>
+          <td style="text-align: center">swith windows inside the application</td>
+          <td style="text-align: right">NOTE: doesn&rsquo;t work for windows running in full screen</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="bash">Bash</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## use gnu readlink instead of readlink</span>
+</span></span><span style="display:flex;"><span>greadlink -f ./1.txt
+</span></span><span style="display:flex;"><span>gfind . -name <span style="color:#e6db74">&#34;XXX&#34;</span>
+</span></span></code></pre></div><h2 id="tools">Tools</h2>
+<h3 id="color-picker">color picker</h3>
+<p>use <em><strong>Digital Color Meter</strong></em> in MacOS</p>
+<h3 id="temperature">Temperature</h3>
+<h4 id="get-temperature">get temperature</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo powermetrics --samplers smc |grep -i <span style="color:#e6db74">&#34;CPU die temperature&#34;</span>
+</span></span></code></pre></div><h4 id="intel-power-gadget">Intel Power Gadget</h4>
+<p>measure Power Watts, CPU temperature, CPU frequency.</p>
+<h2 id="gnu-tools">GNU tools</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>brew install coreutils
+</span></span></code></pre></div><h2 id="networking">Networking</h2>
+<h3 id="brew-install-with-proxy">brew install with proxy</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ALL_PROXY<span style="color:#f92672">=</span>socks5://localhost:1080 brew install minetest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or with password</span>
+</span></span><span style="display:flex;"><span>ALL_PROXY<span style="color:#f92672">=</span>socks5://a:a@localhost:8765 brew install minetest
+</span></span></code></pre></div><h3 id="open-multiple-wireshark-instances">open multiple <em>Wireshark</em> instances</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ open -n /Applications/Wireshark.app
+</span></span></code></pre></div><p><code>netstat -anp</code> not working in MacOS, use lsof</p>
+<h3 id="tcpdump">tcpdump</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo tcpdump -i all host 127.0.0.1 and port <span style="color:#ae81ff">1080</span> -w cap1.pcap
+</span></span><span style="display:flex;"><span>$ open cap1.pcap
+</span></span></code></pre></div><h3 id="max-connection-in-macos">max connection in MacOS</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo sysctl -a |grep somaxconn
+</span></span><span style="display:flex;"><span>kern.ipc.somaxconn: <span style="color:#ae81ff">128</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ sudo sysctl -w kern.ipc.somaxconn<span style="color:#f92672">=</span><span style="color:#ae81ff">4096</span>
+</span></span><span style="display:flex;"><span>kern.ipc.somaxconn: <span style="color:#ae81ff">128</span> -&gt; <span style="color:#ae81ff">4096</span>
+</span></span></code></pre></div><p><a href="https://content.nanobox.io/fixing-too-many-open-files-in-macos/">https://content.nanobox.io/fixing-too-many-open-files-in-macos/</a></p>
+<h2 id="emacs">Emacs</h2>
+<p>Open ~/Documents/ folder permission error. Using <code>ns-open-file-using-panel</code> open it once, then error is gone.</p>
+<h2 id="windows">Windows</h2>
+<h3 id="make-a-windows-10-boot-able-usb-stick-in-macos">make a Windows 10 boot-able USB stick in MacOS</h3>
+<ol>
+<li>Format the USB stick
+For me, UEFI Mode is used in BIOS.</li>
+</ol>
+<p>It&rsquo;s working when USB stick is formatted with FAT32+MBR(Master Boot Record) option.</p>
+<p>If I use exFAT32+GPT(GUID Partition Map) option, the USB stick can not boot.</p>
+<ol start="2">
+<li>Mount ISO file and USB stick, and copy all files in ISO to USB.</li>
+</ol>
+<p><a href="https://www.freecodecamp.org/news/how-make-a-windows-10-usb-using-your-mac-build-a-bootable-iso-from-your-macs-terminal/">ref: How to Make a Windows 10 USB Using Your Mac - Build a Bootable ISO From Your Mac&rsquo;s Terminal</a></p>
+<h3 id="microsoft-remote-desktop">Microsoft Remote Desktop</h3>
+<p>RDP client on Mac OS.</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev"></span>
+  <span class="nav-next"><a href="/note/g-suite%E7%9F%A5%E8%AF%86%E6%B1%87%E6%80%BB/">G-Suite知识汇总</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Ansible, 批量脚本执行神器 - 江 Blog</title>
+    <meta property="og:title" content="Ansible, 批量脚本执行神器 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="ansible, remote ssh">
+      <meta property="og:description" content="ansible, remote ssh">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Ansible, 批量脚本执行神器</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2015-08-20
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>就像产品和运营一样，开发和运维的界限现在也越来越模糊。运维工具还是有很多好东西的, Ansible就是个这样一个。</p>
+<p>选择Ansbile理由:</p>
+<ul>
+<li>python</li>
+<li>无须在远程机器上安装agent，直接ssh权限就够了</li>
+<li>宿主机上没有什么依赖，pip安装Ansible就够了</li>
+</ul>
+<p>效果如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>bopjiang@localhost adhoc<span style="color:#f92672">]</span>$ ansible kafka-broker  -i ./ansible_host -a <span style="color:#e6db74">&#34;df -h&#34;</span> --sudo --sudo-user bopjiang
+</span></span><span style="display:flex;"><span>10.10.82.180 | success | rc<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> &gt;&gt;
+</span></span><span style="display:flex;"><span>Filesystem            Size  Used Avail Use% Mounted on
+</span></span><span style="display:flex;"><span>/dev/sda2              49G   18G   29G  38% /
+</span></span><span style="display:flex;"><span>tmpfs                  16G     <span style="color:#ae81ff">0</span>   16G   0% /dev/shm
+</span></span><span style="display:flex;"><span>/dev/sda1             194M   31M  153M  17% /boot
+</span></span><span style="display:flex;"><span>/dev/sda5             1.1T  729G  255G  75% /data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>10.10.30.207 | success | rc<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> &gt;&gt;
+</span></span><span style="display:flex;"><span>Filesystem            Size  Used Avail Use% Mounted on
+</span></span><span style="display:flex;"><span>/dev/sda2              97G   46G   46G  51% /
+</span></span><span style="display:flex;"><span>tmpfs                  32G     <span style="color:#ae81ff">0</span>   32G   0% /dev/shm
+</span></span><span style="display:flex;"><span>/dev/sda1             194M   54M  131M  30% /boot
+</span></span><span style="display:flex;"><span>/dev/sda5             1.6T  1.1T  335G  78% /data
+</span></span></code></pre></div><p>当然你要配置SSH密钥自动登录远程机器，可以参考这个自动化脚本<a href="https://github.com/bopjiang/ssh-no-password">ssh-no-password</a>。</p>
+<p>Adhoc的方式批量执行命令只是Ansible的一个小功能。</p>
+<p>Ansible的主要用途是做自动化部署，使用好需要理解playbook，roles，template的概念，并不复杂，下次再说了。</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2015/01/30/fonts.googleapi%E5%AF%BC%E8%87%B4%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98/">fonts.googleapi导致网页打不开问题</a></span>
+  <span class="nav-next"><a href="/post/2015/08/25/%E7%BD%91%E7%BB%9C%E7%94%B5%E8%AF%9D%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F/">网络电话几种模式</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

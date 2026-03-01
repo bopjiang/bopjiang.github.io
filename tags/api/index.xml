@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>API on 江 Blog</title>
+    <link>https://bopjiang.github.io/tags/api/</link>
+    <description>Recent content in API on 江 Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://bopjiang.github.io/tags/api/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于API、协议设计的一点思考</title>
+      <link>https://bopjiang.github.io/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      <guid>https://bopjiang.github.io/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/</guid>
+      <description>&lt;p&gt;最近几年有幸在两家公司从零开始主导了两个系统对外API、协议的的设计, 最近也在反思在协议设计中的问题(自己埋下的坑).&lt;/p&gt;&#xA;&lt;h2 id=&#34;自定义二进制协议&#34;&gt;自定义二进制协议&lt;/h2&gt;&#xA;&lt;p&gt;先讲第一家ToC的互联网公司, 客户端是手机APP. 因为涉及到VOIP相关业务, 客户端-服务端必须具备双工通信能力, 同时为了节省流量, 选择了基于TCP的二进制协议.(当然也跟我当时从传统通信行业出来有关)&lt;/p&gt;&#xA;&lt;p&gt;一个系统当然不是凭空设计出来的, 从中一定能看出组织架构的影子.当时我这边主要负责接入层这块, VoIP SIP信令是另一个团队在负责, 本着两个团队间代码最小耦合的原则, 于是乎, 协议就分为了两层, 一层负责消息路由(报文头), 一层负责业务数据(报文体).&#xA;具体到字段设计&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;字段名称&lt;/th&gt;&#xA;          &lt;th&gt;宽度(Byte)&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;报文头长度&lt;/td&gt;&#xA;          &lt;td&gt;2&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;报文体长度&lt;/td&gt;&#xA;          &lt;td&gt;2&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;报文头&lt;/td&gt;&#xA;          &lt;td&gt;变长&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;报文体&lt;/td&gt;&#xA;          &lt;td&gt;变长&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;为了保证版本向后扩展, 在TCP三次握手完成后, 客户端必须主动发送一个版本号消息.&lt;/p&gt;&#xA;&lt;p&gt;因为是TCP长连接,所以必须要有应用层心跳消息进行连接保活, 4个Bytes的全0就行了(报文头长度和报文体长度都设置为0)&lt;/p&gt;&#xA;&lt;p&gt;这里的版本号在后来还真起到了很大的用处, 报文头最开始用的是JSON编码, 后面改为Protocol Buffers, 版本号在这块帮助了协议的平滑升级.&lt;/p&gt;&#xA;&lt;h3 id=&#34;遇到的坑&#34;&gt;遇到的坑&lt;/h3&gt;&#xA;&lt;p&gt;由于我们的二进制协议没有特殊的边界字符(magic number), 导致客户端处理异常时, 没有很快的检测到报文错误(&lt;code&gt;Fail Fast&lt;/code&gt;), 会导致服务端一致读阻塞(读到错误的报文头或报文体长度字段).&lt;/p&gt;&#xA;&lt;p&gt;报文体长度的宽度, 2个字节一般是够用了, 设计4字节大小的报文体, 也不太合适,万一谁不小心发个几百M的巨包, 岂不是把整条TCP连接都阻塞住了?&#xA;但是大报文的场景总是存在的, 预先设计好&lt;code&gt;分帧协议&lt;/code&gt;是很有必要的.&lt;/p&gt;&#xA;&lt;p&gt;二进制协议调试定位上会有一定难度, 特别是协议开发初期, 数据结构不稳定时.想到在Wireshark里看一堆二进制符号现在都有些头疼, 如果是PB协议, 更是令人抓狂. 相比而言, HTTP明文协议调试起来就简单多了.&lt;/p&gt;&#xA;&lt;h2 id=&#34;rest-api&#34;&gt;REST API&lt;/h2&gt;&#xA;&lt;p&gt;第二家是硬件独角兽, 我从事的是ToB系统的设计. API主要提供给外部用户使用, HTTP看上去是不错选择. 这个API设计的时候, 严格遵循了REST风格, 每个请求都包含:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;动词(HTTP Method: GET POST PUT PATCH DELETE)&lt;/li&gt;&#xA;&lt;li&gt;资源属性&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;其中, GET、PUT、DELETE请求都是幂等的. PUT用来整体更新或覆盖, PATCH是做部分修改.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
