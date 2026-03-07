@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>使用graphite做指标统计和绘图 - 江 Blog</title>
+    <meta property="og:title" content="使用graphite做指标统计和绘图 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="graphing">
+      <meta property="og:description" content="graphing">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>使用graphite做指标统计和绘图</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2014-12-01
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h3 id="基础知识">基础知识</h3>
+<ul>
+<li><a href="https://graphite.readthedocs.org/en/latest/">https://graphite.readthedocs.org/en/latest/</a>  graphite doc</li>
+<li><a href="http://graphite.wikidot.com/">http://graphite.wikidot.com/</a>  outdated</li>
+<li><a href="http://graphite.wikidot.com/high-level-diagram">http://graphite.wikidot.com/high-level-diagram</a>  high-level-diagram(outdated)</li>
+<li><a href="http://www.aosabook.org/en/graphite.html">http://www.aosabook.org/en/graphite.html</a> The Architecture of Open Source Applications</li>
+</ul>
+<h3 id="代码库">代码库</h3>
+<ul>
+<li><a href="https://github.com/graphite-project">https://github.com/graphite-project</a></li>
+<li><a href="https://github.com/bitly/statsdaemon">https://github.com/bitly/statsdaemon</a> statsd implemented in Go</li>
+</ul>
+<h3 id="使用graphite的项目">使用graphite的项目</h3>
+<ul>
+<li>League Of Legends  <a href="http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html">http://highscalability.com/blog/2014/10/13/how-league-of-legends-scaled-chat-to-70-million-players-it-t.html</a></li>
+<li>hipchat <a href="http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html">http://highscalability.com/blog/2014/1/6/how-hipchat-stores-and-indexes-billions-of-messages-using-el.html</a></li>
+</ul>
+<h3 id="其他资料">其他资料</h3>
+<ul>
+<li>Measure it, Don&rsquo;t Just Monitor It <a href="http://bryanwb.github.io/monitoring-measurement-preso">http://bryanwb.github.io/monitoring-measurement-preso</a></li>
+<li>A quick look at Graphite and StatsD<a href="http://www.slideshare.net/adrianmoisey1/graphite-14761751">http://www.slideshare.net/adrianmoisey1/graphite-14761751</a></li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2014/11/30/%E4%BD%BF%E7%94%A8jekyll-bootstrap%E5%92%8Cgithub%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">使用jekyll-bootstrap和github建立个人博客</a></span>
+  <span class="nav-next"><a href="/post/2014/12/03/measure-statsd-and-graphite/">Measure, Statsd and Graphite</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
