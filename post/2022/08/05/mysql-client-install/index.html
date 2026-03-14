@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>MySQL Client Install - 江 Blog</title>
+    <meta property="og:title" content="MySQL Client Install - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="check CentOS version
+[&hellip;] $ sudo yum install redhat-lsb-core $ lsb_release -d Description: CentOS Linux release 7.9.2009 (Core) $ hostnamectl Static hostname: tidb-dm-1 Icon name: computer-vm &amp;hellip;">
+      <meta property="og:description" content="check CentOS version
+[&hellip;] $ sudo yum install redhat-lsb-core $ lsb_release -d Description: CentOS Linux release 7.9.2009 (Core) $ hostnamectl Static hostname: tidb-dm-1 Icon name: computer-vm &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>MySQL Client Install</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2022-08-05
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="centos">CentOS</h2>
+<p>check CentOS version</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo yum install redhat-lsb-core
+</span></span><span style="display:flex;"><span>$ lsb_release -d
+</span></span><span style="display:flex;"><span>Description:    CentOS Linux release 7.9.2009 <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ hostnamectl
+</span></span><span style="display:flex;"><span>   Static hostname: tidb-dm-1
+</span></span><span style="display:flex;"><span>         Icon name: computer-vm
+</span></span><span style="display:flex;"><span>           Chassis: vm
+</span></span><span style="display:flex;"><span>        Machine ID: xxxx
+</span></span><span style="display:flex;"><span>           Boot ID: xxxx
+</span></span><span style="display:flex;"><span>    Virtualization: kvm
+</span></span><span style="display:flex;"><span>  Operating System: CentOS Linux <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>       CPE OS Name: cpe:/o:centos:centos:7
+</span></span><span style="display:flex;"><span>            Kernel: Linux 3.10.0-1160.71.1.el7.x86_64
+</span></span><span style="display:flex;"><span>      Architecture: x86-64
+</span></span></code></pre></div><p>purge existing installation</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ rpm -qa|grep -E <span style="color:#e6db74">&#34;(mariadb|mysql)&#34;</span>
+</span></span><span style="display:flex;"><span>mysql57-community-release-el7-11.noarch
+</span></span><span style="display:flex;"><span>mariadb-libs-5.5.68-1.el7.x86_64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ yum remove mysql57-community-release-el7-11.noarch  mariadb-libs-5.5.68-1.el7.x86_64
+</span></span></code></pre></div><p>install MySQL 5.7.38 client</p>
+<p>get packages from MySQL site: <a href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-client-5.7.38-1.el7.x86_64.rpm
+</span></span><span style="display:flex;"><span>wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-libs-5.7.38-1.el7.x86_64.rpm
+</span></span><span style="display:flex;"><span>wget https://downloads.mysql.com/archives/get/p/23/file/mysql-community-common-5.7.38-1.el7.x86_64.rpm
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rpm -ivh ./mysql-community-common-5.7.38-1.el7.x86_64.rpm ./mysql-community-libs-5.7.38-1.el7.x86_64.rpm ./mysql-community-client-5.7.38-1.el7.x86_64.rpm
+</span></span></code></pre></div><h2 id="mysql-client-for-python">MySQL Client for Python</h2>
+<p>MacOS:</p>
+<pre tabindex="0"><code>brew install mysql-client
+</code></pre><p>Linux:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install libmysqlclient-dev
+</span></span></code></pre></div><p>install Python MySQL package</p>
+<pre tabindex="0"><code>pip install --user mysql-connector-python
+
+pip install --user mysqlclient
+# if OSError: mysql_config not found, run `export PATH=/usr/local/mysql/bin:$PATH` fisrt
+
+pip install --user records
+</code></pre>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2022/06/14/gdb-made-easy/">GDB made easy</a></span>
+  <span class="nav-next"><a href="/post/2025/01/02/a-brief-history-of-database-history/">A Brief History of Database History</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

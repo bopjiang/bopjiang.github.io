@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>AWS存储的坑 - 江 Blog</title>
+    <meta property="og:title" content="AWS存储的坑 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="在最近5年使用AWS的历程中, 出现的最严重的两次故障, 都跟存储有关.
+[&hellip;] 这个问题的起因是有DBA同事想定位某个生产环境Aurora数据库CPU毛刺问题, 想查看下CPU上升时有哪些SQL正在执行. 初衷是好的, 按照他之前的运维经验, 打开General Log, 如果系统性能没有明显下降, 在产线采集一段时间应该不会有什么问题.
+偏偏就在打开General Log的那天凌 &amp;hellip;">
+      <meta property="og:description" content="在最近5年使用AWS的历程中, 出现的最严重的两次故障, 都跟存储有关.
+[&hellip;] 这个问题的起因是有DBA同事想定位某个生产环境Aurora数据库CPU毛刺问题, 想查看下CPU上升时有哪些SQL正在执行. 初衷是好的, 按照他之前的运维经验, 打开General Log, 如果系统性能没有明显下降, 在产线采集一段时间应该不会有什么问题.
+偏偏就在打开General Log的那天凌 &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>AWS存储的坑</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2025-02-06
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>在最近5年使用AWS的历程中, 出现的最严重的两次故障, 都跟存储有关.</p>
+<h2 id="aurora-instance-local-storage-full导致数据库宕机">Aurora Instance Local Storage Full导致数据库宕机</h2>
+<p>这个问题的起因是有DBA同事想定位某个生产环境Aurora数据库CPU毛刺问题, 想查看下CPU上升时有哪些SQL正在执行.
+初衷是好的, 按照他之前的运维经验, 打开General Log, 如果系统性能没有明显下降, 在产线采集一段时间应该不会有什么问题.</p>
+<p>偏偏就在打开General Log的那天凌晨, Aurora数据库宕机了, 数据库突然连不上, 没有任何提示.紧急联系AWS的最高级别技术支持, 5分钟左右就有人介入处理了(好像要买专门的support服务才有这个待遇). 当时给的建议是, 实例规格不够, 让我们升级实例规格. DBA同学听从了建议, 升级了一倍实例规格(从db.r5.xlarge到db.r5.2xlarge).</p>
+<p>可惜, 扛了几天, 数据库又跪了! 这次Support才分析到数据库宕机的本质原因是Instance Local Storage Full, 给出的建议还是我们升级规格, 到db.r5.4xlarge.</p>
+<p>这时候老板们就怒了, 发出了灵魂拷问:</p>
+<ul>
+<li>升级到db.r5.2xlarge后, 数据库负载很低, 1分钟级别的CPU占有率P99值已经不到10%, 再升级一倍不是浪费钱吗?</li>
+<li>Aurora不是号称存算分离吗? 为什么一个小小的Instance Local Storage模块会导致数据库崩溃.</li>
+<li>到底是什么原因导致Local Storage Full?</li>
+</ul>
+<p>这时候DBA同学才小心翼翼的道出, 前几天为了配合开发定位问题, 打开了General Log.关闭General Log后, Local Storage没有再继续下降, 问题解决.</p>
+<p>至于后续AWS内部怎么定性这个问题, 就不得而知了.</p>
+<h3 id="教训">教训</h3>
+<p>AWS Aurora不是完全的Serverless服务, 计算节点也是EC2 Instance.</p>
+<ul>
+<li>Aurora的计算节点, 不光CPU/内存, 本地磁盘/网络都需要监控.</li>
+<li>Aurora不要开启General Log. 可以使用Audit Log替代General Log功能. <br/>
+Aurora的Audit Log貌似没有写Instance Local Storage.</li>
+<li>数据库系统级别的变更操作, 需要有统一记录. <br/>
+出现问题时, 可以根据变更历史分析潜在的原因, 毕竟绝大部分生产环境问题都是变更导致的.</li>
+</ul>
+<!---
+## Amazon MQ for RabbitMQ的Broker EBS磁盘空间满, 导致MQ不可用
+-->
+<h2 id="参考">参考</h2>
+<ul>
+<li>AWS Knowledge Center: <a href="https://repost.aws/knowledge-center/postgresql-aurora-storage-issue">How can I troubleshoot local storage issues in Aurora PostgreSQL-Compatible instances?</a></li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2025/01/25/%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5-aws-dms%E5%92%8Caliyun-dts%E5%AF%B9%E6%AF%94/">数据同步: AWS DMS和Aliyun DTS对比</a></span>
+  <span class="nav-next"></span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

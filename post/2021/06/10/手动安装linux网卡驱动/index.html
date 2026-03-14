@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>手动安装Linux网卡驱动 - 江 Blog</title>
+    <meta property="og:title" content="手动安装Linux网卡驱动 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="今天偶然间发现一台Linux机器的网卡峰值速度只有100Mbps了, 奇怪.
+虽说是台旧电脑(Thinkpad X61s), 但明明规格是1000Mbps啊.
+查询了下interface信息, 网卡类型Intel(R) PRO/1000,eth0: NIC Link is Up 100 Mbps Full Duplex, 果然是100Mbps.
+[&hellip;] sudo dmesg | &amp;hellip;">
+      <meta property="og:description" content="今天偶然间发现一台Linux机器的网卡峰值速度只有100Mbps了, 奇怪.
+虽说是台旧电脑(Thinkpad X61s), 但明明规格是1000Mbps啊.
+查询了下interface信息, 网卡类型Intel(R) PRO/1000,eth0: NIC Link is Up 100 Mbps Full Duplex, 果然是100Mbps.
+[&hellip;] sudo dmesg | &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>手动安装Linux网卡驱动</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2021-06-10
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>今天偶然间发现一台Linux机器的网卡峰值速度只有100Mbps了, 奇怪.</p>
+<p>虽说是台旧电脑(Thinkpad X61s), 但明明规格是1000Mbps啊.</p>
+<p>查询了下interface信息, 网卡类型<code>Intel(R) PRO/1000</code>,<code>eth0: NIC Link is Up 100 Mbps Full Duplex</code>, 果然是100Mbps.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dmesg | grep -i duplex
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>   15.928542<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: NIC Link is Up <span style="color:#ae81ff">100</span> Mbps Full Duplex, Flow Control: Rx/Tx
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>dev2<span style="color:#f92672">)</span>➜  ~ sudo dmesg | grep -i eth
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>    3.568102<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: <span style="color:#f92672">(</span>PCI Express:2.5GT/s:Width x1<span style="color:#f92672">)</span> 00:16:d3:3e:0d:74
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>    3.568105<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: Intel<span style="color:#f92672">(</span>R<span style="color:#f92672">)</span> PRO/1000 Network Connection
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>    3.568144<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: MAC: 6, PHY: 6, PBA No: FFFFFF-0FF
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>    7.716045<span style="color:#f92672">]</span> Bluetooth: BNEP <span style="color:#f92672">(</span>Ethernet Emulation<span style="color:#f92672">)</span> ver 1.3
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>   15.928542<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: NIC Link is Up <span style="color:#ae81ff">100</span> Mbps Full Duplex, Flow Control: Rx/Tx
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>   15.928653<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: Link Speed was downgraded by SmartSpeed
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>   15.928656<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: 10/100 speed: disabling TSO
+</span></span></code></pre></div><p>怎么回事?想想做过什么操作吗?</p>
+<p>哦, 手动编译升级过内核到5.6版本.</p>
+<p>默认kernel source tree中的驱动有问题.</p>
+<p>从上面dmesg信息中, 可以看到驱动是<code>e1000e</code>, 查了下驱动版本, 是3.2</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo modinfo e1000e |less
+</span></span><span style="display:flex;"><span>version:        3.2
+</span></span></code></pre></div><p>在Intel的<a href="https://www.intel.com/content/www/us/en/support/articles/000005480/ethernet-products.html">网站</a>查了下, PRO/1000最新的驱动已经是3.8.*</p>
+<p>下载最新的驱动(是源代码发布的), 按照README <code>make install</code>, 提示没有kernel-devel.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo make install
+</span></span><span style="display:flex;"><span>common.mk:85: *** Kernel header files not in any of the expected locations.
+</span></span><span style="display:flex;"><span>common.mk:86: *** Install the appropriate kernel development package, e.g.
+</span></span><span style="display:flex;"><span>common.mk:87: *** kernel-devel, <span style="color:#66d9ef">for</span> building kernel modules and try again.  Stop.
+</span></span></code></pre></div><p>apt里面搜索了下, 什么鬼, 没有5.6版本的&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ apt search linux-headers
+</span></span><span style="display:flex;"><span>linux-headers-4.19.0-10-amd64/now 4.19.132-1 amd64 <span style="color:#f92672">[</span>installed,local<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>  Header files <span style="color:#66d9ef">for</span> Linux 4.19.0-10-amd64
+</span></span></code></pre></div><p>想了下, 是使用源代码编译的, 其实编译驱动需要的只是kernel代码而已</p>
+<p>把/usr/src/linux指向代码目录后, make install OK</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ln -s /data/linux_src /usr/src/linux
+</span></span></code></pre></div><p>检查驱动版本, OK, 已经是3.8版本.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo modinfo e1000e
+</span></span><span style="display:flex;"><span>version:        3.8.4-NAPI
+</span></span><span style="display:flex;"><span>license:        GPL
+</span></span><span style="display:flex;"><span>description:    Intel<span style="color:#f92672">(</span>R<span style="color:#f92672">)</span> PRO/1000 Network Driver
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>但&hellip;iperf3测速还是100Mbps.</p>
+<p>重启下网卡后, 终于恢复1000Mbps.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo ip link set eth0 down <span style="color:#f92672">&amp;&amp;</span> sudo ip link set eth0 up
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo dmesg | grep -i duplex
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span> 3449.405283<span style="color:#f92672">]</span> e1000e 0000:00:19.0 eth0: NIC Link is Up <span style="color:#ae81ff">1000</span> Mbps Full Duplex, Flow Control: Rx/Tx
+</span></span></code></pre></div><p>Done.</p>
+<p>看来以后从kernel source编译内核, 驱动得多留意.</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2020/08/16/tidb-local-development-envrionment/">TiDB Local Development Envrionment</a></span>
+  <span class="nav-next"><a href="/post/2021/06/26/ubuntu-20.04-desktop%E5%AE%89%E8%A3%85%E5%90%8E%E7%98%A6%E8%BA%AB/">Ubuntu 20.04 Desktop安装后瘦身</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

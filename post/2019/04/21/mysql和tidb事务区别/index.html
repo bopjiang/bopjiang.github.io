@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>MySQL和TiDB事务区别 - 江 Blog</title>
+    <meta property="og:title" content="MySQL和TiDB事务区别 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="transaction isolation">
+      <meta property="og:description" content="transaction isolation">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>MySQL和TiDB事务区别</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2019-04-21
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>我们知道, MySQL的默认隔离级别是可重复读(RR, Repeatable Read). TiDB是快照隔离 (SI, Snapshot Isolation), 虽然对外显示为Repeatable Read).</p>
+<p>TiDB 使用 Percolator 事务模型, 冲突检测只在事务提交时才触发, 而MySQL则是通过锁等待机制(如SELECT &hellip; FOR UPDATE)解决冲突问题.TiDB这样设计有好有坏, 在冲突小的情况下,由于没有锁等待,系统的并发性能更好. 但在冲突严重的情况下, 会造成事务失败增多,影响并发性能.</p>
+<p>反映到应用开发中, 我们会发现, 在很多场景, MySQL事务提交成功, 但是TiDB事务提交却可能会失败.
+如果应用代码有在事务执行过程中穿插业务判断逻辑, 是不能依赖TiDB自带的事务重试机制的. 这时,要显式的关闭事务重试, 重试逻辑必须放到业务层来做.</p>
+<h2 id="例子">例子</h2>
+<p>下面三个例子, 从TiDB和MySQL执行结果和逻辑的区别, 我们可以看到两个数据库系统在事务处理上的差别.</p>
+<p>本文中MySQL的版本是8.0.15, TiDB的版本是v2.1.7, 事务隔离级别都为默认值Repeatable Read.</p>
+<h3 id="例1-update在事务中处理逻辑不同">例1: Update在事务中处理逻辑不同</h3>
+<p>创建表t1, 语句如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#f92672">`</span>t1<span style="color:#f92672">`</span> (
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>a<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>b<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">11</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">NULL</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>a<span style="color:#f92672">`</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>在MySQL和TiDB中分别执行下面的两个事务, 执行时序如下:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Time</th>
+          <th>Tx1</th>
+          <th>Tx2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>t0</td>
+          <td>begin;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t1</td>
+          <td>select * from t1;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t2</td>
+          <td></td>
+          <td>begin;</td>
+      </tr>
+      <tr>
+          <td>t3</td>
+          <td></td>
+          <td>insert into t1 values(1,10);</td>
+      </tr>
+      <tr>
+          <td>t4</td>
+          <td></td>
+          <td>commit;</td>
+      </tr>
+      <tr>
+          <td>t5</td>
+          <td>update t1 set b=b+10 where a = 1;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t6</td>
+          <td>commit;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t7</td>
+          <td>select * from t1;</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>MySQL, t7时刻,select语句的执行结果是</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> * from t1;
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| a | b    |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| <span style="color:#ae81ff">1</span> |   <span style="color:#ae81ff">20</span> |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> row in set <span style="color:#f92672">(</span>0.00 sec<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>但在TiDB中执行结果却是:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mysql&gt; <span style="color:#66d9ef">select</span> * from t1;
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| a | b    |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| <span style="color:#ae81ff">1</span> |   <span style="color:#ae81ff">10</span> |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> row in set <span style="color:#f92672">(</span>0.01 sec<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>对于MySQL,在可重复读级别下, 事务中的update操作, 为了不读到脏数据, 是当前读, 而且要加写锁. 虽然事务1的快照读是取的t1时刻的版本(MySQL默认的事务开始时间是事务执行的第一条语句), 但是在t5时刻的update操作, 是要读到当前最新版本的, 这时是能读到Tx2的insert语句的执行结果a=1这行的.</p>
+<p>对于TiDB, update一直是快照读, t5时刻是读不到Tx2的已提交的a=1这行数据的, t5时刻的update操作自然没有修改到a=1这行数据.</p>
+<h3 id="例2-更新冲突处理逻辑不同">例2 更新冲突处理逻辑不同</h3>
+<p>如果a=1这行在Tx1启动时已存在, Tx2在t3时刻更新了a=1这行的数据, 并完成提交. 同样, TiDB中,t5时刻Tx1在update时, 也是读到的过期数据, 但是在事务提交时, 才会报写冲突, 事务提交失败.</p>
+<p>事务执行时序如下:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Time</th>
+          <th>Tx1</th>
+          <th>Tx2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>t0</td>
+          <td>begin;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t1</td>
+          <td>select * from t1;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t2</td>
+          <td></td>
+          <td>begin;</td>
+      </tr>
+      <tr>
+          <td>t3</td>
+          <td></td>
+          <td>update t1 set b=100 where a = 1;</td>
+      </tr>
+      <tr>
+          <td>t4</td>
+          <td></td>
+          <td>commit;</td>
+      </tr>
+      <tr>
+          <td>t5</td>
+          <td>update t1 set b=b+10 where a = 1;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t6</td>
+          <td>commit;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t7</td>
+          <td>select * from t1;</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>TiDB Tx1执行结果如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ERROR <span style="color:#ae81ff">1105</span> <span style="color:#f92672">(</span>HY000<span style="color:#f92672">)</span>: <span style="color:#f92672">[</span>try again later<span style="color:#f92672">]</span>: WriteConflict: startTS<span style="color:#f92672">=</span>407855583704121345, conflictTS<span style="color:#f92672">=</span>407855586561228801, key<span style="color:#f92672">={</span>tableID<span style="color:#f92672">=</span>49, handle<span style="color:#f92672">=</span>1<span style="color:#f92672">}</span> primary<span style="color:#f92672">={</span>tableID<span style="color:#f92672">=</span>49, handle<span style="color:#f92672">=</span>1<span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>在MySQL中, 事务会提交成功, t7时刻select查询返回为:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mysql&gt; <span style="color:#66d9ef">select</span> * from t1;
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| a | b    |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| <span style="color:#ae81ff">1</span> |  <span style="color:#ae81ff">110</span> |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> row in set <span style="color:#f92672">(</span>0.00 sec<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h3 id="例3-select--for-update的执行区别">例3 Select &hellip; For Update的执行区别</h3>
+<p>假设表t1中有(2,1)这行数据,事务执行时序如下:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Time</th>
+          <th>Tx1</th>
+          <th>Tx2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>t0</td>
+          <td>begin;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t1</td>
+          <td>select * from t1 where a = 2 for update;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t2</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t3</td>
+          <td></td>
+          <td>update t1 set b=b+20 where a = 2;</td>
+      </tr>
+      <tr>
+          <td>t4</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t5</td>
+          <td>update t1 set b=b*2 where a = 2;</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>t6</td>
+          <td>commit;</td>
+          <td>(MySQL: Tx2 BLOCK UNTIL Tx1 commited)</td>
+      </tr>
+      <tr>
+          <td>t7</td>
+          <td>select * from t1 where a = 2;</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>MySQL,Tx1和Tx2都可以成功提交, t7时刻, select执行结果为:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> * from t1 where a <span style="color:#f92672">=</span> 2;
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| a | b    |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| <span style="color:#ae81ff">2</span> |   <span style="color:#ae81ff">22</span> |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span></code></pre></div><p>但Tx2从t3时刻开始,会被阻塞,一直到t6时刻, Tx1完成提交后, Tx2才能提交.</p>
+<p>TiDB中, Tx1提交会失败(WriteConflict).  t7时刻, select执行结果为:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mysql&gt; <span style="color:#66d9ef">select</span> * from t1 where a<span style="color:#f92672">=</span>2;
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| a | b    |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span>| <span style="color:#ae81ff">2</span> |   <span style="color:#ae81ff">21</span> |
+</span></span><span style="display:flex;"><span>+---+------+
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> row in set <span style="color:#f92672">(</span>0.00 sec<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h2 id="小结">小结</h2>
+<p>TiDB在事务提交时,检测冲突. 有冲突时,后提交事务的失败.</p>
+<p>TiDB使用Percolator事务模型, 并发控制模型感觉像是Timestamp-Base + MutliVersion的综合, 是无锁的并发控制方案.</p>
+<p>但是TiDB这样的分布式数据库系统, 如果像MySQL使用的锁机制解决冲突的话, 光分布式锁的开销将会非常大.</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2019/04/02/sql%E8%AF%AD%E5%8F%A5%E8%A7%A3%E6%9E%90%E4%B8%BAast/">SQL语句解析为AST</a></span>
+  <span class="nav-next"><a href="/post/2019/05/05/%E5%85%B3%E4%BA%8Eapi%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%9D%E8%80%83/">关于API、协议设计的一点思考</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
