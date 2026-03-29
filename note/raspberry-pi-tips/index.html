@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Raspberry Pi Tips - 江 Blog</title>
+    <meta property="og:title" content="Raspberry Pi Tips - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="sudo raspi-config static IP per SSID in wireless network # in /etc/wpa_supplicant/wpa_supplicant.conf ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev update_config=1 country=CN network={ &amp;hellip;">
+      <meta property="og:description" content="sudo raspi-config static IP per SSID in wireless network # in /etc/wpa_supplicant/wpa_supplicant.conf ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev update_config=1 country=CN network={ &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="note">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Raspberry Pi Tips</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2020-06-13
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="basic-config">Basic Config</h2>
+<pre tabindex="0"><code>sudo raspi-config
+</code></pre><h3 id="static-ip-per-ssid-in-wireless-network">static IP per SSID in wireless network</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># in /etc/wpa_supplicant/wpa_supplicant.conf</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ctrl_interface</span><span style="color:#f92672">=</span><span style="color:#e6db74">DIR=/var/run/wpa_supplicant GROUP=netdev</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">update_config</span><span style="color:#f92672">=</span><span style="color:#e6db74">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">country</span><span style="color:#f92672">=</span><span style="color:#e6db74">CN</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">network</span><span style="color:#f92672">=</span><span style="color:#e6db74">{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ssid=&#34;WIFI-NAME&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        psk=&#34;password&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># in /etc/dhcpcd.conf</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># set wifi static ip per ssid</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ssid WIFI-Name</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">static ip_address</span><span style="color:#f92672">=</span><span style="color:#e6db74">10.2.32.50/24</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">static routers</span><span style="color:#f92672">=</span><span style="color:#e6db74">10.2.32.1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">static domain_name_servers</span><span style="color:#f92672">=</span><span style="color:#e6db74">8.8.8.8</span>
+</span></span></code></pre></div><p><a href="https://www.raspberrypi.org/forums/viewtopic.php?f=29&amp;t=199081">https://www.raspberrypi.org/forums/viewtopic.php?f=29&amp;t=199081</a></p>
+<h2 id="monitor">Monitor</h2>
+<h3 id="measure-cpu-temperature">Measure CPU temperature</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo vcgencmd measure_temp
+</span></span><span style="display:flex;"><span>temp<span style="color:#f92672">=</span>44.4<span style="color:#960050;background-color:#1e0010">&#39;</span>C
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># use `sensors` in Ubuntu given package `lm-sensors` installed.</span>
+</span></span></code></pre></div><h3 id="monitor-others">monitor others</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo vcgencmd commands
+</span></span><span style="display:flex;"><span>commands<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vcos, ap_output_control, ap_output_post_processing, vchi_test_init, vchi_test_exit, vctest_memmap, vctest_start, vctest_stop, vctest_set, vctest_get, pm_set_policy, pm_get_status, pm_show_stats, pm_start_logging, pm_stop_logging, version, commands, set_vll_dir, set_backlight, set_logging, get_lcd_info, arbiter, cache_flush, otp_dump, test_result, codec_enabled, get_camera, get_mem, measure_clock, measure_volts, enable_clock, scaling_kernel, scaling_sharpness, get_hvs_asserts, get_throttled, measure_temp, get_config, hdmi_ntsc_freqs, hdmi_adjust_clock, hdmi_status_show, hvs_update_fields, pwm_speedup, force_audio, hdmi_stream_channels, hdmi_channel_map, display_power, read_ring_osc, memtest, dispmanx_list, get_rsts, schmoo, render_bar, disk_notify, inuse_notify, sus_suspend, sus_status, sus_is_enabled, sus_stop_test_thread, egl_platform_switch, mem_validate, mem_oom, mem_reloc_stats, hdmi_cvt, hdmi_timings, readmr, pmicrd, pmicwr, bootloader_version, bootloader_config, file&#34;</span>
+</span></span></code></pre></div><h3 id="contrl-led">contrl LED</h3>
+<p>config in <code>/boot/config.txt</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># Disable the PWR LED</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">pwr_led_trigger=none</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">pwr_led_activelow=off</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Disable the Activity LED</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">act_led_trigger=none</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">act_led_activelow=off</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Disable ethernet port LEDs</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">eth_led0=4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dtparam</span><span style="color:#f92672">=</span><span style="color:#e6db74">eth_led1=4</span>
+</span></span></code></pre></div><p>or set in bash</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># echo 0 &gt; /sys/class/leds/led1/brightness</span>
+</span></span></code></pre></div><h2 id="desktop">Desktop</h2>
+<h3 id="set-25601440-2k-resolution-display">set 2560*1440 (2K) resolution display</h3>
+<p>2K resolution is not supported by default, we should modify the <code>/boot/config.txt</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span> # uncomment if hdmi display is not detected and composite is being output
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-#hdmi_force_hotplug=1
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+hdmi_force_hotplug=1
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> # uncomment to force a specific HDMI mode (this will force VGA)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-#hdmi_group=1
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-#hdmi_mode=1
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+hdmi_group=2
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+hdmi_mode=87
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+hdmi_cvt=2560 1440 60 3
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> # uncomment to force a HDMI mode rather than DVI. This can make audio work in
+</span></span><span style="display:flex;"><span> # DMT (computer monitor) modes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-#hdmi_drive=2
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+hdmi_drive=2
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> # uncomment to increase signal to HDMI, if you have interference, blanking, or
+</span></span><span style="display:flex;"><span> # no display
+</span></span></code></pre></div><h3 id="terminal">terminal</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install guake
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">```</span>
+</span></span></code></pre></div>
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/note/tools-collection-%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">Tools Collection 常用工具</a></span>
+  <span class="nav-next"><a href="/note/linux-cheat-sheet/">Linux Cheat Sheet</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

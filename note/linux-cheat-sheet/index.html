@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Linux Cheat Sheet - 江 Blog</title>
+    <meta property="og:title" content="Linux Cheat Sheet - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="zip -Z store -r myfolder.zip myfolder tar compress &amp; decompress # compress tar czvf archive.tar.gz xx-dir # decompress filename.tar.xx tar xvf archive.tar.xz # GNU tar recognizes the format by &amp;hellip;">
+      <meta property="og:description" content="zip -Z store -r myfolder.zip myfolder tar compress &amp; decompress # compress tar czvf archive.tar.gz xx-dir # decompress filename.tar.xx tar xvf archive.tar.xz # GNU tar recognizes the format by &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+  <body class="note">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Linux Cheat Sheet</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2021-05-01
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<h2 id="general">General</h2>
+<ul>
+<li>zip/tar directory without compressing</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>zip -Z store -r  myfolder.zip myfolder
+</span></span></code></pre></div><ul>
+<li>tar compress &amp; decompress</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># compress</span>
+</span></span><span style="display:flex;"><span>tar czvf archive.tar.gz xx-dir
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># decompress filename.tar.xx</span>
+</span></span><span style="display:flex;"><span>tar xvf archive.tar.xz
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># GNU tar recognizes the format by itself!</span>
+</span></span></code></pre></div><h2 id="bash">Bash</h2>
+<p>Inside single quotes everything is preserved literally, without exception.</p>
+<p>format date time</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>date<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date <span style="color:#e6db74">&#39;+%Y%m%d_%H%M%S&#39;</span><span style="color:#66d9ef">)</span>
+</span></span></code></pre></div><p>extract value from file content, and use in shell script.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>SQL_TEXT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>IFS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>; cat ~/dump/tbl1.sql<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>mysql -h 127.0.0.1 -e <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>SQL_TEXT<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>get the directory in which a Bash script is located</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>SCRIPT_DIR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span> cd <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span> dirname <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>BASH_SOURCE[0]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> &amp;&gt; /dev/null <span style="color:#f92672">&amp;&amp;</span> pwd <span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>copy while skipping .git folder by default.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp GIT_REPO/*  target_dir/
+</span></span></code></pre></div><p>copy only when the SOURCE file is newer than the destination file or when the destination file is missing</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp -u -r /home/peter/dst/* .
+</span></span></code></pre></div><p>find .go file except the vendor directory</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find . -path ./vendor -prune -false -o -name <span style="color:#e6db74">&#39;*.go&#39;</span><span style="color:#e6db74">`</span>
+</span></span></code></pre></div><p>find normal file in directory, including hidden files</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find . -type f
+</span></span></code></pre></div><p>find executable binary in a directory</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find /usr/local/bin -type f -executable -exec sh -c <span style="color:#e6db74">&#39;test &#34;$(head -c 2 &#34;$1&#34;)&#34; != &#34;#!&#34;&#39;</span> sh <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span> -print
+</span></span></code></pre></div><p>grant access to directories recursively</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find . -type d  -exec  chmod +x <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span></code></pre></div><p>find and grep</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#39;*_test.go&#39;</span> -exec grep -Hn 127.0.0.1 <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#39;*_test.go&#39;</span> -exec grep -Hn <span style="color:#f92672">[</span>golang.org/x<span style="color:#f92672">](</span>http://golang.org/x<span style="color:#f92672">)</span>  <span style="color:#f92672">{}</span><span style="color:#ae81ff">\;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#39;*.go&#39;</span> -exec grep --color -Hn <span style="color:#e6db74">&#34;TODO:&#34;</span> <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find . -name <span style="color:#e6db74">&#39;*.[ch]&#39;</span> -exec grep --color -Hn <span style="color:#e6db74">&#39;struct page {&#39;</span> <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grep <span style="color:#e6db74">&#34;\.[ch]</span>$<span style="color:#e6db74">&#34;</span> source_index.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## find TODO in code repo, ignore the binary files</span>
+</span></span><span style="display:flex;"><span>grep --binary-files<span style="color:#f92672">=</span>without-match -nr <span style="color:#e6db74">&#34;TODO:&#34;</span> .
+</span></span></code></pre></div><p>grep with regular expression</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## find boost:: and std:: usage in code base</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## extract value using grep</span>
+</span></span><span style="display:flex;"><span>find .  -name <span style="color:#e6db74">&#34;*.[hc]*&#34;</span> |xargs grep -Poh <span style="color:#e6db74">&#34;\Kstd::\w+&#34;</span> <span style="color:#f92672">{}</span>  |sort |uniq -c |sort -h &gt; ~/tmp/cpp_std.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find .  -name <span style="color:#e6db74">&#34;*.[hc]*&#34;</span> |xargs grep -Poh <span style="color:#e6db74">&#34;\Kboost::\w+&#34;</span> <span style="color:#f92672">{}</span>  |sort |uniq -c |sort -h &gt; ~/tmp/cpp_boost.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>grep:
+</span></span><span style="display:flex;"><span>    -o Print only the matched <span style="color:#f92672">(</span>non-empty<span style="color:#f92672">)</span> parts of a matching line, with each such part on a separate output line.
+</span></span><span style="display:flex;"><span>	-h Suppress the prefixing of file names on output.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">## mysql</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">109</span> std::list
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">110</span> std::cerr
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">110</span> std::make_pair
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">149</span> std::min
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">151</span> std::nothrow
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">181</span> std::swap
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">202</span> std::map
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">226</span> std::pair
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">228</span> std::ostream
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">251</span> std::endl
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">341</span> std::size_t
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">529</span> std::cout
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1008</span> std::vector
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3723</span> std::string
+</span></span><span style="display:flex;"><span>   ...
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">50</span> boost::range_iterator
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">90</span> boost::end
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">93</span> boost::begin
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">248</span> boost::geometry
+</span></span></code></pre></div><p>list sub-directories by size</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>du -h --max-depth<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> | sort -h
+</span></span></code></pre></div><p>cloc: code summary</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cloc  --not-match-f<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.*_test.go&#34;</span> src/database/sql
+</span></span><span style="display:flex;"><span>Language                     files          blank        comment           code
+</span></span><span style="display:flex;"><span>-------------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>Go                               <span style="color:#ae81ff">5</span>            <span style="color:#ae81ff">500</span>           <span style="color:#ae81ff">1472</span>           <span style="color:#ae81ff">3014</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cloc  --match-f<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.*_test.go&#34;</span> src/database/sql
+</span></span><span style="display:flex;"><span>Language                     files          blank        comment           code
+</span></span><span style="display:flex;"><span>-------------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>Go                               <span style="color:#ae81ff">7</span>            <span style="color:#ae81ff">848</span>            <span style="color:#ae81ff">449</span>           <span style="color:#ae81ff">5721</span>
+</span></span></code></pre></div><p>find the top 10 largest file in directory recursively.</p>
+<pre tabindex="0"><code>find . -type f -printf &#34;%s\t%p\n&#34; | sort -rn | head -10
+</code></pre><p>find out binaries provided by a package.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dpkg -L mysql-community-server |grep -E <span style="color:#e6db74">&#39;/s?bin/&#39;</span>
+</span></span></code></pre></div><p>for loops</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## curl 100 times, and write the results line by line</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in <span style="color:#f92672">{</span>1..100<span style="color:#f92672">}</span>; <span style="color:#66d9ef">do</span> curl -s http://34.69.165.177/; echo <span style="color:#e6db74">&#39;&#39;</span> ;<span style="color:#66d9ef">done</span> &gt; result.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> f in *.sql; <span style="color:#66d9ef">do</span> <span style="color:#f92672">(</span>cat <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>f<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>; echo<span style="color:#f92672">)</span> &gt;&gt; all.txt; <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> dt in 2022-07-05 2022-07-06 2022-07-07 2022-07-08 2022-07-09 2022-07-10; <span style="color:#66d9ef">do</span> echo $dt; <span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>directory checksum</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find somedir -type f -exec md5sum <span style="color:#f92672">{}</span> <span style="color:#ae81ff">\;</span> | sort -k <span style="color:#ae81ff">2</span> | md5sum
+</span></span></code></pre></div><p>xargs</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws dynamodb list-tables | jq <span style="color:#e6db74">&#39;.TableNames[]&#39;</span> &gt; /tmp/dynamo_tables_test.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## xargs and dump files with parameterized file name</span>
+</span></span><span style="display:flex;"><span>cat /tmp/dynamo_tables_test.txt | xargs -I<span style="color:#f92672">{}</span> sh -c <span style="color:#e6db74">&#39;aws dynamodb update-table --table-name=&#34;$1&#34; --billing-mode PAY_PER_REQUEST &gt; &#34;$1.json&#34;&#39;</span> -- <span style="color:#f92672">{}</span>
+</span></span></code></pre></div><p>sed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## parse environment variables</span>
+</span></span><span style="display:flex;"><span>sed -z <span style="color:#e6db74">&#39;s/$/\n/&#39;</span> /proc/4185/environ |grep -a GO
+</span></span><span style="display:flex;"><span>cat /proc/1/environ |tr <span style="color:#e6db74">&#39;\0&#39;</span> <span style="color:#e6db74">&#39;\n&#39;</span>
+</span></span><span style="display:flex;"><span>cat /proc/1/cmdline |tr <span style="color:#e6db74">&#39;\0&#39;</span> <span style="color:#e6db74">&#39;\n&#39;</span>
+</span></span><span style="display:flex;"><span>strings /proc/1/environ
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## filter lines by keyword(/struct/!d) and keep the second line(2p)</span>
+</span></span><span style="display:flex;"><span>sudo cat /proc/slabinfo |sed -e <span style="color:#e6db74">&#39;2p&#39;</span> -e <span style="color:#e6db74">&#39;/struct/!d&#39;</span>
+</span></span></code></pre></div><p>extract substring with regex using sed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>redis-cli -h 127.0.0.1 -p <span style="color:#ae81ff">6379</span> client list &gt;/tmp/clients.txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># id=474958 addr=10.0.66.226:46704 fd=14 name= age=554798 idle=1 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=0 obl=0 oll=0 omem=0 events=rcmd=ping</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># id=474959 addr=10.0.66.226:46699 fd=23 name= age=554798 idle=1 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=0 obl=0 oll=0 omem=0 events=rcmd=ping</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $2}&#39;</span> /tmp/clients.txt | sed -n <span style="color:#e6db74">&#39;s/addr=\([0-9.]*\):.*/\1/p&#39;</span> | sort |uniq -c
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">2</span> 10.0.66.226
+</span></span></code></pre></div><p>field select using awk</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ netstat -anp |grep  chia |grep LISTEN |awk <span style="color:#e6db74">&#39;{ print $7 }&#39;</span> |sort |uniq | awk <span style="color:#e6db74">&#39;BEGIN { FS = &#34;/&#34; } { print $2}&#39;</span>
+</span></span><span style="display:flex;"><span>chia_daemon
+</span></span><span style="display:flex;"><span>chia_wallet
+</span></span><span style="display:flex;"><span>chia_full_nod
+</span></span><span style="display:flex;"><span>chia_farmer
+</span></span><span style="display:flex;"><span>chia_harveste
+</span></span></code></pre></div><p>filter field by value using awk</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lsmod | awk <span style="color:#e6db74">&#39;{if ($3 != 0) print $1, $2, $3, $4}&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># filter mysql slow query log</span>
+</span></span><span style="display:flex;"><span>grep Rows_examined mysql-slowquery.log |awk <span style="color:#e6db74">&#39;{ print $9}&#39;</span> |sort -h |less
+</span></span></code></pre></div><p><a href="https://www.thegeekstuff.com/2010/01/8-powerful-awk-built-in-variables-fs-ofs-rs-ors-nr-nf-filename-fnr/">8 Powerful Awk Built-in Variables – FS, OFS, RS, ORS, NR, NF, FILENAME, FNR</a></p>
+<p>Find the largest file in a directory and its subdirectories</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find . -printf <span style="color:#e6db74">&#39;%s %p\n&#39;</span>| sort -nr | head -10
+</span></span></code></pre></div><p>shell parameter expansion</p>
+<p>Inside single quotes everything is preserved literally, without exception.</p>
+<p>That means you have to close the quotes, insert something, and then re-enter again.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#e6db74">&#39;before&#39;</span><span style="color:#e6db74">&#34;</span>$variable<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#39;after&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;before&#39;</span><span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#e6db74">&#39;after&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;before&#39;</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">&#39;after&#39;</span>
+</span></span></code></pre></div><p>replace string in bash</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># ${parameter/pattern/string}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># (https://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If pattern begins with ‘/’, all matches of pattern are replaced with string.</span>
+</span></span><span style="display:flex;"><span>IP<span style="color:#f92672">=</span>10.0.2.15
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">${</span>IP/<span style="color:#ae81ff">\.</span>/_<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>10_0.2.15
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">${</span>IP//<span style="color:#ae81ff">\.</span>/_<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>10_0_2_15
+</span></span></code></pre></div><p>batch rename file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in ./docdb_* ; <span style="color:#66d9ef">do</span> mv <span style="color:#e6db74">&#34;</span>$i<span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>i/blog_q2/p2p_q1<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> ; <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in ./*.mp3 ; <span style="color:#66d9ef">do</span> mv <span style="color:#e6db74">&#34;</span>$i<span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>i/ /_<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> ; <span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>patch file</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>diff -u working/slang.c latest/slang.c &gt; 1.patch
+</span></span><span style="display:flex;"><span>patch -u prod/other.c -i 1.patch
+</span></span></code></pre></div><h3 id="disable-bash-history">disable bash history</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## turn off bash history:</span>
+</span></span><span style="display:flex;"><span>unset HISTFILE
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#or</span>
+</span></span><span style="display:flex;"><span>set +o history
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## turn on bash history</span>
+</span></span><span style="display:flex;"><span>set -o history
+</span></span></code></pre></div><h3 id="log-and-standard-output">log and standard output</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker logs aaasdas9c356 &gt; docker.log 2&gt;&amp;<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>journalctl --since <span style="color:#e6db74">&#34;2020-01-02 05:17&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## system log 15 min before. (in `/var/logs/messages` before)</span>
+</span></span><span style="display:flex;"><span>journalctl -k --since <span style="color:#e6db74">&#34;10min ago”
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">## watch logs in directory
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">## ignored lines started with `==&gt;` and empty lines
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">tail -f ./log | grep -v --line-buffered -e &#34;</span>^<span style="color:#f92672">==</span>&gt; . &lt;<span style="color:#f92672">==</span>$<span style="color:#e6db74">&#34; | grep -v -e &#39;^</span>$<span style="color:#e6db74">&#39;
+</span></span></span></code></pre></div><h2 id="debug">Debug</h2>
+<p>reboot record</p>
+<pre tabindex="0"><code>last reboot | less
+</code></pre><p>measure command executing time</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>da<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date +<span style="color:#e6db74">&#39;%s.%3N&#39;</span><span style="color:#66d9ef">)</span>; XXX; db<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date +<span style="color:#e6db74">&#39;%s.%3N&#39;</span><span style="color:#66d9ef">)</span>; echo <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;(</span>$db<span style="color:#e6db74"> - </span>$da<span style="color:#e6db74">)&#34;</span>|bc<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">[</span> 1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>;<span style="color:#66d9ef">do</span> da<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date +<span style="color:#e6db74">&#39;%s.%3N&#39;</span><span style="color:#66d9ef">)</span>;mysql --defaults-file<span style="color:#f92672">=</span>./my.cnf -D windmills_large -e <span style="color:#e6db74">&#34;insert into windmills_test select null,uuid,millid,kwatts_s,date,location,active,time,strrecordtype from windmills4 limit 1;&#34;</span> -e <span style="color:#e6db74">&#34;select count(*) from windmills_large.windmills_test;&#34;</span> &gt; /dev/null;db<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date +<span style="color:#e6db74">&#39;%s.%3N&#39;</span><span style="color:#66d9ef">)</span>; echo <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;(</span>$db<span style="color:#e6db74"> - </span>$da<span style="color:#e6db74">)&#34;</span>|bc<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>;sleep 1;<span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><h2 id="networking">Networking</h2>
+<h3 id="one-line-http-file-server-in-python">one line http file server in Python</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ python2 -m SimpleHTTPServer <span style="color:#ae81ff">8000</span>
+</span></span><span style="display:flex;"><span>$ python3 -m http.server
+</span></span></code></pre></div><h3 id="dns">DNS</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># dig using specified DNS server</span>
+</span></span><span style="display:flex;"><span>dig @8.8.8.8 tinyurl.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># clean DNS cache</span>
+</span></span><span style="display:flex;"><span>sudo systemd-resolve --flush-caches
+</span></span></code></pre></div><h3 id="lsof">lsof</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo lsof -nP -i4TCP:1080 -sTCP:LISTEN
+</span></span><span style="display:flex;"><span>$ sudo lsof -nP -i4TCP:1080 -sTCP:ESTABLISHED
+</span></span><span style="display:flex;"><span>$ sudo lsof -iTCP -sTCP:LISTEN -n -P
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># -a means AND in lsof</span>
+</span></span><span style="display:flex;"><span>$ sudo lsof -itcp -a -p <span style="color:#e6db74">&#34;1280595&#34;</span>
+</span></span></code></pre></div><h3 id="tcpdump">tcpdump</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo tcpdump -i all host 127.0.0.1 and port <span style="color:#ae81ff">1080</span> -w cap1.pcap
+</span></span></code></pre></div><h3 id="ip">ip</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Bring wlan0 online</span>
+</span></span><span style="display:flex;"><span>ip link set wlan0 up
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Bring wlan0 offline</span>
+</span></span><span style="display:flex;"><span>ip link set wlan0 down
+</span></span></code></pre></div><h3 id="check-nic-speed">check NIC speed</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat /sys/class/net/enp4s0/speed
+</span></span><span style="display:flex;"><span>ethtool enp4s0
+</span></span></code></pre></div><h3 id="iperf">iperf</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># server</span>
+</span></span><span style="display:flex;"><span>iperf3 -s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># client</span>
+</span></span><span style="display:flex;"><span>iperf3 -c 192.168.2.1
+</span></span></code></pre></div><h3 id="ssh-as-socks5-proxy-server">ssh as socks5 proxy server</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># setup a SOCKS5 proxy server listening at TCP/1082, forward request to remote host.</span>
+</span></span><span style="display:flex;"><span>ssh -D <span style="color:#ae81ff">1080</span>  -q -C -N remote-machine-host
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># use the SOCKS5 proxy, git can use it.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># https_proxy=socks5://127.0.0.1:1080</span>
+</span></span></code></pre></div><p>to use the socks5 proxy in Python, some packages should be installed,  <code>pip install pysocks </code></p>
+<p>convert SOCKS5 proxy to HTTP proxy server using privoxy</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo pip install privoxy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># cat /etc/privoxy/config</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># listen-address  192.168.28.6:8118</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># forward-socks5 / 127.0.0.1:1080 . </span>
+</span></span><span style="display:flex;"><span>$ sudo systemctl start privoxy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># use the http proxy</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># https_proxy=http://127.0.0.1:8118</span>
+</span></span></code></pre></div><h3 id="ssh-tunnel">ssh tunnel</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Listen on the remote side using , and forward connection to the local side</span>
+</span></span><span style="display:flex;"><span>ssh -p <span style="color:#ae81ff">22</span> -qngfNTR 8082:localhost:8080 dev2
+</span></span></code></pre></div><p>check linux <a href="https://en.wikipedia.org/wiki/Ephemeral_port#:~:text=4%20ges-,Range,the%20port%20range%2032768%E2%80%9360999.">Ephemeral port</a> range</p>
+<pre tabindex="0"><code>cat /proc/sys/net/ipv4/ip_local_port_range
+</code></pre><h3 id="ssh-and-execute-remote-commands">ssh and execute remote commands</h3>
+<p>Q: error: Pseudo-terminal will not be allocated because stdin is not a terminal
+A: <a href="https://stackoverflow.com/questions/7114990/pseudo-terminal-will-not-be-allocated-because-stdin-is-not-a-terminal">https://stackoverflow.com/questions/7114990/pseudo-terminal-will-not-be-allocated-because-stdin-is-not-a-terminal</a></p>
+<p>Q: escape single quotes with in string
+A: <a href="https://stackoverflow.com/questions/1250079/how-to-escape-single-quotes-within-single-quoted-strings">https://stackoverflow.com/questions/1250079/how-to-escape-single-quotes-within-single-quoted-strings</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh -tt -i  ~/.ssh/ssh1.pem user1@JUMP-SERVER <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;ssh -tt -i ssh2.pem  user2@INTERNAL-SERVER &#39;</span><span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#e6db74">&#39;tmux -L session1  attach&#39;</span><span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#e6db74">&#39;&#39;</span>
+</span></span></code></pre></div><h3 id="tcp-ping-with-hping3">tcp ping with hping3</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>&gt; hping -S -p <span style="color:#ae81ff">80</span> www.sunet.se
+</span></span><span style="display:flex;"><span>HPING www.sunet.se <span style="color:#f92672">(</span>eth0 192.36.171.155<span style="color:#f92672">)</span>: S set, <span style="color:#ae81ff">40</span> headers + <span style="color:#ae81ff">0</span> data bytes
+</span></span><span style="display:flex;"><span>len<span style="color:#f92672">=</span><span style="color:#ae81ff">46</span> ip<span style="color:#f92672">=</span>192.36.171.155 ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">59</span> DF id<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> sport<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> flags<span style="color:#f92672">=</span>SA seq<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> win<span style="color:#f92672">=</span><span style="color:#ae81ff">5840</span> rtt<span style="color:#f92672">=</span>0.7 ms
+</span></span></code></pre></div><h3 id="nnamp-network-scanning">nnamp (network scanning)</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sV 192.168.28.0/24 | grep -wE <span style="color:#e6db74">&#39;(scan report|ssh)&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## check open port of host</span>
+</span></span><span style="display:flex;"><span>nmap 192.168.28.14
+</span></span></code></pre></div><h3 id="sync-files">sync files</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## synchronize entire directory</span>
+</span></span><span style="display:flex;"><span>rsync -au <span style="color:#e6db74">&#39;~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/&#39;</span> ./notes
+</span></span></code></pre></div><h2 id="system-admin">System Admin</h2>
+<h3 id="extend-swap">extend swap</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ swapon --show
+</span></span><span style="display:flex;"><span>NAME       TYPE SIZE USED PRIO
+</span></span><span style="display:flex;"><span>/.swapfile file   4G 1.5G   -2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ ll /.swapfile
+</span></span><span style="display:flex;"><span>-rw------- <span style="color:#ae81ff">1</span> root root <span style="color:#ae81ff">4294967296</span> Aug <span style="color:#ae81ff">18</span>  <span style="color:#ae81ff">2022</span> /.swapfile
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ sudo fallocate -l 32G /swapfile
+</span></span><span style="display:flex;"><span>$ sudo mkswap /swapfile
+</span></span><span style="display:flex;"><span>$ sudo swapon /swapfile
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ swapon --show
+</span></span><span style="display:flex;"><span>NAME       TYPE SIZE USED PRIO
+</span></span><span style="display:flex;"><span>/.swapfile file   4G 1.5G   -2
+</span></span><span style="display:flex;"><span>/swapfile  file  32G   0B   -3
+</span></span></code></pre></div><h2 id="file-system">File system</h2>
+<p>mount local image file to file system</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ mount -o loop,offset<span style="color:#f92672">=</span><span style="color:#ae81ff">63963136</span> RetroPie_2017_8_29_rom.img /mnt/2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># find offset if multiple partition exists.</span>
+</span></span><span style="display:flex;"><span>$ parted RetroPie_2017_8_29_rom.img
+</span></span><span style="display:flex;"><span>Disk /home/pi/RetroPie_2017_8_29_rom.img: 3276MB
+</span></span><span style="display:flex;"><span>Sector size <span style="color:#f92672">(</span>logical/physical<span style="color:#f92672">)</span>: 512B/512B
+</span></span><span style="display:flex;"><span>Partition Table: msdos
+</span></span><span style="display:flex;"><span>Disk Flags:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Number  Start   End     Size    Type     File system  Flags
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span>      4194kB  64.0MB  59.8MB  primary  fat16        lba
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">2</span>      64.0MB  3275MB  3211MB  primary  ext4
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>parted<span style="color:#f92672">)</span> u
+</span></span><span style="display:flex;"><span>Unit?  <span style="color:#f92672">[</span>compact<span style="color:#f92672">]</span>? B
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>parted<span style="color:#f92672">)</span> print
+</span></span><span style="display:flex;"><span>Model:  <span style="color:#f92672">(</span>file<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Disk /home/pi/RetroPie_2017_8_29_rom.img: 3275999744B
+</span></span><span style="display:flex;"><span>Sector size <span style="color:#f92672">(</span>logical/physical<span style="color:#f92672">)</span>: 512B/512B
+</span></span><span style="display:flex;"><span>Partition Table: msdos
+</span></span><span style="display:flex;"><span>Disk Flags:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Number  Start      End          Size         Type     File system  Flags
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span>      4194304B   63963135B    59768832B    primary  fat16        lba
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">2</span>      63963136B  3274702847B  3210739712B  primary  ext4
+</span></span></code></pre></div><p>mount external devices, preventing errors being reported at boot. <a href="https://wiki.archlinux.org/index.php/fstab#External_devices">link</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/dev/xvdh1 /myfs xfs defaults,nofail,x-systemd.device-timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>check device file system
+<code>df -T, lsblk -no name, fstype, fdisk -l,  fdisk -x, blkid /dev/nvme1n1, mount</code></p>
+<h2 id="system-monitor">System Monitor</h2>
+<pre tabindex="0"><code>dstat -t -a
+# dstat is deprecated, use `dool` instead.
+dool -t -a
+</code></pre><h2 id="package">Package</h2>
+<h3 id="install-with-dependency">install with dependency</h3>
+<pre tabindex="0"><code>yum install ./percona-toolkit-3.3.1-1.el7.x86_64.rpm
+</code></pre><h3 id="install-libs">install libs</h3>
+<p>library missing error when compiling mosh</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>checking <span style="color:#66d9ef">for</span> protobuf... no
+</span></span><span style="display:flex;"><span>configure: error: Package requirements <span style="color:#f92672">(</span>protobuf<span style="color:#f92672">)</span> were not met:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>No package <span style="color:#e6db74">&#39;protobuf&#39;</span> found
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Consider adjusting the PKG_CONFIG_PATH environment variable <span style="color:#66d9ef">if</span> you
+</span></span><span style="display:flex;"><span>installed software in a non-standard prefix.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Alternatively, you may set the environment variables protobuf_CFLAGS
+</span></span><span style="display:flex;"><span>and protobuf_LIBS to avoid the need to call pkg-config.
+</span></span><span style="display:flex;"><span>See the pkg-config man page <span style="color:#66d9ef">for</span> more details.
+</span></span></code></pre></div><p>search and install</p>
+<pre tabindex="0"><code>sudo apt install pkg-config
+
+sudo apt search protobuf
+sudo apt install libprotobuf-dev
+</code></pre><p>install pkg in alpinelinux container:</p>
+<pre tabindex="0"><code>## useful to debug connection in Pod
+apk add lsof bind-tools
+
+apk search xxx # support re
+apk add hping3 --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+</code></pre><p>list all binaries from $PATH</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>compgen -c
+</span></span></code></pre></div><p>list the binaries installed by a Debian package</p>
+<pre tabindex="0"><code>binaries () { dpkg -L &#34;$1&#34; | grep -Po &#39;.*/bin/\K.*&#39;; }
+
+$ binaries gcc-riscv64-linux-gnu
+riscv64-linux-gnu-gcc
+riscv64-linux-gnu-gcc-ar
+riscv64-linux-gnu-gcc-nm
+riscv64-linux-gnu-gcc-ranlib
+riscv64-linux-gnu-gcov
+riscv64-linux-gnu-gcov-dump
+riscv64-linux-gnu-gcov-tool
+</code></pre><p><a href="github.com/mattn/goreman">goreman</a> to start multiple process.</p>
+<h2 id="bootloader-grub">Bootloader GRUB</h2>
+<p>set resolution in GRUB boot screen</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## edit /etc/default/grub</span>
+</span></span><span style="display:flex;"><span>GRUB_GFXMODE<span style="color:#f92672">=</span>1024x768x32
+</span></span><span style="display:flex;"><span>GRUB_GFXPAYLOAD_LINUX<span style="color:#f92672">=</span>keep
+</span></span><span style="display:flex;"><span>GRUB_DEFAULT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## sudo update-grub2</span>
+</span></span></code></pre></div><h2 id="other">Other</h2>
+<p>copy to clipboard of X window</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat ~/.ssh/id_rsa.pub | xclip -selection c
+</span></span></code></pre></div><h3 id="tts-text-to-speech">TTS (Text-to-Speech)</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>spd-say -t female3 <span style="color:#e6db74">&#34;Good morning, Jimmy”
+</span></span></span></code></pre></div><h3 id="vim">vim</h3>
+<p>edit by vim, not using config</p>
+<pre tabindex="0"><code>vim -u NORC xxx
+</code></pre><p>vim hex mode: <code>%! xxd</code></p>
+<h3 id="atop">atop</h3>
+<p>atop: memory accumulated by process name</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/note/raspberry-pi-tips/">Raspberry Pi Tips</a></span>
+  <span class="nav-next"><a href="/note/go-cheat-sheet/">Go Cheat Sheet</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
