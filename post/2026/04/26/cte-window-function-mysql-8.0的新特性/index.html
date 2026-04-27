@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>CTE &amp; Window Function: MySQL 8.0的新特性 - 江 Blog</title>
+    <meta property="og:title" content="CTE &amp; Window Function: MySQL 8.0的新特性 - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="MySQL 8.0补齐了不少现代SQL能力, 其中最常用的两个是:
+[&hellip;] 以前在MySQL 5.7里写Top N, 分组排名, 中位数这类题目, 经常需要用户变量或多层子查询. 到了MySQL 8.0, 写法终于接近PostgreSQL这类数据库.
+这篇用LeetCode的Median Employee Salary作为例子.
+[&hellip;] CREATE TABLE IF &amp;hellip;">
+      <meta property="og:description" content="MySQL 8.0补齐了不少现代SQL能力, 其中最常用的两个是:
+[&hellip;] 以前在MySQL 5.7里写Top N, 分组排名, 中位数这类题目, 经常需要用户变量或多层子查询. 到了MySQL 8.0, 写法终于接近PostgreSQL这类数据库.
+这篇用LeetCode的Median Employee Salary作为例子.
+[&hellip;] CREATE TABLE IF &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.12.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>CTE &amp; Window Function: MySQL 8.0的新特性</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2026-04-26
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>MySQL 8.0补齐了不少现代SQL能力, 其中最常用的两个是:</p>
+<ul>
+<li>CTE(Common Table Expression), 也就是<code>WITH ... AS (...)</code></li>
+<li>Window Function, 也就是<code>xxx() OVER (PARTITION BY ... ORDER BY ...)</code></li>
+</ul>
+<p>以前在MySQL 5.7里写Top N, 分组排名, 中位数这类题目, 经常需要用户变量或多层子查询. 到了MySQL 8.0, 写法终于接近PostgreSQL这类数据库.</p>
+<p>这篇用LeetCode的<a href="https://leetcode.cn/problems/median-employee-salary/">Median Employee Salary</a>作为例子.</p>
+<h2 id="测试数据">测试数据</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> Employee (
+</span></span><span style="display:flex;"><span>    id INT <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>,
+</span></span><span style="display:flex;"><span>    company VARCHAR(<span style="color:#ae81ff">255</span>),
+</span></span><span style="display:flex;"><span>    salary INT
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">TRUNCATE</span> <span style="color:#66d9ef">TABLE</span> Employee;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">2341</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">341</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">15</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">15314</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">5</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">451</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">6</span>, <span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#ae81ff">513</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">7</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">15</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">13</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">9</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">1154</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">10</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">1345</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">11</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">1221</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">12</span>, <span style="color:#e6db74">&#39;B&#39;</span>, <span style="color:#ae81ff">234</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">13</span>, <span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">2345</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">14</span>, <span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">2645</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">15</span>, <span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">2645</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">16</span>, <span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">2652</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> Employee (id, company, salary) <span style="color:#66d9ef">VALUES</span> (<span style="color:#ae81ff">17</span>, <span style="color:#e6db74">&#39;C&#39;</span>, <span style="color:#ae81ff">65</span>);
+</span></span></code></pre></div><h2 id="cte是什么">CTE是什么</h2>
+<p>CTE可以理解为&quot;只在当前SQL语句里可见的临时命名结果集&quot;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">WITH</span> ranked_employee <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> ranked_employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> company <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;A&#39;</span>;
+</span></span></code></pre></div><p>CTE不一定等价于临时表, 优化器可能会选择合并、物化或重写. 日常写SQL时, 它最大的价值是把复杂查询拆成几个可读的步骤.</p>
+<p>递归CTE也很有用, 例如生成序列、处理树形结构. 本文先只讨论非递归CTE.</p>
+<h2 id="window-function是什么">Window Function是什么</h2>
+<p>窗口函数和<code>GROUP BY</code>的差异在于:</p>
+<ul>
+<li><code>GROUP BY</code>会把多行聚合成一行.</li>
+<li>Window Function保留原始行, 只是在每一行旁边算出一个窗口内的值.</li>
+</ul>
+<p>例如按公司排序员工工资:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary,
+</span></span><span style="display:flex;"><span>    ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> company, rn;
+</span></span></code></pre></div><p><code>PARTITION BY company</code>表示每个公司单独计算, <code>ORDER BY salary, id</code>表示公司内部先按工资排序, 工资相同再按<code>id</code>排序.</p>
+<p>这里的<code>id</code>很重要. 如果只写<code>ORDER BY salary</code>, C公司有两个人工资都是<code>2645</code>, 它们的先后顺序在SQL语义上是不稳定的.</p>
+<h2 id="三个排名函数">三个排名函数</h2>
+<p>排名函数里最常用的是<code>ROW_NUMBER()</code>, <code>RANK()</code>, <code>DENSE_RANK()</code>.</p>
+<p>用C公司数据看最清楚:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary,
+</span></span><span style="display:flex;"><span>    ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> row_number_,
+</span></span><span style="display:flex;"><span>    RANK() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary) <span style="color:#66d9ef">AS</span> rank_,
+</span></span><span style="display:flex;"><span>    DENSE_RANK() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary) <span style="color:#66d9ef">AS</span> dense_rank_
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> company <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;C&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id;
+</span></span></code></pre></div><p>结果:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>+----+---------+--------+-------------+-------+-------------+
+</span></span><span style="display:flex;"><span>| id | company | salary | row_number_ | rank_ | dense_rank_ |
+</span></span><span style="display:flex;"><span>+----+---------+--------+-------------+-------+-------------+
+</span></span><span style="display:flex;"><span>| 17 | C       |     65 |           1 |     1 |           1 |
+</span></span><span style="display:flex;"><span>| 13 | C       |   2345 |           2 |     2 |           2 |
+</span></span><span style="display:flex;"><span>| 14 | C       |   2645 |           3 |     3 |           3 |
+</span></span><span style="display:flex;"><span>| 15 | C       |   2645 |           4 |     3 |           3 |
+</span></span><span style="display:flex;"><span>| 16 | C       |   2652 |           5 |     5 |           4 |
+</span></span><span style="display:flex;"><span>+----+---------+--------+-------------+-------+-------------+
+</span></span></code></pre></div><p>区别:</p>
+<ul>
+<li><code>ROW_NUMBER()</code>不关心并列, 每一行都有唯一序号: <code>1, 2, 3, 4, 5</code>.</li>
+<li><code>RANK()</code>有并列, 并且跳号: <code>1, 2, 3, 3, 5</code>.</li>
+<li><code>DENSE_RANK()</code>有并列, 但不跳号: <code>1, 2, 3, 3, 4</code>.</li>
+</ul>
+<p>如果要&quot;每组取前3行&quot;, 用<code>ROW_NUMBER()</code>. 如果要&quot;工资前三名, 并列也算&quot;, 用<code>RANK()</code>或<code>DENSE_RANK()</code>, 取决于是否允许跳号.</p>
+<p>中位数这题要取排序后第<code>N/2</code>附近的行, 所以用<code>ROW_NUMBER()</code>最直接.</p>
+<h2 id="解法">解法</h2>
+<p>每个公司内部按工资升序排序, 同时算出公司总人数:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">WITH</span> ordered_employee <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">COUNT</span>(<span style="color:#f92672">*</span>) OVER (PARTITION <span style="color:#66d9ef">BY</span> company) <span style="color:#66d9ef">AS</span> cnt
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> ordered_employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rn <span style="color:#f92672">&gt;=</span> cnt <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">AND</span> rn <span style="color:#f92672">&lt;=</span> cnt <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> company, salary, id;
+</span></span></code></pre></div><p>为什么这个条件能处理奇偶?</p>
+<ul>
+<li><code>cnt = 6</code>, <code>cnt / 2 = 3</code>, 选<code>rn &gt;= 3 AND rn &lt;= 4</code>, 也就是第3和第4行.</li>
+<li><code>cnt = 5</code>, <code>cnt / 2 = 2.5</code>, 选<code>rn &gt;= 2.5 AND rn &lt;= 3.5</code>, 整数<code>rn</code>只有第3行满足.</li>
+</ul>
+<p>输出:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>+----+---------+--------+
+</span></span><span style="display:flex;"><span>| id | company | salary |
+</span></span><span style="display:flex;"><span>+----+---------+--------+
+</span></span><span style="display:flex;"><span>|  5 | A       |    451 |
+</span></span><span style="display:flex;"><span>|  6 | A       |    513 |
+</span></span><span style="display:flex;"><span>| 12 | B       |    234 |
+</span></span><span style="display:flex;"><span>|  9 | B       |   1154 |
+</span></span><span style="display:flex;"><span>| 14 | C       |   2645 |
+</span></span><span style="display:flex;"><span>+----+---------+--------+
+</span></span></code></pre></div><p>注意C公司有两条<code>2645</code>. 因为SQL里写了<code>ORDER BY salary, id</code>, 所以中位数员工稳定为<code>id = 14</code>. 如果只按<code>salary</code>排序, MySQL, PostgreSQL, TiDB都不承诺两条<code>2645</code>的内部顺序, 结果可能变成<code>id = 15</code>.</p>
+<h2 id="另一种写法">另一种写法</h2>
+<p>也可以把中位数位置直接算出来:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">WITH</span> ordered_employee <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">COUNT</span>(<span style="color:#f92672">*</span>) OVER (PARTITION <span style="color:#66d9ef">BY</span> company) <span style="color:#66d9ef">AS</span> cnt
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>median_pos <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        rn,
+</span></span><span style="display:flex;"><span>        FLOOR((cnt <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">AS</span> left_pos,
+</span></span><span style="display:flex;"><span>        FLOOR((cnt <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">AS</span> right_pos
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> ordered_employee
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> median_pos
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rn <span style="color:#66d9ef">IN</span> (left_pos, right_pos)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> company, salary, id;
+</span></span></code></pre></div><p>这种写法更直观:</p>
+<ul>
+<li><code>cnt = 6</code>, 位置是<code>3</code>和<code>4</code>.</li>
+<li><code>cnt = 5</code>, 位置是<code>3</code>和<code>3</code>.</li>
+</ul>
+<h2 id="mysql-80-postgresql-tidb的差异">MySQL 8.0, PostgreSQL, TiDB的差异</h2>
+<p>这道题的核心SQL在三者上都能跑:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">WITH</span> ordered_employee <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">COUNT</span>(<span style="color:#f92672">*</span>) OVER (PARTITION <span style="color:#66d9ef">BY</span> company) <span style="color:#66d9ef">AS</span> cnt
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> id, company, salary
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> ordered_employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rn <span style="color:#f92672">&gt;=</span> cnt <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">AND</span> rn <span style="color:#f92672">&lt;=</span> cnt <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> company, salary, id;
+</span></span></code></pre></div><p>但有几个细节值得注意.</p>
+<h3 id="1-mysql-57不能这样写">1. MySQL 5.7不能这样写</h3>
+<p>CTE和窗口函数都是MySQL 8.0时代才正式进入MySQL主线的常用能力. MySQL 5.7没有<code>WITH</code>, 也没有<code>ROW_NUMBER() OVER (...)</code>.</p>
+<p>在MySQL 5.7里, 通常要用用户变量模拟排名:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        e.<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">@</span>rn :<span style="color:#f92672">=</span> <span style="color:#66d9ef">IF</span>(<span style="color:#f92672">@</span>company <span style="color:#f92672">=</span> company, <span style="color:#f92672">@</span>rn <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">AS</span> rn,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">@</span>company :<span style="color:#f92672">=</span> company
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee e
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> (<span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">@</span>rn :<span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#f92672">@</span>company :<span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>) vars
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> company, salary, id
+</span></span><span style="display:flex;"><span>) ranked;
+</span></span></code></pre></div><p>这类写法依赖MySQL用户变量求值顺序, 可读性和可移植性都差很多.</p>
+<h3 id="2-窗口函数不能直接写在where里">2. 窗口函数不能直接写在WHERE里</h3>
+<p>下面这个SQL不应该写:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    id,
+</span></span><span style="display:flex;"><span>    company,
+</span></span><span style="display:flex;"><span>    salary
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>原因是SQL的逻辑执行顺序里, <code>WHERE</code>早于窗口函数计算. MySQL官方文档也明确说窗口函数只能出现在select list和<code>ORDER BY</code>里.</p>
+<p>所以通常做法是:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">WITH</span> ranked <span style="color:#66d9ef">AS</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>        id,
+</span></span><span style="display:flex;"><span>        company,
+</span></span><span style="display:flex;"><span>        salary,
+</span></span><span style="display:flex;"><span>        ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> rn
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> Employee
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> ranked
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> rn <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>PostgreSQL和TiDB也是同样的思路. 如果用的是支持<code>QUALIFY</code>的数据库, 可以少一层CTE, 但MySQL 8.0和PostgreSQL原生语法里没有<code>QUALIFY</code>.</p>
+<h3 id="3-cte物化行为不同">3. CTE物化行为不同</h3>
+<p>CTE主要是可读性工具, 不要天然假设它一定更快.</p>
+<ul>
+<li>MySQL 8.0会对CTE做合并或物化等优化, 行为要看具体SQL和版本.</li>
+<li>PostgreSQL 12之前, CTE经常被当成优化屏障; PostgreSQL 12之后, 简单CTE可以被内联, 也支持<code>MATERIALIZED</code>和<code>NOT MATERIALIZED</code>提示.</li>
+<li>TiDB支持CTE和递归CTE, 执行计划还会受分布式执行、TiFlash下推等因素影响.</li>
+</ul>
+<p>真实业务里, 复杂SQL写完后还是应该看<code>EXPLAIN</code>.</p>
+<h3 id="4-返回类型可能不一样">4. 返回类型可能不一样</h3>
+<p>PostgreSQL文档里<code>row_number()</code>, <code>rank()</code>, <code>dense_rank()</code>返回<code>bigint</code>.</p>
+<p>MySQL和TiDB里一般也会把窗口函数结果当作整数列来处理, 但客户端驱动展示的类型细节可能不同. 如果应用层强依赖字段类型, 最好显式转换:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CAST</span>(ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> SIGNED) <span style="color:#66d9ef">AS</span> rn
+</span></span></code></pre></div><p>PostgreSQL里对应写法是:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CAST</span>(ROW_NUMBER() OVER (PARTITION <span style="color:#66d9ef">BY</span> company <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id) <span style="color:#66d9ef">AS</span> INTEGER) <span style="color:#66d9ef">AS</span> rn
+</span></span></code></pre></div><h3 id="5-排序必须写完整">5. 排序必须写完整</h3>
+<p>这是跨数据库最容易忽略的问题.</p>
+<p><code>ROW_NUMBER()</code>遇到并列值时, 如果<code>ORDER BY</code>不能唯一决定顺序, 数据库可以用任意顺序返回这些peer rows. 同一条SQL在不同数据库, 不同执行计划, 甚至同一数据库不同版本下, 都可能返回不同的<code>ROW_NUMBER()</code>.</p>
+<p>所以中位数员工这题应该写:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary, id
+</span></span></code></pre></div><p>而不是:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> salary
+</span></span></code></pre></div><p>这不是为了好看, 是为了结果稳定.</p>
+<h3 id="6-这道题的输出没有本质差异">6. 这道题的输出没有本质差异</h3>
+<p>如果使用本文这条带<code>ORDER BY salary, id</code>的SQL, MySQL 8.0, PostgreSQL, TiDB的结果行应该一致:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>+----+---------+--------+
+</span></span><span style="display:flex;"><span>| id | company | salary |
+</span></span><span style="display:flex;"><span>+----+---------+--------+
+</span></span><span style="display:flex;"><span>|  5 | A       |    451 |
+</span></span><span style="display:flex;"><span>|  6 | A       |    513 |
+</span></span><span style="display:flex;"><span>| 12 | B       |    234 |
+</span></span><span style="display:flex;"><span>|  9 | B       |   1154 |
+</span></span><span style="display:flex;"><span>| 14 | C       |   2645 |
+</span></span><span style="display:flex;"><span>+----+---------+--------+
+</span></span></code></pre></div><p>差异主要在客户端展示格式和执行计划上. MySQL/TiDB命令行默认是上面这种表格样式, PostgreSQL的<code>psql</code>默认也是表格, 但边框样式不同. 真正影响结果的是排序条件是否完整, 而不是这三个数据库对<code>ROW_NUMBER()</code>语义的差异.</p>
+<h2 id="小结">小结</h2>
+<p>CTE和Window Function让MySQL 8.0的SQL表达能力提升很多. 对应用开发来说, 最常见的收益是:</p>
+<ul>
+<li>复杂查询可以拆成可读步骤.</li>
+<li>分组排序、Top N、中位数、去重保留第一行等问题, 不再需要MySQL用户变量.</li>
+<li>同一套SQL更容易迁移到PostgreSQL和TiDB.</li>
+</ul>
+<p>排名函数的选择可以简单记:</p>
+<ul>
+<li>要每行唯一序号: <code>ROW_NUMBER()</code></li>
+<li>要排名, 并列后跳号: <code>RANK()</code></li>
+<li>要排名, 并列后不跳号: <code>DENSE_RANK()</code></li>
+</ul>
+<p>这道中位数题的关键是<code>ROW_NUMBER()</code>加<code>COUNT(*) OVER</code>, 再用CTE在外层过滤目标行.</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/with.html">MySQL 8.0 Reference Manual: WITH (Common Table Expressions)</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/window-functions-usage.html">MySQL 8.0 Reference Manual: Window Function Concepts and Syntax</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/window-function-descriptions.html">MySQL 8.0 Reference Manual: Window Function Descriptions</a></li>
+<li><a href="https://www.postgresql.org/docs/current/functions-window.html">PostgreSQL Documentation: Window Functions</a></li>
+<li><a href="https://www.postgresql.org/docs/current/queries-with.html">PostgreSQL Documentation: WITH Queries</a></li>
+<li><a href="https://docs.pingcap.com/tidb/stable/window-functions/">TiDB Docs: Window Functions</a></li>
+<li><a href="https://docs.pingcap.com/tidb/stable/sql-statement-with">TiDB Docs: WITH</a></li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2025/02/06/aws%E5%AD%98%E5%82%A8%E7%9A%84%E5%9D%91/">AWS存储的坑</a></span>
+  <span class="nav-next"><a href="/post/2026/04/26/cloud-native-relational-database-architecture/">云原生关系型数据库: 一致性、存储与复杂度</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@9.12.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+

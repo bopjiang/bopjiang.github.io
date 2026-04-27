@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>A Brief History of Database History - 江 Blog</title>
+    <meta property="og:title" content="A Brief History of Database History - 江 Blog">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="去年读了《数据库简史》, 发现每个技术方向都有一些有趣的事情, 我们每个人其实都在历史浪潮中.
+以古鉴今, 多读读历史能让我们少走很多弯路.
+Snowflake的创始人Marcin Żukowski在一个采访中说得很好
+[&hellip;] I mean our field (database), especially computer science, has been around for &amp;hellip;">
+      <meta property="og:description" content="去年读了《数据库简史》, 发现每个技术方向都有一些有趣的事情, 我们每个人其实都在历史浪潮中.
+以古鉴今, 多读读历史能让我们少走很多弯路.
+Snowflake的创始人Marcin Żukowski在一个采访中说得很好
+[&hellip;] I mean our field (database), especially computer science, has been around for &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江 Blog</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>A Brief History of Database History</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2025-01-02
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<p>去年读了《数据库简史》, 发现每个技术方向都有一些有趣的事情, 我们每个人其实都在历史浪潮中.</p>
+<p>以古鉴今, 多读读历史能让我们少走很多弯路.</p>
+<p>Snowflake的创始人Marcin Żukowski在一个<a href="https://www.youtube.com/clip/UgkxPjf-NvN0kNaj2QV-V534SLNN4iToricC">采访</a>中说得很好</p>
+<blockquote>
+<p>I mean our field (database), especially computer science, has been around for you know decades, like 60, 70 years. The new generations often forget things, or don&rsquo;t really know that somethings has been tried or tested, and there is a lot of depth and wisdom in old research. Maybe that&rsquo;s something I would encourage everybody to at least look into, because we focus on the brand new things over and over, but we don&rsquo;t realize how much we can learn from the old things.</p>
+</blockquote>
+<p>所以, 2025年一开始, 便以<code>A Brief History of Database History</code>为题, 在<a href="https://szdiy.org/">SZDIY</a>社区开了一个小讲座, 想不到反响还不错, 私信问我要Slides的小伙伴不下10位.</p>
+<h3 id="讨论">讨论</h3>
+<p>其实分享的大部分内容都是来自看过的几本书, 加上同业内人士的聊天中得到的一些八卦. 我觉得做分享, 对主讲人来说, 最大收获的是接收到大家的反馈(提问和讨论)</p>
+<p>首先, 大家最关心的还是NoSQL, 看起来这些年MongoDB的营销产生了一些效果.</p>
+<blockquote>
+<p>NoSQL不是一个新技术, 在关系模型出现前的1970年代就有了, 譬如存储认证/授权信息的层级目录(hierarchical directories for storing authentication and authorization credentials).</p>
+</blockquote>
+<blockquote>
+<p>最近20年, NoSQL出现的本质是大家对互联网产生的大量数据的存储需求, 对数据存储有水平扩展的巨大需求. 讽刺的是, 在NoSQL数据库中大家最希望的特性往往是SQL!</p>
+</blockquote>
+<p>其次, 怎么选择数据库?</p>
+<blockquote>
+<p>选择我们最熟悉和易于维护的数据库. 分布式数据库在大部分场景都不是第一选择. 国外网友经验, 使用PostgreSQL一般不是最差的选择.</p>
+</blockquote>
+<blockquote>
+<p>有了S3之类的稳定存储系统后, 不是所有东西都必须往数据库扔的.
+我之前做过最愚蠢的设计是将图片的缩略图放入MySQL数据库, 导致存放缩略图的表急剧膨胀.</p>
+</blockquote>
+<p>有小伙伴问Redis是不是数据库?</p>
+<blockquote>
+<p><code>It's data structure server!</code> 得看你怎么使用, 当cache还是存储.
+并且现在云厂商已经提供了具有Redis接口, 数据可持久化的数据库, 如<a href="https://aws.amazon.com/memorydb/">AWS MemoryDB</a>.</p>
+</blockquote>
+<p>有个配置信息存储的问题, 有人说他们目前存储在Redis上的, 问是不是个好主意?</p>
+<blockquote>
+<p>得看你的Redis怎么用, 持久化怎么做的, 配置的数据量有多大(Redis有单机内存限制, 如果一开始未考虑集群模式, 后面从单机切换为集群模式, 很可能涉及代码改造). 如果数据量不大, 存储在MySQL/PostgreSQL的一张表就可以了. 这是典型的EVA(Entity-Attribute-Value)反模式, 一般不推荐使用. 不过还是那句话, 方案跟你的数据规模相关. 至于用MongoDB存储一点点配置信息, 还是算了吧😓.</p>
+</blockquote>
+<p>SQLite的使用上, 有小伙伴提到在嵌入式设备上, 他们使用SQLite替代文件系统, 在大量小文件IO的场景, 效率提升N倍. 算是数据库另辟蹊径的一种用法.</p>
+<p>还有个人问到, PostgreSQL的吉祥物为什么是大象, 问了下ChatGTP</p>
+<blockquote>
+<p>PostgreSQL 的标志使用大象，是因为“大象”代表了 PostgreSQL 的强大、稳定和灵活的特性。这个符号最早由 PostgreSQL 项目的创始人之一、数据库设计师 Michael Stonebraker 提出，他认为大象是个合适的象征，因为大象在自然界中是强大且持久的，而这也恰如 PostgreSQL 作为一个数据库系统的特点。</p>
+<p>具体来说，有几个原因与大象的象征性有关：</p>
+<ol>
+<li><strong>强大与稳健</strong>：大象是一种体型庞大、强壮且耐力极强的动物，象征着 PostgreSQL 作为一个具有强大处理能力和高可扩展性的数据库系统。</li>
+<li><strong>象征“重量级”功能</strong>：PostgreSQL 是一个功能丰富的数据库，支持复杂的数据类型、事务管理、完整性约束等高级功能。这种“重量级”特性与大象的体型非常契合。</li>
+<li><strong>持久性和稳定性</strong>：大象可以活几十年，体现了 PostgreSQL 作为一个长期可靠的数据库系统的特点。</li>
+<li><strong>社区精神</strong>：PostgreSQL 是一个开源项目，许多开发者和贡献者都积极参与其发展。大象的形象也可能象征着数据库的开源社区有着“团结”和“稳固”的基础。</li>
+</ol>
+<p>因此，大象的形象通过其自然界中的特性，向外界传达了 PostgreSQL 的强大、可靠和持久的印象。</p>
+</blockquote>
+<h3 id="国产化">国产化</h3>
+<p>最后谈谈数据库国产化替代, 最近一次聊天中, 某位大佬预判关系型数据库这块, 国内能存活下来的只有三家:</p>
+<ul>
+<li>阿里云PolarDB (蚂蚁Oceanbase没说)</li>
+<li>TiDB</li>
+<li>GaussDB</li>
+</ul>
+<p>我说光在深圳, 不是还有TD-SQL, 崖山(<del>Gauss 100?</del>), 昆仑,  GoldenDB? 大佬笑而不语.</p>
+<p>下一个十年, 我们拭目以待.</p>
+<h2 id="数据库相关书籍">数据库相关书籍</h2>
+<p>推荐几本由浅入深的书和教材</p>
+<ul>
+<li>Avi Silberschatz, Henry F. Korth, S. Sudarshan.Database System Concepts, Seventh Edition. 2019.</li>
+<li>Peter Bailis, Joseph M. Hellerstein, Michael Stonebraker. Readings in Database Systems, 5th Edition](<a href="http://www.redbook.io/)">http://www.redbook.io/)</a>. 2015.</li>
+<li>Jim Gray, Andreas Reuter. Transaction Processing: Concepts and Techniques. 1992.</li>
+</ul>
+<p>基本上第一本已经可以应付数据库相关的应用开发和面试了.</p>
+<p>Gray的Transaction Processing, 涉及的知识领域已经远远不只数据库了. 有个朋友说, 他要是早看这本书, 说不定就去AWS搞云计算了.</p>
+<p>如果要探究数据库内核, 数据结构、编译原理基础知识肯定必不可少.</p>
+<p>现在数据库都是C-S架构, 如果做些接入层方面的工作(如数据库驱动, 数据库中间件), 计算机网络TCP/IP方面的知识肯定得扎实.</p>
+<h2 id="参考资料">参考资料</h2>
+<h3 id="英文">英文</h3>
+<ul>
+<li><a href="https://15721.courses.cs.cmu.edu/spring2023/schedule.html">CMU 15-721 Advanced Database Systems</a>. 2023.</li>
+<li>Michael Stonebraker, Andrew Pavlo. <a href="https://db.cs.cmu.edu/papers/2024/whatgoesaround-sigmodrec2024.pdf">What Goes Around Comes Around&hellip; And Around&hellip;</a>. 2024.</li>
+<li>Andy Pavlo. <a href="https://www.cs.cmu.edu/~pavlo/blog/2024/01/2023-databases-retrospective.html">Databases in 2023: A Year in Review</a>. 2024.</li>
+<li>Richard Hipp. <a href="https://open.spotify.com/episode/3AVbDpEiZqgYyqJSq9FXCY">The Untold Story of SQLite</a>. 2021.</li>
+<li>Alex Petrov. Database Internals. 2020.</li>
+<li>Diego Ongaro. <a href="https://raft.github.io/raft.pdf">In Search of an Understandable Consensus Algorithm</a>. 2014.</li>
+<li><a href="https://blog.bytebytego.com/">Bytebytego Newsletter</a>.</li>
+</ul>
+<h3 id="中文">中文</h3>
+<ul>
+<li>徐飞. 2019. 大数据浪潮之巅. 公众号: 飞总聊IT</li>
+<li>盖国强. 2024. 《数据库简史》, 墨天轮社区</li>
+<li>吴军. 浪潮之巅, 第四版. 2019. 里面专门一章讲了Oracle的故事.</li>
+</ul>
+<h3 id="其他">其他</h3>
+<ul>
+<li>Marcin Żukowski获得CWI Dijkstra Fellowship的采访
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/moQY_eiHCTs?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" title="YouTube video"></iframe>
+    </div>
+</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2022/08/05/mysql-client-install/">MySQL Client Install</a></span>
+  <span class="nav-next"><a href="/post/2025/01/23/sql%E5%8F%8D%E6%A8%A1%E5%BC%8F/">SQL反模式</a> &rarr;</span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2021 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
