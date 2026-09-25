@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Tailscale如何追踪到一个存在了16年的SQLite漏洞 - 江博</title>
+    
+
+    
+    
+      
+    
+
+    
+      
+      <meta name="description" content="Tailscale团队历时数月追踪SQLite数据库损坏问题，最终定位并修复了一个存在至少16年的WAL-Reset漏洞。">
+      
+    
+
+    <meta property="og:url" content="https://bopjiang.github.io/post/2026/08/12/sqlite-wal-reset-bug/">
+  <meta property="og:site_name" content="江博">
+  <meta property="og:title" content="Tailscale如何追踪到一个存在了16年的SQLite漏洞">
+  <meta property="og:description" content="Tailscale团队历时数月追踪SQLite数据库损坏问题，最终定位并修复了一个存在至少16年的WAL-Reset漏洞。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-08-12T00:00:00+08:00">
+    <meta property="article:modified_time" content="2026-08-12T00:00:00+08:00">
+
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tailscale如何追踪到一个存在了16年的SQLite漏洞">
+  <meta name="twitter:description" content="Tailscale团队历时数月追踪SQLite数据库损坏问题，最终定位并修复了一个存在至少16年的WAL-Reset漏洞。">
+
+
+    
+
+    
+    
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">江博</a></h1>
+
+<p class="tagline">Jiang in Thinking</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/post/">Blog</a></li>
+  
+  <li><a href="/note/">Note</a></li>
+  
+  <li><a href="/books/">Books</a></li>
+  
+  <li><a href="/earn/">薅羊毛</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>Tailscale如何追踪到一个存在了16年的SQLite漏洞</h1>
+
+
+
+<h3>
+
+
+
+
+
+
+2026-08-12
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<div style="color: #1e40af;">
+  <p>翻译了下tailscale写的一篇SQLite事故复盘, 有几个有意思的点:</p>
+  <ul>
+    <li>tailscale用了最简单的SQLite+分片 存储他们的控制平面数据, 没有PostgreSQL, 没有分布式数据库, 没有etcd!</li>
+    <li>一个问题如果没找到重现条件, 无法重现, 是非常难以定位的. 相反, 一旦找到重现条件, 定位就容易了.</li>
+    <li>数据恢复时, SQLite也有WAL的日志, 但是tailscale没有通过解析WAL的方式构建数据修复的pipeline, 而是通过记录执行的SQL语句再重放. 显然引入WAL会增加整个问题的复杂度, 而且不保证WAL没有问题.</li>
+    <li>强如tailscale的技术团队, 也需要更专业的SQLite厂家技术支持. 我们很多团队动不动就要魔改PostgreSQL/MySQL, 搞出来的系统可靠性如何自己可能都说不清楚.</li>
+    <li>最后这个问题本质原因是tailscale没有按照常规的方法使用SQLite, 自己频繁的checkpoint, 导致bug出现的概率放大了. 很多底层系统老老实实遵循大家最常用的使用模式, 是最稳妥的方法. 记得很久之前TX团队也踩过etcd认证的坑.</li>
+  </ul>
+  <p>自从<a href="https://x.com/bradfitz">@bradfitz</a>从Go团队跳槽到了Tailscale, 就一直关注和使用他们的产品, 还是非常牛的!</p>
+</div>
+<hr>
+<br>
+<ul>
+<li><strong>作者：</strong> Alex Chan</li>
+<li><strong>发布日期：</strong> 2026 年 8 月 12 日</li>
+<li><strong>来源：</strong> <a href="https://tailscale.com/blog/sqlite-wal-reset-bug">https://tailscale.com/blog/sqlite-wal-reset-bug</a></li>
+</ul>
+<p>去年年底，我们的服务可用性<a href="https://tailscale.com/blog/hypergrowth-isnt-always-easy">相当不稳定</a>。你可以在<a href="https://status.tailscale.com/history">我们的状态页面</a>上看到这一趋势，而这种不稳定一直延续到了新的一年。其中许多次故障都源于 <a href="https://sqlite.org/index.html">SQLite</a> 深处的同一个漏洞。为了追踪到它，我们进行了数月高强度的取证分析。</p>
+<p>如今已是夏天，我们确信已经找到了这个漏洞，理解了它的原理——更重要的是，我们已经修复了它。</p>
+<p>我们知道，客户期望 Tailscale 是一项可靠的服务，而有好几个月，我们都未能兑现这一承诺。这给大家造成了困扰，我们深感抱歉。我们发布这篇博客，是为了解释哪里出了问题、我们如何应对，以及我们最终如何协助发现 SQLite 数据库核心中一个长期存在的漏洞。</p>
+<h2 id="tailscale-的数据库架构"><a href="#tailscales-database-architecture">Tailscale 的数据库架构</a></h2>
+<p>虽然我们的客户端将<a href="https://tailscale.com/docs/concepts/control-data-planes">控制平面</a>视为单一的公共端点（<a href="http://controlplane.tailscale.com">controlplane.tailscale.com</a>）与之交互，但在内部，我们的控制平面被拆分成一系列协调服务器（或称“分片”）。每个 tailnet 在任一时刻都位于一个内部分片上，但可以在不同分片之间无缝迁移。这些分片属于内部实现细节：你不会知道自己的 tailnet 位于哪个分片，也永远不需要知道。</p>
+<p>每个分片都有一个 SQLite 数据库，其中保存着该分片上所有 tailnet 的全部信息。一个 Go 进程独占访问这个数据库，并为这些 tailnet 提供控制平面服务。这种单写入者设计正是 SQLite 的预期使用方式。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/6db766d5b5c004085237e7498faf57a0e8d3205a-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示 Tailscale 控制平面如何由彼此隔离的分片组成，每个分片都有各自独立的 SQLite 数据库。"></p>
+<p>自 <a href="https://tailscale.com/blog/database-for-2022">2022 年以来</a>，我们一直使用 SQLite 作为主要数据库。之所以选择它，是因为它广为人知、可靠且应用广泛。SQLite 是一种<a href="https://mcfunley.com/choose-boring-technology">“乏味的技术”</a>——这里的“乏味”是褒义。许多公司在规模大得多的部署中使用 SQLite，也从未遇到问题；我们原本也期待拥有同样省心的使用体验。</p>
+<p>在当前的备份流水线中，我们每隔几分钟就会为数据库创建一份完整快照，然后将整个 SQLite 文件上传到 S3 存储桶。自 2023 年初以来，这套方案一直平稳运行，从未发生过事故。</p>
+<p>时间快进到去年 8 月，一个读取这些 S3 备份的数据流水线报告称，我们的某个数据库出现了错误。我们对该备份运行了 SQLite 的 <code>PRAGMA integrity_check</code> 命令，发现它确实已经损坏。SQLite 数据库<a href="https://www.sqlite.org/howtocorrupt.html">有可能损坏</a>，但这种情况极为罕见，在正常运行中不应遇到。我们修复了受影响的数据库，也调查了原因，却一无所获。</p>
+<p>在大规模运行的系统中，即便是罕见事件也可能以一定频率发生，因此，当它再次发生——然后一再发生、再三发生——时，我们本不该感到意外。在最终解决底层漏洞之前的六个月里，我们总共遭遇了 19 次相互独立的数据库损坏事件。</p>
+<p>听到“数据库损坏”这个说法，人们自然会担心数据丢失。由于我们的控制平面只处理配置数据，因此这些数据库中包含的是有关你的 tailnet 和设备的元数据，绝不会包含你的私有加密密钥或网络流量。在最早的几次事件中，恢复过程导致少量新添加的设备或配置变更未能持久保存，还有少量元数据需要重新录入。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/eec436b49f783f30c56edb32b6eeacff62ebfdf4-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示当单个分片上的数据库出现问题时，Tailscale 控制平面如何应对。SQLite 数据库损坏会影响该分片上的流量，但其他分片不受影响。"></p>
+<p>每当发生损坏时，我们都必须停止该分片上的控制平面进程，以便修复或还原数据库。对于该分片上的 tailnet 而言，这非常痛苦，因为在恢复期间，它们的整个控制平面都消失了。在早期事件中，停机时间超过一个小时；但随着事件一次次发生，我们逐步加快了恢复流程。</p>
+<p>每个 tailnet 都是一个网状网络，其中的设备通过 WireGuard® 相互建立点对点连接。当一台设备加入 tailnet 时，必须先从控制平面获取其他设备的列表，然后才能建立新连接——因此，如果某台设备在 SQLite 停机期间上线，它就无法连接。数据库修复期间，已经在线的设备仍会保持彼此连接，但无法获知网络发生的变更。这些 tailnet 也会暂时无法访问基于 Web 的管理控制台和 Tailscale API。</p>
+<p>此外，这还会对信任产生更广泛的影响。即使只有少量 tailnet 受到影响，我们也会在<a href="https://status.tailscale.com/">状态页面</a>上发布全局事件。许多人会看到一条其实并未影响到自己的故障事件。事实上，绝大多数分片和 tailnet 从未卷入任何数据库损坏事件！尽管如此，无论你是否直接受到影响，反复停机都会侵蚀信任。</p>
+<p>从第一次发生损坏起，我们就知道这是对服务可靠性的严重威胁，也投入了大量工程时间来解决这个问题——但修复它并不容易。</p>
+<h2 id="尝试找出问题所在"><a href="#trying-to-find-the-fault">尝试找出问题所在</a></h2>
+<p>这个漏洞躲过了我们最初所有查找它的尝试。</p>
+<p>我们检查了近期的变更，但没有任何一项看起来与此相关。没有人在改动与 SQLite 交互的底层代码，因为这些代码早在几年前就已经写好，而且此前从未出现过问题。我们用最细致的方式重新审查了所有相关代码，寻找之前遗漏的漏洞，但没有发现任何会导致眼前这种损坏的因素。</p>
+<p>我们寻找了各次损坏事件之间的共同因素，却毫无发现。问题与某个特定分片、客户、tailnet 功能、一天中的特定时段或负载水平都无关。我们完全不知道究竟是什么触发了这种行为。</p>
+<p>由于缺少可靠的触发条件，我们无法通过人工构造的方式复现这个漏洞。相反，我们只能在生产环境中部署被动式的取证遥测，以期当场捕获数据库损坏。为数据库问题收集实时诊断信息是我们最不愿意做的事，但我们别无选择。</p>
+<p>更麻烦的是，损坏并不按固定规律发生。有时两次事件只相隔数小时，有时却相隔数周。这让我们很难预测进展或安排后续工作，因为我们永远不确定下一份诊断转储何时才会出现。从 10 月到 12 月，我们曾连续六周没有发生任何损坏事件，随后它们又像一份不受欢迎的圣诞礼物一样卷土重来。</p>
+<p>由于这不可能是一个能够快速或轻松修复的问题，我们联系了 SQLite 开发者，签订了一份<a href="https://sqlite.org/prosupport.html">专业支持合同</a>。事实证明，这是一个极好的决定。我们得以直接借助他们深厚的专业知识和丰富经验，并围绕我们的架构和故障事件进行了许多深入的技术交流。</p>
+<p>Tailscale 工程团队和 SQLite 核心开发者共同梳理了多种可能导致损坏的理论，其中包括 <a href="https://www.sqlite.org/howtocorrupt.html#_posix_advisory_locks_canceled_by_a_separate_thread_doing_close_">close() 导致 POSIX 锁失效</a>、错误管理 SQLite 所拥有的内存，或在<a href="https://sqlite.org/compile.html#threadsafe">禁用线程安全</a>的情况下意外从多个线程使用 SQLite。每次事件发生后，我们都会收集更多数据、增加更多诊断手段，并系统性地排除这些理论。我们正逐步逼近真正的漏洞。</p>
+<h2 id="那些没有吠叫的事务"><a href="#the-transactions-that-didnt-bark">那些没有“吠叫”的事务</a></h2>
+<p>在调查根本原因的同时，我们仍要维持线上平台正常运行。我们采取了积极措施来自动执行恢复并尽量缩短停机时间：</p>
+<ul>
+<li>配置控制平面分片，使其一旦遇到损坏就立即硬停止</li>
+<li>部署自动化备份监控器，持续对备份运行 <code>PRAGMA integrity_check</code></li>
+<li>改进运行手册和随叫随到人员培训</li>
+</ul>
+<p>这些工作将我们的响应时间缩短到了一个小时以内——随后，我们发现了一条意想不到的线索。</p>
+<p>我们希望找到一种恢复服务的方法，既不必回滚到上一个已知完好的备份（那会丢失大量数据），也不必修复已知损坏的数据库（这可能存在风险）。</p>
+<p>为此，我们构建了一条事务日志流水线。我们将每条修改数据库的 SQL 语句流式写入一个单独的日志文件。由于 SQLite 是一个采用<a href="https://sqlite.org/faq.html#:~:text=only%20one%20process%20can%20be%20making%20changes%20to%20the%20database%20at%20any%20moment%20in%20time">单写入者模式的数据库</a>，并支持<a href="https://www.sqlite.org/isolation.html">可串行化事务</a>，因此我们的事务历史完全是线性且确定的。（在 Postgres 或 MySQL 这样的多写入者数据库中，情况并非如此。）在最新的已知完好备份上重放这些事务，理论上应当能够将数据库恢复到最近的状态，同时安全绕过损坏部分。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/34832281499b7d1388317372478dc0001770b16e-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="示意图，展示如何通过重放两次备份之间发生的事务，重建这两次备份之间的变更。"></p>
+<p>这条流水线奏效了，但随后它做了一件更有价值的事：为我们提供了一条线索。</p>
+<p>在两次事件中，我们的事务日志都无法顺利重放。仔细检查后，我们发现，某个事务写入并提交的数据，竟莫名其妙地对后续事务不可见。一次写入在没有引发任何错误的情况下凭空消失了。这本应是不可能发生的！</p>
+<h2 id="wal-上的线索"><a href="#the-writing-on-the-wal">WAL 上的线索</a></h2>
+<p>在这些事件持续发生期间，SQLite 开发者一直在开发一种新的调试工具。有一段时间，我们怀疑漏洞藏在检查点处理过程中的某个地方。他们正在构建一种新工具，以便更清楚地观察检查点期间发生的情况。</p>
+<p>要理解这个工具发现了什么，我们需要先简要说明 SQLite 检查点的工作原理。</p>
+<p>SQLite 数据库由一系列“页”组成，页是承载信息的小型数据块。更新数据库时，其中一些页需要替换为包含更新后信息的新页。</p>
+<p>为了获得更好的性能和更高的并发性，我们使用预写式日志（Write-Ahead Logging）模式运行 SQLite。这意味着新页不会直接写入数据库文件，而是写入“预写式日志”，即“WAL 文件”。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/e80993ba5a6df5095f6cad9649545d52c61bd4c6-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示数据库文件与预写式日志（也称“WAL 文件”）之间的区别。两者都由单独的“页”构成，新页会先写入 WAL 文件。"></p>
+<p>新页不能无限期地写入 WAL 文件；在某个时刻，它们必须被复制回主数据库文件。这个过程称为“检查点处理”（checkpointing）。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/9499bb50a8a15bcf41faed009237de042cf3969e-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示 SQLite 的检查点处理过程。WAL 文件中的页会被复制回数据库文件。新页可以替换数据库文件中任意位置的现有页，也可以追加到文件末尾。"></p>
+<p>在大多数部署中，SQLite 会自行决定何时执行检查点处理，这个过程对最终用户和开发者不可见。在我们的控制平面中，我们手动控制检查点处理过程，以便快速创建一致的备份。随着潜在原因被逐一排除，这种非标准做法变得越来越可疑。</p>
+<p>其中一条线索是：在数据库损坏事件期间，我们的指标显示，SQLite 报告从 WAL 文件复制的页数会多于实际存在的页数。如果 WAL 文件中有 10 页，却有 20 页被复制到数据库中，那显然有问题。</p>
+<p>为了弄清这些异常检查点期间发生了什么，SQLite 开发者为虚拟文件系统层创建了一种新的调试工具。</p>
+<p>SQLite 分为多个层次。最上层是解析器和代码生成器，它们将 SQL 语句转换为 SQLite 的内部数据结构。这些数据结构随后被传递给分页器（pager），由分页器将其拆分为要写入磁盘的各个页。真正将它们写入磁盘的工作由操作系统接口，也就是“虚拟文件系统”负责。目前，SQLite 有两种主流的虚拟文件系统实现——Unix 和 Windows。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/fc1ab3b4825fab7a103b2023b8122f6f6c8f258c-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示 SQLite 的内部结构。它接收 SQL 语句作为输入，语句依次经过三个层次：解析器/代码生成器、分页器，以及操作系统接口/虚拟文件系统。文件系统层负责将变更写入磁盘。"></p>
+<p>如果你有兴趣深入了解这些内部机制，我推荐观看 SQLite 主要作者 Richard Hipp 的<a href="https://www.youtube.com/watch?v=ZSKLA81tBis">这场讲座</a>。</p>
+<p>这种设计让你可以用不同实现替换不同层，或者包装现有层来获取更多信息。为了帮助诊断我们的问题，SQLite 开发者为虚拟文件系统创建了一个包装层，用于写入额外的跟踪信息以及数据库变更日志。这个包装层称为 <code>tmstmpvfs</code> 垫片，其源代码可在 <a href="https://sqlite.org/src/file/ext/misc/tmstmpvfs.c?proof=394548354">SQLite 公共代码仓库</a>中查看。</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/2c42cf49f1419d6d8c07a56873b7ef1d327d1efe-1920x1080.svg?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="架构图，展示加入新调试层后的 SQLite 内部结构。操作系统接口/虚拟文件系统层现在由一个 tmstmpvfs 垫片包装。"></p>
+<p>我们将这个垫片部署到生产环境，然后等待下一次损坏发生。幸运的是，我们没有等太久。</p>
+<h2 id="wal-reset-漏洞"><a href="#the-wal-reset-bug">WAL-Reset 漏洞</a></h2>
+<p>下一次损坏事件发生后，新 <code>tmstmpvfs</code> 垫片提供的额外日志让 SQLite 开发者得以找到并修复这个漏洞：SQLite 源代码中，检查点处理与写事务之间存在一种罕见的数据竞争。</p>
+<p>具体来说，如果在检查点处理期间的某个特定时刻发生写入，检查点进程就会陷入混乱——它以为某些页已经从 WAL 复制到了主数据库文件，但实际上并没有。这些页永远不会写入数据库文件，相应数据也会永久丢失。与此同时，引用这些页的其他页（例如索引）却会被写入数据库，于是数据库文件就会损坏。</p>
+<p>SQLite 开发者将其命名为 <a href="https://sqlite.org/wal.html#the_wal_reset_bug">“WAL-Reset 漏洞”</a>，并估计它已在 SQLite 中存在至少 16 年。它能潜伏如此之久，是因为它极为罕见——罕见到 SQLite 开发者不得不添加代码，才能在测试环境中刻意触发它。他们的修复方案在<a href="https://sqlite.org/src/info/7168988acbec2d8d">检查点处理函数中增加了一项额外检查</a>，用于检测 WAL 是否已被另一个线程重置。</p>
+<p>他们确认，这个漏洞导致了我们所见的全部费解行为。它解释了数据库损坏、无法顺利应用的事务日志，以及前后不一致的检查点统计数据。他们还解释了为什么我们比其他 SQLite 用户更容易遇到这个漏洞：我们手动控制检查点处理过程，而且执行检查点的频率非常激进。即使某个漏洞只有在罕见条件下才会触发，最终也必然会被我们撞上。</p>
+<p>这是一个令人振奋的时刻。经历数月的困惑与不确定后，我们终于有了一个能够合理解释损坏原因的理论，以及一个可以部署来防止问题再次发生的修复方案。</p>
+<p>SQLite 开发者在 <a href="https://sqlite.org/changes.html#version_3_52_0">SQLite 3.52.0</a> 中发布了这项修复，我们也做好准备，等版本一发布就立即部署。</p>
+<h2 id="已经修复但虚惊一场"><a href="#fixed-with-a-false-alarm">已经修复，但虚惊一场</a></h2>
+<p>我们谨慎地推出 SQLite 3.52.0——先部署到少数几个金丝雀分片；确认运行顺利后，再部署到控制平面的其他部分。</p>
+<p>我们的备份监控器很快就亮起红灯，报告 <strong>13 个不同的数据库</strong>发生损坏。这极其令人担忧，但我们遵循恢复流程，修复了所有所谓的损坏，随后一切恢复正常。最终事实证明，这些数据库并未真正损坏，而是受到了该 SQLite 版本中另一个问题的影响。</p>
+<p>我们将遇到的错误告知 SQLite 开发者，由此发现了 SQLite 中一个与<a href="https://sqlite.org/staleexpridx.html">陈旧表达式索引</a>有关的漏洞。如果你基于一个计算值创建索引，之后该计算发生变化，索引中就会包含不匹配的值，而 <code>PRAGMA integrity_check</code> 会将其报告为数据库损坏。</p>
+<p>在我们的案例中，我们将一些高精度时间戳存储为文本，再通过一个 VIRTUAL 生成列将其转换为浮点数。而修复数据竞争的 SQLite 3.52.0 版本还包含一项<a href="https://research.swtch.com/fp">优化</a>，它细微地改变了文本转浮点数时的舍入行为。我们的金丝雀分片中恰好没有任何时间戳会触发这种舍入行为变化，因此分阶段推出时我们没有发现这个问题。</p>
+<p>由于这项变更会引发错误的数据库损坏警告，SQLite 开发者撤回了 3.52.0 版本，转而发布 3.51.3，其中只包含针对 WAL-Reset 漏洞的修复。</p>
+<p>我们在自身系统中降低了时间戳的精度，将其改为整数秒，从而解决了问题；文本到整数的转换不存在歧义。与此同时，SQLite 开发者在 3.53.0 中创建了一项自动化的<a href="https://sqlite.org/staleexpridx.html#selfheal">索引自愈功能</a>，以防止陈旧表达式索引问题。</p>
+<h2 id="庆祝时刻"><a href="#party-time">庆祝时刻！</a></h2>
+<p>当修复已部署到整个控制平面后，我们准备宣布胜利，但仍然十分谨慎。没有发生损坏事件并不意味着问题已经修好——此前我们就经历过一次具有迷惑性的六周平静期。</p>
+<p>我们希望获得确凿证据，证明这种数据竞争确实会在生产环境中发生。既然我们已经理解了漏洞成因——写事务与 WAL 重置发生碰撞——便修补了 SQLite 驱动，使其在这两项操作重叠时<a href="https://github.com/tailscale/sqlite/commit/070c921dea03f793cbbbd9d39551d0ad26136113#diff-fcff16fa73210758d3a31f4cfa4609ad5b3ca692b66fc7fb7587c08a1ab11048">记录一条警告</a>。如果警告被触发，但数据库并未损坏，我们就能确认这项修复让我们躲过了一次潜在的数据库损坏事件。</p>
+<p>我们部署了这项警告，然后开始等待。等了又等。一直等。继续等。数周过去，我们开始疑惑为何始终看不到它。警告机制坏了吗？我们的理论错了吗？真正的漏洞是否仍潜伏在黑暗之中？</p>
+<p>终于在两个月后，我们一直等待的警报触发了：</p>
+<p><img src="https://cdn.sanity.io/images/w77i7m8x/production/19ae089ae209ad7e395e188b7f6e4a81be29c431-1458x684.png?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" alt="Alert Manager 通知，显示 SQLitePartyMode 警告：SQLite 在 party mode 下试图损坏 shard2.corp.ts.net:8383 上的数据，但系统阻止了它。详细信息包括警告代码、主机、实例、作业、命名空间、严重性和分片信息。消息建议检查服务器日志，以了解数据库损坏事件的详情。"></p>
+<p>这条警报证明，触发 WAL-Reset 漏洞的精确条件<em>确实</em>会在我们的生产环境中出现，这意味着它很可能正是导致我们那六个月服务可用性不稳定的元凶。</p>
+<p>截至本文写作时，自那条令人莫名欣喜的警报触发以来，我们又平稳运行了四个月，没有发生任何数据库事件。我们终于可以松一口气了。</p>
+<h2 id="离开成熟可靠的常规路径"><a href="#off-the-well-trodden-path">离开成熟可靠的常规路径</a></h2>
+<p>没有人希望我们花六个月时间在 SQLite 中查找漏洞。对于客户和员工而言，这都是一次极其令人沮丧的经历；如今终于能够摆脱这种不稳定，我们所有人都感到欣慰。</p>
+<p>这次调查给了我们一个有益的提醒：**以非标准方式运行乏味的技术是有风险的。**常见路径和标准配置都经过了极其充分的测试，可靠性很高。大多数人使用标准配置运行 SQLite，从未遇到过这类问题。我们所做的一切都属于公开、有文档记录且受支持的配置——但当我们手动控制检查点处理过程，并以自己设定的激进频率运行它时，就偏离了成熟可靠的常规运维路径。</p>
+<p>解决这些事件是一项规模庞大的跨职能工作，涉及数十人——包括 Tailscale 的工程与支持团队，以及 SQLite 的核心维护者。正是所有人的共同努力，才让这些事件造成的影响没有严重得多。</p>
+<p>我们知道，无论受影响的人数有多少，反复停机都会侵蚀信任。在我们追查问题期间，客户给予了耐心和支持，我们对此深表感谢。</p>
+<p>尽管这段时期令人沮丧，但如今我们的处境比以前更加稳固。SQLite 中这个长期存在的漏洞已经修复，而我们也在寻找它的过程中修复了数十个偶然发现的其他问题。我们资助开发了开源的 SQLite VFS 垫片，它几乎立刻就帮助我们隔离出了竞争条件，未来也将有助于追踪类似漏洞。最后，我们完善了数据库备份和恢复流程，并在实际生产环境中测试了十多次。</p>
+<p>希望我们不会再遇到这样的数据库事件——但如果真的再次发生，我们已经做好了准备。</p>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev">&larr; <a href="/post/2026/05/07/key-person-in-company/">关键先生: 公司增长背后的翻译者</a></span>
+  <span class="nav-next"></span>
+</nav>
+
+
+
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script>
+  var disqus_config = function () {
+  
+  };
+  (function() {
+    var inIFrame = function() {
+      var iframe = true;
+      try { iframe = window.self !== window.top; } catch (e) {}
+      return iframe;
+    };
+    if (inIFrame()) return;
+    var disqus_js = '//bopjianggithubio.disqus.com/embed.js';
+    var d = document, s = d.createElement('script');
+    s.src = disqus_js; s.async = true;
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+
+
+  
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://bopjiang.github.io">bopjiang</a> 2026 | <a href="https://github.com/bopjiang">Github</a> | <a href="https://twitter.com/bopjiang">Twitter</a></div>
+  
+  </footer>
+  </article>
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPQ6VV8M1S"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VPQ6VV8M1S');
+        }
+      </script>
+  </body>
+</html>
+
